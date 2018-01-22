@@ -1,6 +1,7 @@
 package pages;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -18,20 +19,21 @@ public class HomePage {
 		PageFactory.initElements(driver, this);
 	}
 	
-	public void performLikesOnProfile() throws InterruptedException {
+	public void performLikesOnProfile(int n, int timeMin, int timeMax) throws InterruptedException {
 		_sleep(3);
 		List<WebElement> likeButtons = _getLikeButtons();
 		int count = 0;
 		System.out.println("Starting to like...");
 		while (likeButtons.size() != 0) {
+			if (count >= n) return;
 			likeButtons.get(0).click();
 			System.out.println("Liked so far: " + ++count);
-			_sleep(3);
+			_sleep(_getRandomTime(timeMin, timeMax));
 			likeButtons = _getLikeButtons();
 		}
 	}
 	
-	public void performLikesOnHashTag(String hashtagName, int noOfPhotos) throws InterruptedException {
+	public void performLikesOnHashTag(String hashtagName, int noOfPhotos, int timeMin, int timeMax) throws InterruptedException {
 		hashtagName = hashtagName.toLowerCase();
 		driver.get(HASHTAG_URL + hashtagName);
 		_sleep(3);
@@ -39,15 +41,19 @@ public class HomePage {
 		photos.get(0).click();
 	
 		for (int i = 0; i < noOfPhotos; i++) {
-			_sleep(2);
+			_sleep(_getRandomTime(timeMin, timeMax));
 			List<WebElement> likeButtons = _getLikeButtons();
 			if (likeButtons.size() != 0) {
 				likeButtons.get(0).click();
-				System.out.println(i + ") " + _getProfileName());
+				System.out.println((i+1) + ") " + _getProfileName());
 			}
 			_getRightNavArrow().click();
 		}
 		
+	}
+	
+	private int _getRandomTime(int low, int high) {
+		return ThreadLocalRandom.current().nextInt(low, high);
 	}
 	
 	private List<WebElement> _getLikeButtons() {

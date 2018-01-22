@@ -17,8 +17,17 @@ public class App
         ChromeDriver driver = new ChromeDriver();
         driver.get("http://www.instagram.com");
         LoginPage loginPage = new LoginPage(driver);
+        
+        // put your username and password here
         HomePage homePage = loginPage.login("USERNAME", "PASSWORD");
-//        homePage.performLikesOnProfile();
-        homePage.performLikesOnHashTag("HASHTAG", 1000);
+        
+        // Like photos on your profile
+        // Parameters: noOfPhotos to like, wait time min, wait time max
+        homePage.performLikesOnProfile(100, 10, 20);
+        
+        // example: HappyFriday, Do not use # in front
+        // Like photos for this hashtag for the given count
+        // Parameters: hashtagName, noOfPhotos to like, wait time min, wait time max
+        homePage.performLikesOnHashTag("HASHTAG_NAME", 100, 10, 20);
     }
 }
