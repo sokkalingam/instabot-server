@@ -56,6 +56,7 @@ public class HomePage {
 		while (i < noOfPhotos) {
 			WebElement likeButton = _getLikeButton();
 			if (likeButton != null) {
+				likeButton.click();
 				i++;
 				System.out.println(i + ") " + _getProfileName());
 				_sleep(_getRandomTime(timeMin, timeMax));
