@@ -1,4 +1,4 @@
-package pages;
+package instagram.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -8,9 +8,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class LoginPage {
-	
-	private WebDriver driver;
+public class LoginPage extends SuperPage {
 	
 	@FindBy(linkText = "Log in")
 	private WebElement loginLink;
@@ -25,30 +23,24 @@ public class LoginPage {
 	private WebElement loginButton;
 	
 	public LoginPage(WebDriver driver) {
-		this.driver = driver;
+		super(driver);
 	}
 	
 	public HomePage login(String username, String password) throws InterruptedException {
-		Thread.sleep(3000);
-		PageFactory.initElements(driver, this);
+		sleep(3);
+		PageFactory.initElements(getDriver(), this);
 		loginLink.click();
-		PageFactory.initElements(driver, this);
-		new WebDriverWait(driver, 5).until(ExpectedConditions.presenceOfElementLocated(By.name("username")));
+		PageFactory.initElements(getDriver(), this);
+		new WebDriverWait(getDriver(), 5).until(ExpectedConditions.presenceOfElementLocated(By.name("username")));
 		fillIn(username, password);
-		return new HomePage(driver);
+		sleep(5);
+		return new HomePage(getDriver());
 	}
 	
 	public void fillIn(String username, String password) throws InterruptedException {
 		usernameInput.sendKeys(username);
 		passwordInput.sendKeys(password);
 		loginButton.click();
-		Thread.sleep(1000);
-		try {
-			if (usernameInput.isDisplayed())
-				fillIn(username, password);
-		} catch (Exception e) {
-			
-		}
 	}
 
 }
