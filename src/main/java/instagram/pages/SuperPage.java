@@ -114,6 +114,10 @@ public class SuperPage {
 		return getElement("textarea");
 	}
 	
+	public String getCommentsAsText() {
+		return getElement("._ebcx9").getText();
+	}
+	
 	public void comment(WebElement element, Object text) {
 		Actions actions = new Actions(driver);
 		actions.moveToElement(element);

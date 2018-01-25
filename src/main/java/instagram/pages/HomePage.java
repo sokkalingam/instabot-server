@@ -39,19 +39,19 @@ public class HomePage extends SuperPage {
 		}
 	}
 	
-	public void likeOnlyOnHashTag(String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
-		_performOnHashTag(hashtagName, noOfPhotos, timeMin, timeMax, true, false);
+	public void likeOnlyOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, false);
 	}
 	
-	public void commentOnlyOnHashTag(String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
-		_performOnHashTag(hashtagName, noOfPhotos, timeMin, timeMax, false, true);
+	public void commentOnlyOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, false, true);
 	}
 	
-	public void likeAndCommentOnHashTag(String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
-		_performOnHashTag(hashtagName, noOfPhotos, timeMin, timeMax, true, true);
+	public void likeAndCommentOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, true);
 	}
 	
-	private void _performOnHashTag(String hashtagName, int noOfPhotos, int timeMin, int timeMax, boolean like, boolean comment) {
+	private void _performOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax, boolean like, boolean comment) {
 		
 		if (!like || !comment)
 			return;
@@ -73,15 +73,15 @@ public class HomePage extends SuperPage {
 			
 			String profileName = getProfileName();
 			
-			if ((like && !alreadyLiked()) || (comment && !alreadyCommented(commentedProfiles, profileName))) {
+			if ((like && !alreadyLiked()) || (comment && !alreadyCommented(accountName))) {
 				sleep(getRandomTime(timeMin, timeMax));
-				System.out.println((++i) + ") " + profileName);
+				System.out.println("\n" + (++i) + ") " + profileName);
 			}
 			
 			if (like && !alreadyLiked())
 				like(getLikeButton());
 			
-			if (comment)
+			if (comment && !alreadyCommented(accountName))
 				comment(commentedProfiles, profileName, getRandomComment());
 						
 			getRightNavArrow().click();
@@ -99,7 +99,7 @@ public class HomePage extends SuperPage {
 			sleep(1);
 			comment(getCommentInput(), Keys.ENTER);
 			waitForCommentToLoad();
-			System.out.println(" Commented: " + comment);
+			System.out.print(" Commented: " + comment);
 		}
 	}
 	
@@ -112,8 +112,8 @@ public class HomePage extends SuperPage {
 		return getLikeButton() == null;
 	}
 	
-	public boolean alreadyCommented(Set<String> commentedProfiles, String profileName) {
-		return commentedProfiles.contains(profileName);
+	public boolean alreadyCommented(String accountName) {
+		return getCommentsAsText().contains(accountName);
 	}
 	
 }
