@@ -96,7 +96,7 @@ public class HomePage extends SuperPage {
 	
 	public void like(WebElement likeButton) {
 		likeButton.click();
-		System.out.print("Liked ");
+		System.out.println("Liked ");
 	}
 	
 	public void comment(Set<String> commentedProfiles, String profileName, String comment) {
@@ -106,7 +106,7 @@ public class HomePage extends SuperPage {
 			comment(getCommentInput(), Keys.ENTER);
 			sleep(1);
 			waitForCommentToLoad();
-			System.out.print(" Commented: " + comment);
+			System.out.println(" Commented: " + comment);
 		}
 	}
 	
