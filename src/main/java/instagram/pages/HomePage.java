@@ -91,7 +91,14 @@ public class HomePage extends SuperPage {
 			if (comment && !alreadyCommented(accountName))
 				comment(commentedProfiles, profileName, getRandomComment());
 						
-			getRightNavArrow().click();
+			WebElement rightArrow = getRightNavArrow();
+			if (rightArrow != null) {
+				rightArrow.click();
+			} else {
+				System.out.println("Right Arrow Not Found, Retrying Hashtag");
+				_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, like, comment, counter);
+				return;
+			}
 		}
 	}
 	
