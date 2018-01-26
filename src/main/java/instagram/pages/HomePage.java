@@ -16,10 +16,12 @@ import instagram.data.Data;
 public class HomePage extends SuperPage {
 	
 	private final String HASHTAG_URL = "https://www.instagram.com/explore/tags/";
+	private Set<String> alreadyVisited;
 	
 	public HomePage(WebDriver driver) {
 		super(driver);
 		PageFactory.initElements(driver, this);
+		alreadyVisited = new HashSet<String>();
 	}
 	
 	public void performLikesOnProfile(int n, int timeMin, int timeMax) throws InterruptedException {
@@ -66,8 +68,6 @@ public class HomePage extends SuperPage {
 		// Skip top posts and open the most recent
 		int indexOfFirstMostRecentPhoto = 9;
 		photos.get(indexOfFirstMostRecentPhoto).click();
-		
-		Set<String> commentedProfiles = new HashSet<String>();
 
 		while (counter < noOfPhotos) {
 			
@@ -89,7 +89,7 @@ public class HomePage extends SuperPage {
 				like(getLikeButton());
 			
 			if (comment && !alreadyCommented(accountName))
-				comment(commentedProfiles, profileName, getRandomComment());
+				comment(alreadyVisited, profileName, getRandomComment());
 						
 			WebElement rightArrow = getRightNavArrow();
 			if (rightArrow != null) {
@@ -107,15 +107,16 @@ public class HomePage extends SuperPage {
 		System.out.println("Liked ");
 	}
 	
-	public void comment(Set<String> commentedProfiles, String profileName, String comment) {
-		if (!commentedProfiles.contains(profileName)) {
-			comment(getCommentInput(), comment);
-			sleep(1);
-			comment(getCommentInput(), Keys.ENTER);
-			sleep(1);
-			waitForCommentToLoad();
-			System.out.println(" Commented: " + comment);
-		}
+	public void comment(Set<String> alreadyVisited, String profileName, String comment) {
+		if (this.alreadyVisited.contains(profileName))
+			return;
+		comment(getCommentInput(), comment);
+		sleep(1);
+		comment(getCommentInput(), Keys.ENTER);
+		sleep(1);
+		waitForCommentToLoad();
+		alreadyVisited.add(profileName);
+		System.out.println("Commented: " + comment);
 	}
 	
 	public String getRandomComment() {

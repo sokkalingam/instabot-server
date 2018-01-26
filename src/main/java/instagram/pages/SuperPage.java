@@ -127,7 +127,7 @@ public class SuperPage {
 	}
 	
 	public String getCommentsAsText() {
-		return getElement("._ebcx9").getText();
+		return getElement("._b0tqa").getText();
 	}
 	
 	public void comment(WebElement element, Object text) {
