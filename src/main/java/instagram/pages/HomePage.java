@@ -40,20 +40,20 @@ public class HomePage extends SuperPage {
 	}
 	
 	public void likeOnlyOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
-		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, false);
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, false, 0);
 	}
 	
 	public void commentOnlyOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
-		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, false, true);
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, false, true, 0);
 	}
 	
 	public void likeAndCommentOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
-		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, true);
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, true, 0);
 	}
 	
-	private void _performOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax, boolean like, boolean comment) {
+	private void _performOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax, boolean like, boolean comment, int counter) {
 		
-		if (!like || !comment)
+		if (!like && !comment)
 			return;
 		
 		hashtagName = hashtagName.toLowerCase();
@@ -64,18 +64,24 @@ public class HomePage extends SuperPage {
 		List<WebElement> photos = getDriver().findElements(By.cssSelector("a[href*='tagged="+ hashtagName +"']"));
 		
 		// Skip top posts and open the most recent
-		photos.get(9).click();
+		int indexOfFirstMostRecentPhoto = 9;
+		photos.get(indexOfFirstMostRecentPhoto).click();
 		
 		Set<String> commentedProfiles = new HashSet<String>();
-	
-		int i = 0;
-		while (i < noOfPhotos) {
+
+		while (counter < noOfPhotos) {
+			
+			if (isPageNotFound()) {
+				System.out.println("Retrying Hashtag");
+				_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, like, comment, counter);
+			}
 			
 			String profileName = getProfileName();
 			
 			if ((like && !alreadyLiked()) || (comment && !alreadyCommented(accountName))) {
 				sleep(getRandomTime(timeMin, timeMax));
-				System.out.println("\n" + (++i) + ") " + profileName);
+				counter++;
+				System.out.println("\n" + counter + ") " + profileName);
 			}
 			
 			if (like && !alreadyLiked())
@@ -98,6 +104,7 @@ public class HomePage extends SuperPage {
 			comment(getCommentInput(), comment);
 			sleep(1);
 			comment(getCommentInput(), Keys.ENTER);
+			sleep(1);
 			waitForCommentToLoad();
 			System.out.print(" Commented: " + comment);
 		}

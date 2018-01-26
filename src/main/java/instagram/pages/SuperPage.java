@@ -18,6 +18,7 @@ public class SuperPage {
 	private final String heartCss = "span.coreSpriteHeartOpen";
 	private final String rightArrowCss = ".coreSpriteRightPaginationArrow";
 	private final String profileNameCss = "._eeohz";
+	private final String errorCss = ".error-container";
 	
 	private WebDriverWait wait;
 	private WebDriver driver;
@@ -73,6 +74,17 @@ public class SuperPage {
 	
 	public void waitForCommentToLoad() {
 		waitForElementToBeInvisible("textarea[disabled]");
+	}
+	
+	public boolean isPageNotFound() {
+		setWait(2);
+		boolean isNotFound = getElement(errorCss) != null;
+		setWait(WAIT_TIME);
+		
+		if (isNotFound)
+			System.out.println("Page Not Found: " + getDriver().getCurrentUrl());
+		
+		return isNotFound;
 	}
 	
 	public void waitForElementToBeInvisible(String css) {
