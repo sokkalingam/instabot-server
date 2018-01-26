@@ -1,6 +1,7 @@
 package instagram.app;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -23,25 +24,39 @@ public class App
         driver.get("http://www.instagram.com");
         LoginPage loginPage = new LoginPage(driver);
         
-        // put your userName and password here
-        HomePage homePage = loginPage.login("USERNAME", "PASSWORD");
+    	/**
+         * DATA YOU NEED TO SET
+         */
+        String username = "USERNAME";
+        String password = "PASSWORD";
+        String hashtag = "HASHTAG";
+        int noOfPhotos = 5;
+        int minTime = 20;
+        int maxTime = 30;
+        List<String> comments = Arrays.asList(
+					        		"Woof! Woof!",
+					        		"So Cute",
+					        		"Awww"
+				        		);
+        /**
+         * END OF DATA SETUP
+         */
+    	
+    	HomePage homePage = loginPage.login(username, password);
         
         /**
          * Like Photos on your feed
          * Parameters: No of Photos, Min wait time, Max wait time
          */
-        // homePage.performLikesOnProfile(200, 20, 30);
+//         homePage.performLikesOnProfile(noOfPhotos, minTime, maxTime);
         
         /**
          * Like and comment on hashtag
          * Parameters: Hashtag, No of Photos, Min wait time, Max wait time
          */
-        Data.comments = Arrays.asList(
-        		"Woof! Woof!",
-        		"So Cute",
-        		"Awww");
-        // homePage.likeOnlyOnHashTag("goldenretrieverpuppy", 3, 20, 30);
-        // homePage.commentOnlyOnHashTag("goldenretrieverpuppy", 3, 20, 30);
-        homePage.likeAndCommentOnHashTag("goldenretriever", 4, 20, 30);
+        Data.comments = comments;
+//        homePage.likeOnlyOnHashTag(username, hashtag, noOfPhotos, minTime, maxTime);
+//        homePage.commentOnlyOnHashTag(username, hashtag, noOfPhotos, minTime, maxTime);
+        homePage.likeAndCommentOnHashTag(username, hashtag, noOfPhotos, minTime, maxTime);
     }
 }
