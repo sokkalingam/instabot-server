@@ -74,6 +74,7 @@ public class HomePage extends SuperPage {
 			if (isPageNotFound()) {
 				System.out.println("Retrying Hashtag");
 				_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, like, comment, counter);
+				return;
 			}
 			
 			String profileName = getProfileName();
