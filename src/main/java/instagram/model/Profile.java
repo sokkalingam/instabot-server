@@ -4,8 +4,8 @@ public class Profile {
 	
 	private String name;
 	private int posts;
-	private int followers;
-	private int following;
+	private int noOfFollowers;
+	private int noOfFollowing;
 	
 	public String getName() {
 		return name;
@@ -19,22 +19,23 @@ public class Profile {
 	public void setPosts(int posts) {
 		this.posts = posts;
 	}
-	public int getFollowers() {
-		return followers;
+	public int getNoOfFollowers() {
+		return noOfFollowers;
 	}
-	public void setFollowers(int followers) {
-		this.followers = followers;
+	public void setNoOfFollowers(int followers) {
+		this.noOfFollowers = followers;
 	}
-	public int getFollowing() {
-		return following;
+	public int getNoOfFollowing() {
+		return noOfFollowing;
 	}
-	public void setFollowing(int following) {
-		this.following = following;
+	public void setNoOfFollowing(int following) {
+		this.noOfFollowing = following;
 	}
 	@Override
 	public String toString() {
-		return "Profile [name=" + name + ", posts=" + posts + ", followers=" + followers + ", following=" + following
-				+ "]";
+		return "Profile [name=" + name + ", posts=" + posts + ", noOfFollowers=" + noOfFollowers + ", noOfFollowing="
+				+ noOfFollowing + "]";
 	}
+	
 
 }

@@ -24,14 +24,15 @@ public class HttpCall {
 		String profileText = getProfileAsText(profileName);
 		try {
 			String followers = profileText.split("meta content=\"")[1].split(" ")[0];
-			profile.setFollowers(ProfileUtils.getNumberCount(followers));
+			profile.setNoOfFollowers(ProfileUtils.getNumberCount(followers));
 			String following = profileText.split("Followers, ")[1].split(" ")[0];
-			profile.setFollowing(ProfileUtils.getNumberCount(following));
+			profile.setNoOfFollowing(ProfileUtils.getNumberCount(following));
 			String posts = profileText.split("Following, ")[1].split(" ")[0];
 			profile.setPosts(ProfileUtils.getNumberCount(posts));
 		} catch (Exception e) {
 			System.out.println("Exception in getting profile details");
 		}
+		System.out.println(profile);
 		return profile;
 	}
 
