@@ -16,10 +16,12 @@ import instagram.data.Data;
 public class HomePage extends SuperPage {
 	
 	private final String HASHTAG_URL = "https://www.instagram.com/explore/tags/";
+	private Set<String> alreadyVisited;
 	
 	public HomePage(WebDriver driver) {
 		super(driver);
 		PageFactory.initElements(driver, this);
+		alreadyVisited = new HashSet<String>();
 	}
 	
 	public void performLikesOnProfile(int n, int timeMin, int timeMax) throws InterruptedException {
@@ -40,20 +42,20 @@ public class HomePage extends SuperPage {
 	}
 	
 	public void likeOnlyOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
-		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, false);
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, false, 0);
 	}
 	
 	public void commentOnlyOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
-		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, false, true);
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, false, true, 0);
 	}
 	
 	public void likeAndCommentOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
-		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, true);
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, true, 0);
 	}
 	
-	private void _performOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax, boolean like, boolean comment) {
+	private void _performOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax, boolean like, boolean comment, int counter) {
 		
-		if (!like || !comment)
+		if (!like && !comment)
 			return;
 		
 		hashtagName = hashtagName.toLowerCase();
@@ -64,43 +66,57 @@ public class HomePage extends SuperPage {
 		List<WebElement> photos = getDriver().findElements(By.cssSelector("a[href*='tagged="+ hashtagName +"']"));
 		
 		// Skip top posts and open the most recent
-		photos.get(9).click();
-		
-		Set<String> commentedProfiles = new HashSet<String>();
-	
-		int i = 0;
-		while (i < noOfPhotos) {
+		int indexOfFirstMostRecentPhoto = 9;
+		photos.get(indexOfFirstMostRecentPhoto).click();
+
+		while (counter < noOfPhotos) {
+			
+			if (isPageNotFound()) {
+				System.out.println("Retrying Hashtag");
+				_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, like, comment, counter);
+				return;
+			}
 			
 			String profileName = getProfileName();
 			
 			if ((like && !alreadyLiked()) || (comment && !alreadyCommented(accountName))) {
 				sleep(getRandomTime(timeMin, timeMax));
-				System.out.println("\n" + (++i) + ") " + profileName);
+				counter++;
+				System.out.println("\n" + counter + ") " + profileName);
 			}
 			
 			if (like && !alreadyLiked())
 				like(getLikeButton());
 			
 			if (comment && !alreadyCommented(accountName))
-				comment(commentedProfiles, profileName, getRandomComment());
+				comment(alreadyVisited, profileName, getRandomComment());
 						
-			getRightNavArrow().click();
+			WebElement rightArrow = getRightNavArrow();
+			if (rightArrow != null) {
+				rightArrow.click();
+			} else {
+				System.out.println("Right Arrow Not Found, Retrying Hashtag");
+				_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, like, comment, counter);
+				return;
+			}
 		}
 	}
 	
 	public void like(WebElement likeButton) {
 		likeButton.click();
-		System.out.print("Liked ");
+		System.out.println("Liked ");
 	}
 	
-	public void comment(Set<String> commentedProfiles, String profileName, String comment) {
-		if (!commentedProfiles.contains(profileName)) {
-			comment(getCommentInput(), comment);
-			sleep(1);
-			comment(getCommentInput(), Keys.ENTER);
-			waitForCommentToLoad();
-			System.out.print(" Commented: " + comment);
-		}
+	public void comment(Set<String> alreadyVisited, String profileName, String comment) {
+		if (this.alreadyVisited.contains(profileName))
+			return;
+		comment(getCommentInput(), comment);
+		sleep(1);
+		comment(getCommentInput(), Keys.ENTER);
+		sleep(1);
+		waitForCommentToLoad();
+		alreadyVisited.add(profileName);
+		System.out.println("Commented: " + comment);
 	}
 	
 	public String getRandomComment() {

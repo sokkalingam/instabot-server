@@ -55,8 +55,8 @@ public class App
          * Parameters: Hashtag, No of Photos, Min wait time, Max wait time
          */
         Data.comments = comments;
-//        homePage.likeOnlyOnHashTag(username, hashtag, noOfPhotos, minTime, maxTime);
+        homePage.likeOnlyOnHashTag(username, hashtag, noOfPhotos, minTime, maxTime);
 //        homePage.commentOnlyOnHashTag(username, hashtag, noOfPhotos, minTime, maxTime);
-        homePage.likeAndCommentOnHashTag(username, hashtag, noOfPhotos, minTime, maxTime);
+//        homePage.likeAndCommentOnHashTag(username, hashtag, noOfPhotos, minTime, maxTime);
     }
 }
