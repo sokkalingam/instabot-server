@@ -1,7 +1,7 @@
 package instagram.utils;
 
 public class ProfileUtils {
-	
+
 	public static int getNumberCount(String value) {
 		value = value.replaceAll(",", "");
 		boolean isDot = value.contains(".");
