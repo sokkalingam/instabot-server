@@ -30,10 +30,13 @@ public class App {
         Data.noOfMostRecentPhotos = 20; // No of most recent photos to like
         Data.noOfTimesToLoop = 20; // No of times to loop to like the most recent photos
 		Data.sessionId = "SESSION_ID_FROM_APPLICATION_COOKIE_INSTAGRAM"; // session id for logging in
+        // Comment will be picked randomly from the list
 		Data.comments = Arrays.asList(
-					"Comment...1",
-                    "Comment...2"
+					"so cute...",
+                    "what a pic...",
+                    "this is so awesome..."
 				);
+		// Profile names mentioned in the list will not be unFollowed
 		Data.protectedProfiles = new HashSet<>(Arrays.asList(
 		                            "profileName1",
                                     "profileName2"
