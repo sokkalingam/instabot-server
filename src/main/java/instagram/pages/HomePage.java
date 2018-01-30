@@ -83,7 +83,6 @@ public class HomePage extends SuperPage {
 		while (counter < Data.noOfPhotos) {
 
 			if (isPageNotFound()) {
-				System.out.println("Retrying Hashtag");
 				_performOnHashTag(like, comment, follow, counter);
 				return;
 			}
@@ -134,7 +133,7 @@ public class HomePage extends SuperPage {
 	}
 
 	private void _follow(Profile profile) {
-		if (profile.getNoOfFollowers() > Data.maxFollowers)
+		if (profile.getNoOfFollowers() > Data.maxFollowersRequiredToFollow)
 			return;
 		getFollowButton().click();
 		System.out.println("Followed");

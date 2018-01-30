@@ -10,7 +10,13 @@ public class HttpCall {
 
 	public static String getResponse(String url) {
 		RestTemplate restTemplate = new RestTemplate();
-		String response = restTemplate.getForObject(url, String.class);
+		String response = "";
+		try {
+			response = restTemplate.getForObject(url, String.class);
+		} catch (Exception e) {
+			System.out.println("Error fetching data for URL: " + url);
+			return "";
+		}
 		return response;
 	}
 
@@ -31,6 +37,7 @@ public class HttpCall {
 			profile.setPosts(ProfileUtils.getNumberCount(posts));
 		} catch (Exception e) {
 			System.out.println("Exception in getting profile details");
+			return null;
 		}
 		System.out.println(profile);
 		return profile;
