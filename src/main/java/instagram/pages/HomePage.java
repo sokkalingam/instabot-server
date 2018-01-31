@@ -12,10 +12,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
 import instagram.data.Data;
+import instagram.http.HttpCall;
+import instagram.model.Profile;
 
 public class HomePage extends SuperPage {
 	
-	private final String HASHTAG_URL = "https://www.instagram.com/explore/tags/";
 	private Set<String> alreadyVisited;
 	
 	public HomePage(WebDriver driver) {
@@ -42,24 +43,32 @@ public class HomePage extends SuperPage {
 	}
 	
 	public void likeOnlyOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
-		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, false, 0);
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, false, false, 0);
 	}
 	
 	public void commentOnlyOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
-		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, false, true, 0);
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, false, true, false, 0);
 	}
 	
 	public void likeAndCommentOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
-		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, true, 0);
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, true, false, 0);
 	}
 	
-	private void _performOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax, boolean like, boolean comment, int counter) {
+	public void likeAndFollowOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, false, true, 0);
+	}
+	
+	public void likeCommentFollowOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax) {
+		_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, true, true, true, 0);
+	}
+	
+	private void _performOnHashTag(String accountName, String hashtagName, int noOfPhotos, int timeMin, int timeMax, boolean like, boolean comment, boolean follow, int counter) {
 		
-		if (!like && !comment)
+		if (!like && !comment && !follow)
 			return;
 		
 		hashtagName = hashtagName.toLowerCase();
-		getDriver().get(HASHTAG_URL + hashtagName);
+		getDriver().get(Data.HASHTAG_URL + hashtagName);
 		sleep(3);
 		
 		System.out.println("#" + hashtagName + ", " + noOfPhotos + " photos, Wait time between " + timeMin + " and " + timeMax + " seconds");
@@ -73,30 +82,46 @@ public class HomePage extends SuperPage {
 			
 			if (isPageNotFound()) {
 				System.out.println("Retrying Hashtag");
-				_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, like, comment, counter);
+				_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, like, comment, follow, counter);
 				return;
 			}
 			
 			String profileName = getProfileName();
 			
-			if ((like && !alreadyLiked()) || (comment && !alreadyCommented(accountName))) {
-				sleep(getRandomTime(timeMin, timeMax));
-				counter++;
-				System.out.println("\n" + counter + ") " + profileName);
+			counter++;
+			System.out.println("\n" + counter + ") " + profileName);
+			System.out.println("Following: " + alreadyFollowing());
+			Profile currentProfile = HttpCall.getProfile(profileName);
+			System.out.println(currentProfile);
+			
+			if (like && !alreadyLiked()) {
+				like(getLikeButton());
+			} else {
+				like = false;
 			}
 			
-			if (like && !alreadyLiked())
-				like(getLikeButton());
-			
-			if (comment && !alreadyCommented(accountName))
+			if (comment && !alreadyCommented(accountName)) {
 				comment(alreadyVisited, profileName, getRandomComment());
+			} else {
+				comment = false;
+			}
+				
+			if (follow && !alreadyFollowing()) {
+				follow(currentProfile);
+			} else {
+				follow = false;
+			}
+			
+			if (like || comment || follow) {
+				sleep(getRandomTime(timeMin, timeMax));
+			}
 						
 			WebElement rightArrow = getRightNavArrow();
 			if (rightArrow != null) {
 				rightArrow.click();
 			} else {
 				System.out.println("Right Arrow Not Found, Retrying Hashtag");
-				_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, like, comment, counter);
+				_performOnHashTag(accountName, hashtagName, noOfPhotos, timeMin, timeMax, like, comment, follow, counter);
 				return;
 			}
 		}
@@ -107,13 +132,20 @@ public class HomePage extends SuperPage {
 		System.out.println("Liked ");
 	}
 	
+	public void follow(Profile profile) {
+		if (profile.getFollowers() > Data.maxFollowers)
+			return;
+		getFollowButton().click();
+		System.out.println("Followed");
+	}
+	
 	public void comment(Set<String> alreadyVisited, String profileName, String comment) {
-		if (this.alreadyVisited.contains(profileName))
+		if (getCommentInput() == null || this.alreadyVisited.contains(profileName))
 			return;
 		comment(getCommentInput(), comment);
-		sleep(1);
+		sleep(2);
 		comment(getCommentInput(), Keys.ENTER);
-		sleep(1);
+		sleep(2);
 		waitForCommentToLoad();
 		alreadyVisited.add(profileName);
 		System.out.println("Commented: " + comment);
@@ -126,6 +158,10 @@ public class HomePage extends SuperPage {
 	
 	public boolean alreadyLiked() {
 		return getLikeButton() == null;
+	}
+	
+	public boolean alreadyFollowing() {
+		return !isFollowButtonVisible();
 	}
 	
 	public boolean alreadyCommented(String accountName) {

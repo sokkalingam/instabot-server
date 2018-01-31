@@ -123,7 +123,7 @@ public class SuperPage {
 	}
 	
 	public WebElement getCommentInput() {
-		return getElement("textarea");
+		return getElement("textarea[placeholder*='comment']");
 	}
 	
 	public String getCommentsAsText() {
@@ -138,9 +138,18 @@ public class SuperPage {
 		actions.build().perform();
 	}
 	
+	public Object executeJs(String script, WebElement element) {
+		return ((JavascriptExecutor) driver)
+		        .executeScript(script, element);
+	}
+	
+	public Object executeJs(String script) {
+		return ((JavascriptExecutor) driver)
+        .executeScript(script);
+	}
+	
 	public WebElement getParentElement(WebElement element) {
-		return (WebElement) ((JavascriptExecutor) driver)
-		        .executeScript("return arguments[0].parentNode;", element);
+		return (WebElement) executeJs("return arguments[0].parentNode;", element);
 	}
 	
 	public WebElement getParentElement(String tagName, WebElement element) {
@@ -156,6 +165,18 @@ public class SuperPage {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public WebElement getFollowButton() {
+		WebElement button = getElement("button");
+		if (button != null && button.getText().equals("Follow"))
+			return button;
+		return null;
+	}
+	
+	public boolean isFollowButtonVisible() {
+		WebElement button = getElement("button");
+		return button != null && button.getText().equals("Follow");
 	}
 
 }
