@@ -63,14 +63,19 @@ public class HomePage extends SuperPage {
 		_performOnHashTag(true, true, true, 0);
 	}
 
+	public void likeInLoop() {
+	    for (int i = 0; i < Data.noOfTimesToLoop; i++) {
+            System.out.println("Loop #" + i);
+            _performOnHashTag(true, false, false, 0);
+        }
+    }
+
 	private void _performOnHashTag(boolean like, boolean comment, boolean follow, int counter) {
 
 		if (!like && !comment && !follow)
 			return;
 
-		Data.hashtag = Data.hashtag.toLowerCase();
-		getDriver().get(Data.HASHTAG_URL + Data.hashtag);
-		sleep(3);
+		_gotoHashTagPage();
 
 		System.out.println("#" + Data.hashtag + ", " + Data.noOfPhotos + " photos, Wait time between " + Data.timeMin + " and "
 				+ Data.timeMax + " seconds");
@@ -116,16 +121,30 @@ public class HomePage extends SuperPage {
 				sleep(getRandomTime(Data.timeMin, Data.timeMax));
 			}
 
-			WebElement rightArrow = getRightNavArrow();
-			if (rightArrow != null) {
-				rightArrow.click();
-			} else {
-				System.out.println("Right Arrow Not Found, Retrying Hashtag");
-				_performOnHashTag(like, comment, follow, counter);
-				return;
-			}
+			boolean clickedNext = _clickNext();
+			if (!clickedNext) {
+                System.out.println("Right Arrow Not Found, Retrying Hashtag");
+                _performOnHashTag(like, comment, follow, counter);
+                return;
+            }
 		}
 	}
+
+	private void _gotoHashTagPage() {
+        Data.hashtag = Data.hashtag.toLowerCase();
+        getDriver().get(Data.HASHTAG_URL + Data.hashtag);
+        sleep(3);
+    }
+
+	private boolean _clickNext() {
+        WebElement rightArrow = getRightNavArrow();
+        if (rightArrow != null) {
+            rightArrow.click();
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 	private void _like(WebElement likeButton) {
 		likeButton.click();
@@ -133,7 +152,7 @@ public class HomePage extends SuperPage {
 	}
 
 	private void _follow(Profile profile) {
-		if (profile.getNoOfFollowers() > Data.maxFollowersRequiredToFollow)
+		if (profile == null || profile.getNoOfFollowers() > Data.maxFollowersRequiredToFollow)
 			return;
 		getFollowButton().click();
 		System.out.println("Followed");
