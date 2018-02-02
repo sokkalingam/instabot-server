@@ -3,10 +3,8 @@ package instagram.app;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import instagram.pages.ProfilePage;
-import org.openqa.selenium.Cookie;
+import instagram.factory.DriverFactory;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 import instagram.data.Data;
 import instagram.pages.HomePage;
@@ -26,15 +24,16 @@ public class App {
 		Data.timeMax = 20; // Maximum time to wait between actions
         Data.maxNoOfProfilesToUnfollow = 10; // Max no of profiles to unfollow
 		Data.minFollowersRequiredToNotUnfollow = 100; // User for unFollowing
-		Data.maxFollowersRequiredToFollow = 100; // used for following
-        Data.noOfMostRecentPhotos = 20; // No of most recent photos to like
+		Data.maxFollowersRequiredToFollow = 1000; // used for following
         Data.noOfTimesToLoop = 20; // No of times to loop to like the most recent photos
+        Data.spamLikeCount = 3;
 		Data.sessionId = "SESSION_ID_FROM_APPLICATION_COOKIE_INSTAGRAM"; // session id for logging in
         // Comment will be picked randomly from the list
 		Data.comments = Arrays.asList(
 					"so cute...",
-                    "what a pic...",
-                    "this is so awesome..."
+                    "such a cutie...",
+                    "omg so cute...",
+                    "awwww... so cute..."
 				);
 		// Profile names mentioned in the list will not be unFollowed
 		Data.protectedProfiles = new HashSet<>(Arrays.asList(
@@ -44,22 +43,20 @@ public class App {
 		/**
 		 * END OF DATA SETUP
 		 */
-		
-		System.setProperty(Data.DRIVER_PROPERTY_NAME, Data.DRIVER_PROPERTY_VALUE);
-		WebDriver driver = new ChromeDriver();
-		driver.get(Data.BASE_URL);
-		driver.manage().addCookie(new Cookie("sessionid", Data.sessionId));
+
+		WebDriver driver = DriverFactory.getLoggedInDriver();
 
 		HomePage homePage = new HomePage(driver);
-		homePage.likeNewsFeed();
-		homePage.likeHashtag();
-		homePage.commentHashTag();
-		homePage.likeAndCommentHashTag();
-		homePage.likeAndFollowHashTag();
-		homePage.likeCommentFollowHashTag();
-		
-		ProfilePage profilePage = new ProfilePage(driver, Data.username);
-		profilePage.unfollow();
+//		homePage.likeNewsFeed();
+//		homePage.likeHashtag();
+//		homePage.commentHashTag();
+//		homePage.likeAndCommentHashTag();
+//		homePage.likeAndFollowHashTag();
+//		homePage.likeCommentFollowHashTag();
+//        homePage.likeInLoop();
+		homePage.spamLike();
+//		ProfilePage profilePage = new ProfilePage(driver, "eatsumieat");
+//		profilePage.massLike(20);
 		
 	}
 }

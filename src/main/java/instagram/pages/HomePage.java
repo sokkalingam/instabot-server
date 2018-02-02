@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import instagram.factory.DriverFactory;
+import instagram.model.Action;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -44,35 +46,56 @@ public class HomePage extends SuperPage {
 	}
 
 	public void likeHashtag() {
-		_performOnHashTag(true, false, false, 0);
+	    Action action = new Action();
+	    action.like = true;
+	    _performOnHashTag(action);
 	}
 
 	public void commentHashTag() {
-		_performOnHashTag(false, true, false, 0);
+        Action action = new Action();
+        action.comment = true;
+        _performOnHashTag(action);
 	}
 
 	public void likeAndCommentHashTag() {
-		_performOnHashTag(true, true, false, 0);
+        Action action = new Action();
+        action.like = true;
+        action.comment = true;
+        _performOnHashTag(action);
 	}
 
 	public void likeAndFollowHashTag() {
-		_performOnHashTag(true, false, true, 0);
+        Action action = new Action();
+        action.like = true;
+        action.follow = true;
+        _performOnHashTag(action);
 	}
 
 	public void likeCommentFollowHashTag() {
-		_performOnHashTag(true, true, true, 0);
+        Action action = new Action();
+        action.like = true;
+        action.comment = true;
+        action.follow = true;
+        _performOnHashTag(action);
 	}
 
 	public void likeInLoop() {
 	    for (int i = 0; i < Data.noOfTimesToLoop; i++) {
             System.out.println("Loop #" + i);
-            _performOnHashTag(true, false, false, 0);
+            likeHashtag();
         }
     }
 
-	private void _performOnHashTag(boolean like, boolean comment, boolean follow, int counter) {
+    public void spamLike() {
+        Action action = new Action();
+        action.spamLike = true;
+        _performOnHashTag(action);
 
-		if (!like && !comment && !follow)
+    }
+
+	private void _performOnHashTag(Action action) {
+
+		if (!action.like && !action.comment && !action.follow && !action.spamLike)
 			return;
 
 		_gotoHashTagPage();
@@ -85,65 +108,66 @@ public class HomePage extends SuperPage {
 		int indexOfFirstMostRecentPhoto = 9;
 		photos.get(indexOfFirstMostRecentPhoto).click();
 
-		while (counter < Data.noOfPhotos) {
+		while (action.counter < Data.noOfPhotos) {
 
 			if (isPageNotFound()) {
-				_performOnHashTag(like, comment, follow, counter);
+				_performOnHashTag(action);
 				return;
 			}
 
 			String profileName = getProfileName();
 
-			counter++;
-			System.out.println("\n" + counter + ") " + profileName);
+            action.counter++;
+			System.out.println("\n" + action.counter + ") " + profileName);
 			Profile currentProfile = HttpCall.getProfile(profileName);
 			System.out.println("Am I following? - " + _alreadyFollowing());
 
-			if (like && !_alreadyLiked()) {
+			if (action.like && !isAlreadyLiked()) {
 				_like(getLikeButton());
 			} else {
-				like = false;
+                action.like = false;
 			}
 
-			if (comment && !_alreadyCommented(Data.username)) {
+			if (action.comment && !_alreadyCommented(Data.username)) {
 				_comment(alreadyVisited, profileName, _getRandomComment());
 			} else {
-				comment = false;
+                action.comment = false;
 			}
 
-			if (follow && !_alreadyFollowing()) {
+			if (action.follow && !_alreadyFollowing()) {
 				_follow(currentProfile);
 			} else {
-				follow = false;
+                action.follow = false;
 			}
 
-			if (like || comment || follow) {
+			if (action.spamLike && currentProfile.getNoOfFollowers() < Data.maxFollowersRequiredToFollow) {
+			    _spamLike(profileName);
+            }
+
+			if (action.like || action.comment || action.follow) {
 				sleep(getRandomTime(Data.timeMin, Data.timeMax));
 			}
 
-			boolean clickedNext = _clickNext();
+			boolean clickedNext = clickNext();
 			if (!clickedNext) {
                 System.out.println("Right Arrow Not Found, Retrying Hashtag");
-                _performOnHashTag(like, comment, follow, counter);
+                _performOnHashTag(action);
                 return;
             }
 		}
 	}
 
+	private void _spamLike(String profileName) {
+        WebDriver driver = DriverFactory.getLoggedInDriver();
+        ProfilePage profilePage = new ProfilePage(driver, profileName);
+        profilePage.massLike(Data.spamLikeCount);
+        driver.quit();
+    }
+
 	private void _gotoHashTagPage() {
         Data.hashtag = Data.hashtag.toLowerCase();
         getDriver().get(Data.HASHTAG_URL + Data.hashtag);
         sleep(3);
-    }
-
-	private boolean _clickNext() {
-        WebElement rightArrow = getRightNavArrow();
-        if (rightArrow != null) {
-            rightArrow.click();
-            return true;
-        } else {
-            return false;
-        }
     }
 
 	private void _like(WebElement likeButton) {
@@ -173,10 +197,6 @@ public class HomePage extends SuperPage {
 	private String _getRandomComment() {
 		int index = ThreadLocalRandom.current().nextInt(0, Data.comments.size());
 		return Data.comments.get(index);
-	}
-
-	private boolean _alreadyLiked() {
-		return getLikeButton() == null;
 	}
 
 	private boolean _alreadyFollowing() {

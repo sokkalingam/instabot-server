@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import instagram.data.Data;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -109,6 +110,10 @@ public class SuperPage {
 		return likeButton;
 	}
 
+	protected boolean isAlreadyLiked() {
+		return getLikeButton() == null;
+	}
+
 	protected WebElement getRightNavArrow() {
 		return getElement(rightArrowCss);
 	}
@@ -163,6 +168,20 @@ public class SuperPage {
 			e.printStackTrace();
 		}
 	}
+
+    protected void randomSleep() {
+        sleep(getRandomTime(Data.timeMin, Data.timeMax));
+    }
+
+    protected boolean clickNext() {
+        WebElement rightArrow = getRightNavArrow();
+        if (rightArrow != null) {
+            rightArrow.click();
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 	protected WebElement getFollowButton() {
 		WebElement button = getElement("button");
