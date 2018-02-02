@@ -178,5 +178,17 @@ public class SuperPage {
 		WebElement button = getElement("button");
 		return button != null && button.getText().equals("Follow");
 	}
+	
+	public boolean isUnfollowButtonVisible() {
+		WebElement button = getElement("button");
+		return button != null && button.getText().equals("Following");
+	}
+	
+	public WebElement getUnfollowButton() {
+		WebElement button = getElement("button");
+		if (button != null && button.getText().equals("Following"))
+			return button;
+		return null;
+	}
 
 }

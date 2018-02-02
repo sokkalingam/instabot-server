@@ -133,7 +133,7 @@ public class HomePage extends SuperPage {
 	}
 	
 	public void follow(Profile profile) {
-		if (profile.getFollowers() > Data.maxFollowers)
+		if (profile.getNoOfFollowers() > Data.maxFollowers)
 			return;
 		getFollowButton().click();
 		System.out.println("Followed");
