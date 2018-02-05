@@ -3,10 +3,14 @@ package instagram.pages;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 
 import instagram.factory.DriverFactory;
 import instagram.model.Action;
+import instagram.utils.ThreadUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -43,6 +47,11 @@ public class HomePage extends SuperPage {
 			sleep(getRandomTime(Data.timeMin, Data.timeMax));
 			likeButtons = getLikeButtons();
 		}
+	}
+
+	public void unfollow() {
+		ProfilePage profilePage = new ProfilePage(getDriver(), Data.username);
+		profilePage.unfollow();
 	}
 
 	public void likeHashtag() {
@@ -90,7 +99,6 @@ public class HomePage extends SuperPage {
         Action action = new Action();
         action.spamLike = true;
         _performOnHashTag(action);
-
     }
 
 	private void _performOnHashTag(Action action) {
@@ -140,7 +148,9 @@ public class HomePage extends SuperPage {
                 action.follow = false;
 			}
 
-			if (action.spamLike && currentProfile.getNoOfFollowers() < Data.maxFollowersRequiredToFollow) {
+			if (action.spamLike
+                    && currentProfile.getNoOfFollowers() < Data.maxFollowersRequiredToFollow
+                    && _hasHashTag()) {
 			    _spamLike(profileName);
             }
 
@@ -155,13 +165,20 @@ public class HomePage extends SuperPage {
                 return;
             }
 		}
+
+		ThreadUtils.shutdown();
+		ThreadUtils.awaitTermination();
 	}
 
 	private void _spamLike(String profileName) {
-        WebDriver driver = DriverFactory.getLoggedInDriver();
-        ProfilePage profilePage = new ProfilePage(driver, profileName);
-        profilePage.massLike(Data.spamLikeCount);
-        driver.quit();
+        ThreadUtils.getExecutorService().execute(
+                new Thread(() -> {
+                    WebDriver driver = DriverFactory.getLoggedInDriver();
+                    ProfilePage profilePage = new ProfilePage(driver, profileName);
+                    profilePage.massLike(Data.spamLikeCount);
+                    driver.quit();
+                })
+        );
     }
 
 	private void _gotoHashTagPage() {
@@ -172,7 +189,7 @@ public class HomePage extends SuperPage {
 
 	private void _like(WebElement likeButton) {
 		likeButton.click();
-		System.out.println("Liked ");
+		System.out.println("Liked");
 	}
 
 	private void _follow(Profile profile) {
@@ -206,5 +223,9 @@ public class HomePage extends SuperPage {
 	private boolean _alreadyCommented(String accountName) {
 		return getCommentsAsText().contains(accountName);
 	}
+
+	private boolean _hasHashTag() {
+	    return getCommentsAsText().contains(Data.hashtag);
+    }
 
 }

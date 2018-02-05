@@ -80,7 +80,7 @@ public class ProfilePage extends SuperPage {
                 return;
             if (!isAlreadyLiked()) {
                 getLikeButton().click();
-                System.out.println((++counter) + " Liked");
+                System.out.println((++counter) + ") Liked " + getProfileName());
                 randomSleep();
             }
             clickNext();

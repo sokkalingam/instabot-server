@@ -131,7 +131,8 @@ public class SuperPage {
 	}
 
 	protected String getCommentsAsText() {
-		return getElement("._b0tqa").getText();
+		String text = getElement("._b0tqa").getText();
+		return text;
 	}
 
 	protected void comment(WebElement element, Object text) {
