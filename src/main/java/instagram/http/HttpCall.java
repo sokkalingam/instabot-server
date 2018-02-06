@@ -7,17 +7,17 @@ import instagram.model.Profile;
 import instagram.utils.ProfileUtils;
 
 public class HttpCall {
-	
+
 	public static String getResponse(String url) {
 		RestTemplate restTemplate = new RestTemplate();
 		String response = restTemplate.getForObject(url, String.class);
 		return response;
 	}
-	
+
 	public static String getProfileAsText(String profileName) {
 		return getResponse(Data.BASE_URL + "/" + profileName);
 	}
-	
+
 	public static Profile getProfile(String profileName) {
 		Profile profile = new Profile();
 		profile.setName(profileName);

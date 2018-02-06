@@ -8,36 +8,38 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import instagram.data.Data;
+
 public class LoginPage extends SuperPage {
-	
+
 	@FindBy(linkText = "Log in")
 	private WebElement loginLink;
-	
+
 	@FindBy(name = "username")
 	private WebElement usernameInput;
-	
+
 	@FindBy(name = "password")
 	private WebElement passwordInput;
-	
+
 	@FindBy(tagName = "button")
 	private WebElement loginButton;
-	
+
 	public LoginPage(WebDriver driver) {
 		super(driver);
 	}
-	
-	public HomePage login(String username, String password) throws InterruptedException {
+
+	public HomePage login() {
 		sleep(3);
 		PageFactory.initElements(getDriver(), this);
 		loginLink.click();
 		PageFactory.initElements(getDriver(), this);
 		new WebDriverWait(getDriver(), 5).until(ExpectedConditions.presenceOfElementLocated(By.name("username")));
-		fillIn(username, password);
+		_fillIn(Data.username, Data.password);
 		sleep(5);
 		return new HomePage(getDriver());
 	}
-	
-	public void fillIn(String username, String password) throws InterruptedException {
+
+	private void _fillIn(String username, String password) {
 		usernameInput.sendKeys(username);
 		passwordInput.sendKeys(password);
 		loginButton.click();
