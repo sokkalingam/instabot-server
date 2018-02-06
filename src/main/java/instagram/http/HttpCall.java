@@ -7,17 +7,23 @@ import instagram.model.Profile;
 import instagram.utils.ProfileUtils;
 
 public class HttpCall {
-	
+
 	public static String getResponse(String url) {
 		RestTemplate restTemplate = new RestTemplate();
-		String response = restTemplate.getForObject(url, String.class);
+		String response = "";
+		try {
+			response = restTemplate.getForObject(url, String.class);
+		} catch (Exception e) {
+			System.out.println("Error fetching data for URL: " + url);
+			return "";
+		}
 		return response;
 	}
-	
+
 	public static String getProfileAsText(String profileName) {
 		return getResponse(Data.BASE_URL + "/" + profileName);
 	}
-	
+
 	public static Profile getProfile(String profileName) {
 		Profile profile = new Profile();
 		profile.setName(profileName);
@@ -31,6 +37,7 @@ public class HttpCall {
 			profile.setPosts(ProfileUtils.getNumberCount(posts));
 		} catch (Exception e) {
 			System.out.println("Exception in getting profile details");
+			return null;
 		}
 		System.out.println(profile);
 		return profile;
