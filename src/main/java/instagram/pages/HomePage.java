@@ -38,14 +38,17 @@ public class HomePage extends SuperPage {
 
 		List<WebElement> likeButtons = getLikeButtons();
 		int count = 0;
-		while (likeButtons.size() != 0) {
+		while (likeButtons.size() > 0) {
 			if (count >= Data.noOfPhotos)
 				return;
-			WebElement likeButton = likeButtons.get(0);
-			likeButton.click();
-			System.out.println((++count) + ") " + getProfileName(getParentElement("article", likeButton)));
-			sleep(getRandomTime(Data.timeMin, Data.timeMax));
+			for (WebElement likeButton : likeButtons) {
+                count++;
+                System.out.println((count) + ") " + getProfileName(getParentElement("article", likeButton)));
+			    _like(likeButton);
+				randomSleep();
+			}
 			likeButtons = getLikeButtons();
+            System.out.println("Found more posts to Like: " + likeButtons.size());
 		}
 	}
 
@@ -149,8 +152,7 @@ public class HomePage extends SuperPage {
 			}
 
 			if (action.spamLike
-                    && currentProfile.getNoOfFollowers() < Data.maxFollowersRequiredToFollow
-                    && _hasHashTag()) {
+                    && currentProfile.getNoOfFollowers() < Data.maxFollowersRequiredToFollow) {
 			    _spamLike(profileName);
             }
 
@@ -179,6 +181,7 @@ public class HomePage extends SuperPage {
                     driver.quit();
                 })
         );
+        randomSleep();
     }
 
 	private void _gotoHashTagPage() {
@@ -188,6 +191,7 @@ public class HomePage extends SuperPage {
     }
 
 	private void _like(WebElement likeButton) {
+		moveToElement(likeButton);
 		likeButton.click();
 		System.out.println("Liked");
 	}
@@ -223,9 +227,4 @@ public class HomePage extends SuperPage {
 	private boolean _alreadyCommented(String accountName) {
 		return getCommentsAsText().contains(accountName);
 	}
-
-	private boolean _hasHashTag() {
-	    return getCommentsAsText().contains(Data.hashtag);
-    }
-
 }

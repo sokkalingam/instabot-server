@@ -131,8 +131,11 @@ public class SuperPage {
 	}
 
 	protected String getCommentsAsText() {
-		String text = getElement("._b0tqa").getText();
-		return text;
+		return getText(getElement("._b0tqa"));
+	}
+
+	protected String getText(WebElement element) {
+		return element != null ? element.getText() : "";
 	}
 
 	protected void comment(WebElement element, Object text) {
@@ -140,6 +143,12 @@ public class SuperPage {
 		actions.moveToElement(element);
 		actions.click();
 		actions.sendKeys(text.toString());
+		actions.build().perform();
+	}
+
+	protected void moveToElement(WebElement element) {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(element);
 		actions.build().perform();
 	}
 
@@ -206,6 +215,10 @@ public class SuperPage {
 		if (button != null && button.getText().equals("Following"))
 			return button;
 		return null;
+	}
+
+	protected boolean hasHashTag() {
+		return getCommentsAsText().contains(Data.hashtag);
 	}
 
 }

@@ -76,12 +76,12 @@ public class ProfilePage extends SuperPage {
         List<WebElement> photos = getDriver().findElements(By.cssSelector("a[href*='taken-by=" + this.profileName + "']"));
         photos.get(0).click();
         for (int i = 0; i < photos.size(); i++) {
-            if (i >= count)
+            if (counter > count)
                 return;
-            if (!isAlreadyLiked()) {
+            if (!isAlreadyLiked() && hasHashTag()) {
                 getLikeButton().click();
                 System.out.println((++counter) + ") Liked " + getProfileName());
-                randomSleep();
+                sleep(3);
             }
             clickNext();
         }

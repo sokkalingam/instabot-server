@@ -10,7 +10,6 @@ public class DriverFactory {
     public static WebDriver getLoggedInDriver() {
         System.setProperty(Data.DRIVER_PROPERTY_NAME, Data.DRIVER_PROPERTY_VALUE);
         WebDriver driver = new ChromeDriver();
-        driver.manage().window().maximize();
         NavigationUtils.setup(driver);
         return driver;
     }
