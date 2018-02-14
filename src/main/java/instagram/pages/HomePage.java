@@ -39,9 +39,9 @@ public class HomePage extends SuperPage {
 		List<WebElement> likeButtons = getLikeButtons();
 		int count = 0;
 		while (likeButtons.size() > 0) {
-			if (count >= Data.noOfPhotos)
-				return;
 			for (WebElement likeButton : likeButtons) {
+                if (count >= Data.noOfPhotos)
+                    return;
                 count++;
                 System.out.println((count) + ") " + getProfileName(getParentElement("article", likeButton)));
 			    _like(likeButton);
