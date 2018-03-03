@@ -25,16 +25,7 @@ public class ProfilePage extends SuperPage {
 		WebElement followingButton = getElement("a[href='/" + profileName + "/following/']");
 		followingButton.click();
 		WebElement followingPopup = getElement("._gs38e");
-		long previousVal = -1;
-		while (true) {
-			long currentVal = (long) executeJs("return arguments[0].scrollTop = arguments[0].scrollHeight;",
-					followingPopup);
-			if (currentVal == previousVal)
-				return;
-			previousVal = currentVal;
-			sleep(1);
-		}
-
+		scrollDownTillEnd(followingPopup);
 	}
 
 	private List<String> _getFollowingList() {
@@ -78,8 +69,8 @@ public class ProfilePage extends SuperPage {
         for (int i = 0; i < photos.size(); i++) {
             if (counter > count)
                 return;
-            if (!isAlreadyLiked() && hasHashTag()) {
-                getLikeButton().click();
+            if (hasHashTag()) {
+                like(getLikeButton());
                 System.out.println((++counter) + ") Liked " + getProfileName());
                 sleep(3);
             }

@@ -31,6 +31,14 @@ public class HomePage extends SuperPage {
 		alreadyVisited = new HashSet<String>();
 	}
 
+	public void likeNewsFeedInLoop() {
+		for (int i = 1; i <= Data.noOfTimesToLoop; i++) {
+			System.out.println("Loop #" + i);
+			likeNewsFeed();
+			refreshPage();
+		}
+	}
+
 	public void likeNewsFeed() {
 		sleep(3);
 		System.out.println("\nLiking Photos on your profile, " + Data.noOfPhotos + " photos, Wait time between " + Data.timeMin + " and "
@@ -44,9 +52,10 @@ public class HomePage extends SuperPage {
                     return;
                 count++;
                 System.out.println((count) + ") " + getProfileName(getParentElement("article", likeButton)));
-			    _like(likeButton);
+			    like(likeButton);
 				randomSleep();
 			}
+			scrollDown(1000);
 			likeButtons = getLikeButtons();
             System.out.println("Found more posts to Like: " + likeButtons.size());
 		}
@@ -92,7 +101,7 @@ public class HomePage extends SuperPage {
 	}
 
 	public void likeInLoop() {
-	    for (int i = 0; i < Data.noOfTimesToLoop; i++) {
+	    for (int i = 1; i <= Data.noOfTimesToLoop; i++) {
             System.out.println("Loop #" + i);
             likeHashtag();
         }
@@ -126,38 +135,39 @@ public class HomePage extends SuperPage {
 				return;
 			}
 
+			boolean wait = false;
 			String profileName = getProfileName();
 
-            action.counter++;
-			System.out.println("\n" + action.counter + ") " + profileName);
+			System.out.println("\n" + (action.counter + 1) + ") " + profileName);
 			Profile currentProfile = HttpCall.getProfile(profileName);
 			System.out.println("Am I following? - " + _alreadyFollowing());
 
-			if (action.like && !isAlreadyLiked()) {
-				_like(getLikeButton());
-			} else {
-                action.like = false;
-			}
+			if (currentProfile.getNoOfFollowers() <= Data.maxFollowersRequiredToFollow){
+				if (action.like && !isAlreadyLiked()) {
+					like(getLikeButton());
+					wait = true;
+				}
 
-			if (action.comment && !_alreadyCommented(Data.username)) {
-				_comment(alreadyVisited, profileName, _getRandomComment());
-			} else {
-                action.comment = false;
-			}
+				if (action.comment && _isProfileNotVisited(profileName) && !_alreadyCommented(Data.username)) {
+					_comment(_getRandomComment());
+					wait = true;
+				}
 
-			if (action.follow && !_alreadyFollowing()) {
-				_follow(currentProfile);
-			} else {
-                action.follow = false;
-			}
+				if (action.follow && !_alreadyFollowing()) {
+					_follow(currentProfile);
+					wait = true;
+				}
 
-			if (action.spamLike
-                    && currentProfile.getNoOfFollowers() < Data.maxFollowersRequiredToFollow) {
-			    _spamLike(profileName);
-            }
+				if (action.spamLike
+						&& currentProfile.getNoOfFollowing() > currentProfile.getNoOfFollowers()) {
+					_spamLike(profileName);
+					wait = true;
+				}
 
-			if (action.like || action.comment || action.follow) {
-				sleep(getRandomTime(Data.timeMin, Data.timeMax));
+				if (wait) {
+					sleep(getRandomTime(Data.timeMin, Data.timeMax));
+					action.counter++;
+				}
 			}
 
 			boolean clickedNext = clickNext();
@@ -190,12 +200,6 @@ public class HomePage extends SuperPage {
         sleep(3);
     }
 
-	private void _like(WebElement likeButton) {
-		moveToElement(likeButton);
-		likeButton.click();
-		System.out.println("Liked");
-	}
-
 	private void _follow(Profile profile) {
 		if (profile == null || profile.getNoOfFollowers() > Data.maxFollowersRequiredToFollow)
 			return;
@@ -203,15 +207,22 @@ public class HomePage extends SuperPage {
 		System.out.println("Followed");
 	}
 
-	private void _comment(Set<String> alreadyVisited, String profileName, String comment) {
-		if (getCommentInput() == null || this.alreadyVisited.contains(profileName))
+	private boolean _isProfileNotVisited(String profileName) {
+		if (this.alreadyVisited.contains(profileName))
+			return false;
+		else
+			this.alreadyVisited.add(profileName);
+		return true;
+	}
+
+	private void _comment(String comment) {
+		if (getCommentInput() == null)
 			return;
 		comment(getCommentInput(), comment);
 		sleep(2);
 		comment(getCommentInput(), Keys.ENTER);
 		sleep(2);
 		waitForCommentToLoad();
-		alreadyVisited.add(profileName);
 		System.out.println("Commented: " + comment);
 	}
 

@@ -37,7 +37,7 @@ public class HttpCall {
 			profile.setPosts(ProfileUtils.getNumberCount(posts));
 		} catch (Exception e) {
 			System.out.println("Exception in getting profile details");
-			return null;
+			return profile;
 		}
 		System.out.println(profile);
 		return profile;

@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import instagram.data.Data;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -110,6 +107,31 @@ public class SuperPage {
 		return likeButton;
 	}
 
+	protected void scrollDownTillEnd(WebElement element) {
+		long previousVal = -1;
+		while (true) {
+			long currentVal = (long) executeJs("return arguments[0].scrollTop = arguments[0].scrollHeight;",
+					element);
+			if (currentVal == previousVal)
+				return;
+			previousVal = currentVal;
+			sleep(1);
+		}
+	}
+
+	protected void scrollDown(int yOffset) {
+		System.out.println("Scrolling Down by " + yOffset);
+		executeJs("window.scrollBy(0, "+ yOffset +")");
+	}
+
+	protected void like(WebElement element) {
+		if (element == null)
+			return;
+        moveToElement(element);
+		element.click();
+		System.out.println("Liked");
+	}
+
 	protected boolean isAlreadyLiked() {
 		return getLikeButton() == null;
 	}
@@ -119,7 +141,7 @@ public class SuperPage {
 	}
 
 	protected String getProfileName() {
-		return getElement(profileNameCss).getText();
+		return getText(getElement(profileNameCss));
 	}
 
 	protected String getProfileName(WebElement element) {
@@ -135,7 +157,12 @@ public class SuperPage {
 	}
 
 	protected String getText(WebElement element) {
-		return element != null ? element.getText() : "";
+		try {
+			return element != null ? element.getText() : "";
+		} catch (StaleElementReferenceException e) {
+			System.out.println("Stale Element, " + e);
+			return "";
+		}
 	}
 
 	protected void comment(WebElement element, Object text) {
@@ -173,6 +200,7 @@ public class SuperPage {
 
 	protected void sleep(int seconds) {
 		try {
+            System.out.println("Sleeping for " + seconds + "s...");
 			Thread.sleep(seconds * 1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -219,6 +247,11 @@ public class SuperPage {
 
 	protected boolean hasHashTag() {
 		return getCommentsAsText().contains(Data.hashtag);
+	}
+
+	protected void refreshPage() {
+		getDriver().navigate().refresh();
+		System.out.println("Page Refreshed");
 	}
 
 }
