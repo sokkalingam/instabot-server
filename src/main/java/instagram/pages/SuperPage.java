@@ -24,6 +24,10 @@ public class SuperPage {
 	private static final int WAIT_TIME = 10;
 
 	protected SuperPage(WebDriver driver) {
+		setDriver(driver);
+	}
+
+	protected void setDriver(WebDriver driver) {
 		this.driver = driver;
 		this.wait = new WebDriverWait(driver, WAIT_TIME);
 		PageFactory.initElements(driver, this);
