@@ -58,14 +58,22 @@ public class ProfilePage extends SuperPage {
 
 	public void unfollow() {
 		for (String name : _getFollowingList()) {
+		    if (Data.maxNoOfProfilesToUnfollow-- <= 0)
+		        return;
 			Profile profile = HttpCall.getProfile(name);
+			if (profile == null)
+				continue;
 			ProfilePage thisProfile = new ProfilePage(getDriver(), name);
-			if (!thisProfile._isFollowingMe() && profile.getNoOfFollowers() < 1000)
+			if (!thisProfile._isFollowingMe() && profile.getNoOfFollowers() < Data.minFollowersRequiredToNotUnfollow)
 				unfollow(name);
 		}
 	}
 
 	private void unfollow(String profileName) {
+		if (Data.protectedProfiles.contains(profileName)) {
+			System.out.println("Cannot unfollow protected profile " + profileName);
+			return;
+		}
 		getUnfollowButton().click();
 		sleep(getRandomTime(15, 25));
 		System.out.println("Unfollowed: " + profileName);

@@ -1,7 +1,9 @@
 package instagram.data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Data {
 
@@ -17,11 +19,14 @@ public class Data {
 	public static int noOfPhotos;
 	public static int timeMin;
 	public static int timeMax;
-	public static int maxFollowers;
-	public static int minFollowers;
+	public static int maxFollowersRequiredToFollow;
+	public static int minFollowersRequiredToNotUnfollow;
 	public static String sessionId;
 
-	public static List<String> allowedProfiles = new ArrayList<>();
+	public static Set<String> protectedProfiles = new HashSet<>();
 	public static List<String> comments = new ArrayList<>();
 
+	public static int noOfMostRecentPhotos;
+	public static int noOfTimesToLoop;
+	public static int maxNoOfProfilesToUnfollow;
 }
