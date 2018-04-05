@@ -14,9 +14,18 @@ import instagram.model.Profile;
 public class ProfilePage extends SuperPage {
 
 	private String profileName;
+	private Data data;
 
-	public ProfilePage(WebDriver driver, String profileName) {
+	public ProfilePage(WebDriver driver, Data data) {
 		super(driver);
+		this.data = data;
+		getDriver().get(Data.BASE_URL + "/" + profileName);
+		this.profileName = data.username;
+	}
+
+	public ProfilePage(WebDriver driver, Data data, String profileName) {
+		super(driver);
+		this.data = data;
 		getDriver().get(Data.BASE_URL + "/" + profileName);
 		this.profileName = profileName;
 	}
@@ -50,13 +59,13 @@ public class ProfilePage extends SuperPage {
 
 	public void unfollow() {
 		for (String name : _getFollowingList()) {
-		    if (Data.maxNoOfProfilesToUnfollow-- < 0)
+		    if (data.maxNoOfProfilesToUnfollow-- < 0)
 		        return;
 			Profile profile = HttpCall.getProfile(name);
 			if (profile == null)
 				continue;
-			ProfilePage thisProfile = new ProfilePage(getDriver(), name);
-			if (!thisProfile._isFollowingMe() && profile.getNoOfFollowers() < Data.minFollowersRequiredToNotUnfollow)
+			ProfilePage thisProfile = new ProfilePage(getDriver(), data, name);
+			if (!thisProfile._isFollowingMe() && profile.getNoOfFollowers() < data.minFollowersRequiredToNotUnfollow)
 				unfollow(name);
 		}
 	}
@@ -69,7 +78,7 @@ public class ProfilePage extends SuperPage {
         for (int i = 0; i < photos.size(); i++) {
             if (counter > count)
                 return;
-            if (hasHashTag()) {
+            if (hasHashTag(data.hashtag)) {
                 like(getLikeButton());
                 System.out.println((++counter) + ") Liked " + getProfileName());
                 sleep(3);
@@ -79,7 +88,7 @@ public class ProfilePage extends SuperPage {
 	}
 
 	private void unfollow(String profileName) {
-		if (Data.protectedProfiles.contains(profileName)) {
+		if (data.protectedProfiles.contains(profileName)) {
 			System.out.println("Cannot unfollow protected profile " + profileName);
 			return;
 		}

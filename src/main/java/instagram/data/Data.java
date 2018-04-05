@@ -13,21 +13,21 @@ public class Data {
 	public final static String DRIVER_PROPERTY_NAME = "webdriver.chrome.driver";
 	public final static String DRIVER_PROPERTY_VALUE = "src/main/resources/chromedriver.exe";
 	
-	public static String username;
-	public static String password;
-	public static String hashtag;
-	public static int noOfPhotos;
-	public static int spamLikeCount;
-	public static int timeMin;
-	public static int timeMax;
-	public static int maxFollowersRequiredToFollow;
-	public static int minFollowersRequiredToNotUnfollow;
-	public static String sessionId;
+	public String username;
+	public String password;
+	public String hashtag;
+	public int noOfPhotos;
+	public int spamLikeCount;
+	public int timeMin;
+	public int timeMax;
+	public int maxFollowersRequiredToFollow;
+	public int minFollowersRequiredToNotUnfollow;
+	public String sessionId;
 
-	public static Set<String> protectedProfiles = new HashSet<>();
-	public static List<String> comments = new ArrayList<>();
+	public Set<String> protectedProfiles = new HashSet<>();
+	public List<String> comments = new ArrayList<>();
 
-	public static int noOfMostRecentPhotos;
-	public static int noOfTimesToLoop;
-	public static int maxNoOfProfilesToUnfollow;
+	public int noOfMostRecentPhotos;
+	public int noOfTimesToLoop;
+	public int maxNoOfProfilesToUnfollow;
 }

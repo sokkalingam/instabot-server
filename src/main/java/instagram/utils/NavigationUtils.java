@@ -6,9 +6,9 @@ import org.openqa.selenium.WebDriver;
 
 public class NavigationUtils {
 
-    public static void setup(WebDriver driver) {
+    public static void setup(WebDriver driver, String sessionId) {
         driver.get(Data.BASE_URL);
-        driver.manage().addCookie(new Cookie("sessionid", Data.sessionId));
+        driver.manage().addCookie(new Cookie("sessionid", sessionId));
         driver.navigate().refresh();
     }
 
