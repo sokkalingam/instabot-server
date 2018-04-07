@@ -1,4 +1,4 @@
-package instagram.data;
+package instagram.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,12 +7,6 @@ import java.util.Set;
 
 public class Data {
 
-	public final static String BASE_URL = "https://www.instagram.com";
-	public final static String HASHTAG_URL = BASE_URL + "/explore/tags/";
-	
-	public final static String DRIVER_PROPERTY_NAME = "webdriver.chrome.driver";
-	public final static String DRIVER_PROPERTY_VALUE = "src/main/resources/chromedriver.exe";
-	
 	public String username;
 	public String password;
 	public String hashtag;

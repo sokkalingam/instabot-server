@@ -1,8 +1,9 @@
 package instagram.http;
 
+import instagram.model.ConfigData;
 import org.springframework.web.client.RestTemplate;
 
-import instagram.data.Data;
+import instagram.model.Data;
 import instagram.model.Profile;
 import instagram.utils.ProfileUtils;
 
@@ -21,7 +22,7 @@ public class HttpCall {
 	}
 
 	public static String getProfileAsText(String profileName) {
-		return getResponse(Data.BASE_URL + "/" + profileName);
+		return getResponse(ConfigData.BASE_URL + "/" + profileName);
 	}
 
 	public static Profile getProfile(String profileName) {

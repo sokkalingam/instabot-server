@@ -8,7 +8,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import instagram.data.Data;
+import instagram.model.Data;
 
 public class LoginPage extends SuperPage {
 

@@ -1,6 +1,7 @@
 package instagram.factory;
 
-import instagram.data.Data;
+import instagram.model.Data;
+import instagram.model.ConfigData;
 import instagram.utils.NavigationUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -9,7 +10,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class DriverFactory {
 
     public static WebDriver getLoggedInDriver(Data data) {
-        System.setProperty(data.DRIVER_PROPERTY_NAME, data.DRIVER_PROPERTY_VALUE);
+        System.setProperty(ConfigData.DRIVER_PROPERTY_NAME, ConfigData.DRIVER_PROPERTY_VALUE);
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--headless");
         WebDriver driver = new ChromeDriver(chromeOptions);
