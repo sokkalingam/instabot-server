@@ -24,4 +24,25 @@ public class Data {
 	public int noOfMostRecentPhotos;
 	public int noOfTimesToLoop;
 	public int maxNoOfProfilesToUnfollow;
+
+	@Override
+	public String toString() {
+		return "Data{" +
+				"username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", hashtag='" + hashtag + '\'' +
+				", noOfPhotos=" + noOfPhotos +
+				", spamLikeCount=" + spamLikeCount +
+				", timeMin=" + timeMin +
+				", timeMax=" + timeMax +
+				", maxFollowersRequiredToFollow=" + maxFollowersRequiredToFollow +
+				", minFollowersRequiredToNotUnfollow=" + minFollowersRequiredToNotUnfollow +
+				", sessionId='" + sessionId + '\'' +
+				", protectedProfiles=" + protectedProfiles +
+				", comments=" + comments +
+				", noOfMostRecentPhotos=" + noOfMostRecentPhotos +
+				", noOfTimesToLoop=" + noOfTimesToLoop +
+				", maxNoOfProfilesToUnfollow=" + maxNoOfProfilesToUnfollow +
+				'}';
+	}
 }
