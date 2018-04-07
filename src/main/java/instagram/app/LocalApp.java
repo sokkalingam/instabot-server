@@ -10,7 +10,7 @@ import org.openqa.selenium.WebDriver;
 import instagram.model.Data;
 import instagram.pages.HomePage;
 
-public class App {
+public class LocalApp {
 	
 	public static void main(String[] args) {
 		

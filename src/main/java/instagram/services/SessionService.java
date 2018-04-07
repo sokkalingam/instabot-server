@@ -1,4 +1,4 @@
-package instagram.webservice.services;
+package instagram.services;
 
 import org.springframework.stereotype.Service;
 

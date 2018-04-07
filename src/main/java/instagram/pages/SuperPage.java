@@ -97,6 +97,9 @@ public class SuperPage {
 	}
 
 	protected int getRandomTime(int low, int high) {
+		if (low < 0) low = 0;
+		if (low > high) return low;
+		if (low == high) high++;
 		return ThreadLocalRandom.current().nextInt(low, high);
 	}
 
