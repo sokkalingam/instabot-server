@@ -27,7 +27,7 @@ public class HashtagController {
             try {
                 WebDriver driver = DriverFactory.getLoggedInDriver(data);
                 HomePage homePage = new HomePage(driver, data);
-                homePage.likeInLoop();
+                homePage.likeHashtagInLoop();
                 driver.quit();
             } catch (Throwable e) {
                 System.err.println(e.toString());

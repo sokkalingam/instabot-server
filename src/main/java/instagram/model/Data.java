@@ -9,12 +9,12 @@ public class Data {
 
 	public String username;
 	public String password;
-	public String hashtag;
+	public List<String> hashtags = new ArrayList<>();
 	public int noOfPhotos;
 	public int spamLikeCount;
 	public int timeMin;
 	public int timeMax;
-	public int maxFollowersRequiredToFollow;
+	public int maxNoOfFollowers;
 	public int minFollowersRequiredToNotUnfollow;
 	public String sessionId;
 
@@ -30,12 +30,12 @@ public class Data {
 		return "Data{" +
 				"username='" + username + '\'' +
 				", password='" + password + '\'' +
-				", hashtag='" + hashtag + '\'' +
+				", hashtag='" + hashtags + '\'' +
 				", noOfPhotos=" + noOfPhotos +
 				", spamLikeCount=" + spamLikeCount +
 				", timeMin=" + timeMin +
 				", timeMax=" + timeMax +
-				", maxFollowersRequiredToFollow=" + maxFollowersRequiredToFollow +
+				", maxFollowersRequiredToFollow=" + maxNoOfFollowers +
 				", minFollowersRequiredToNotUnfollow=" + minFollowersRequiredToNotUnfollow +
 				", sessionId='" + sessionId + '\'' +
 				", protectedProfiles=" + protectedProfiles +
