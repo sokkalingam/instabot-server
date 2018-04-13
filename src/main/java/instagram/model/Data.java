@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Data {
 
@@ -24,6 +25,10 @@ public class Data {
 	public int noOfMostRecentPhotos;
 	public int noOfTimesToLoop;
 	public int maxNoOfProfilesToUnfollow;
+
+	public void setHashtags(List<String> list) {
+		hashtags = list.stream().map(item -> item.toLowerCase()).collect(Collectors.toList());
+	}
 
 	@Override
 	public String toString() {

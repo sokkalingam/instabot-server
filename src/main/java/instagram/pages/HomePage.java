@@ -116,6 +116,8 @@ public class HomePage extends SuperPage {
 
 		_gotoHashTagPage(hashtag);
 
+		sleep(3);
+
 		System.out.println("\n#" + hashtag + ", " + data.noOfPhotos + " photos, Wait time between " + data.timeMin + " and "
 				+ data.timeMax + " seconds");
 		scrollDown(1000);
@@ -180,7 +182,7 @@ public class HomePage extends SuperPage {
 	}
 
 	private void _spamLike(String profileName, String hashtag) {
-        ThreadUtils.getExecutorService().execute(
+        ThreadUtils.execute(
                 new Thread(() -> {
                     WebDriver driver = DriverFactory.getLoggedInDriver(data);
                     ProfilePage profilePage = new ProfilePage(driver, data, profileName);
