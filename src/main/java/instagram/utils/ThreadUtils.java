@@ -31,6 +31,6 @@ public class ThreadUtils {
     }
 
     public static void execute(Thread thread) {
-        executorService.execute(thread);
+        getExecutorService().execute(thread);
     }
 }
