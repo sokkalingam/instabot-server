@@ -1,3 +1,5 @@
+package welcome;
+
 import instagram.WebApp;
 import org.hamcrest.Matchers;
 import org.junit.runner.RunWith;
