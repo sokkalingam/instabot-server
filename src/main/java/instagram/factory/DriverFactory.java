@@ -22,6 +22,7 @@ public class DriverFactory {
 //                        .build();
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--headless");
+        chromeOptions.addArguments("--no-sandbox");
         WebDriver driver = new ChromeDriver(chromeOptions);
         NavigationUtils.setup(driver, data.sessionId);
         return driver;
