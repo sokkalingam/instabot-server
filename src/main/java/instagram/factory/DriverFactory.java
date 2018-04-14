@@ -10,19 +10,17 @@ import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class DriverFactory {
 
     public static WebDriver getLoggedInDriver(Data data) {
         System.setProperty(ConfigData.DRIVER_PROPERTY_NAME, ConfigData.DRIVER_PROPERTY_VALUE);
-//        ChromeDriverService chromeDriverService = new ChromeDriverService.Builder()
-//                        .usingDriverExecutable(new File(ConfigData.DRIVER_PROPERTY_VALUE))
-//                        .usingAnyFreePort()
-//                        .withEnvironment(ImmutableMap.of("DISPLAY",":20"))
-//                        .build();
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--headless");
-        chromeOptions.addArguments("--no-sandbox");
+        chromeOptions.addArguments(Arrays.asList(
+           "--headless",
+           "--no-sandbox"
+        ));
         WebDriver driver = new ChromeDriver(chromeOptions);
         NavigationUtils.setup(driver, data.sessionId);
         return driver;
