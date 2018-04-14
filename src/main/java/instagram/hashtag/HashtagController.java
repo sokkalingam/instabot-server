@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/hashtag")
 public class HashtagController {
@@ -21,7 +23,7 @@ public class HashtagController {
     private HashtagService hashtagService;
 
     @RequestMapping(value = "/looplike", method = RequestMethod.POST)
-    public String likeHashTagInLoop(@RequestBody Data data) {
+    public String likeHashTagInLoop(@Valid @RequestBody Data data) {
         if (sessionService.isSessionActive(data.sessionId))
             return Messages.REQUEST_EXISTS.toString();
         ThreadUtils.execute(new Thread(() -> {
@@ -32,7 +34,7 @@ public class HashtagController {
     }
 
     @RequestMapping(value = "/like", method = RequestMethod.POST)
-    public String likeHashTag(@RequestBody Data data) {
+    public String likeHashTag(@Valid @RequestBody Data data) {
         if (sessionService.isSessionActive(data.sessionId))
             return Messages.REQUEST_EXISTS.toString();
         ThreadUtils.execute(new Thread(() -> {
