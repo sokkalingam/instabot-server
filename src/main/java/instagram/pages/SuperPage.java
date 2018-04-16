@@ -261,4 +261,14 @@ public class SuperPage {
 		System.out.println("Page Refreshed");
 	}
 
+	protected String getUsername() {
+		WebElement element = getElement("a.coreSpriteDesktopNavProfile");
+		// href = http://www.instagram.com/username/
+		String href = element.getAttribute("href");
+		String[] strArr = href.split("/");
+		String username = strArr[3];
+		System.out.println("Username: " + username);
+		return username;
+	}
+
 }

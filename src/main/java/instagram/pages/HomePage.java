@@ -1,33 +1,32 @@
 package instagram.pages;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-
 import instagram.factory.DriverFactory;
-import instagram.model.Action;
-import instagram.model.ConfigData;
+import instagram.http.HttpCall;
+import instagram.model.*;
+import instagram.report.ReportManager;
 import instagram.utils.ThreadUtils;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
-import instagram.model.Data;
-import instagram.http.HttpCall;
-import instagram.model.Profile;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class HomePage extends SuperPage {
 
 	private Set<String> alreadyVisited;
 	private Data data;
+	private Report report;
 
 	public HomePage(WebDriver driver, Data data) {
 		super(driver);
 		this.data = data;
 		PageFactory.initElements(driver, this);
-		alreadyVisited = new HashSet<String>();
+		alreadyVisited = new HashSet<>();
+		this.data.username = getUsername();
 	}
 
 	public void likeNewsFeedInLoop() {
@@ -97,10 +96,13 @@ public class HomePage extends SuperPage {
 	}
 
 	public void likeHashtagInLoop() {
+		report = ReportManager.getNewReport(data.username);
 	    for (int i = 1; i <= data.noOfTimesToLoop; i++) {
             System.out.println("Loop #" + i);
+            report.incrementCurrentLoop();
             likeHashtag();
         }
+		ReportManager.clearReport(data.username);
     }
 
     public void spamLike() {
@@ -142,11 +144,13 @@ public class HomePage extends SuperPage {
 			if (currentProfile.getNoOfFollowers() <= data.maxNoOfFollowers){
 				if (action.like && !isAlreadyLiked()) {
 					like(getLikeButton());
+					report.incrementPhotoLiked();
 					wait = true;
 				}
 
 				if (action.comment && _isProfileNotVisited(profileName) && !_alreadyCommented(data.username)) {
 					_comment(_getRandomComment());
+					report.incrementPhotosCommented();
 					wait = true;
 				}
 

@@ -15,8 +15,7 @@ public class DriverFactory {
         System.setProperty("webdriver.chrome.driver", ConfigPropertyUtils.getDriverPath());
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments(Arrays.asList(
-           "--headless",
-           "--no-sandbox"
+           "--headless"
         ));
         WebDriver driver = new ChromeDriver(chromeOptions);
         NavigationUtils.setup(driver, data.sessionId);
