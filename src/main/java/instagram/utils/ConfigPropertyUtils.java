@@ -1,9 +1,7 @@
 package instagram.utils;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 public class ConfigPropertyUtils {
 
@@ -19,5 +17,9 @@ public class ConfigPropertyUtils {
 
     public static String getDriverPath() {
         return properties.getProperty("driver_location");
+    }
+
+    public static String get(String property) {
+        return properties.getProperty(property);
     }
 }
