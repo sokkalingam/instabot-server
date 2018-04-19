@@ -3,6 +3,7 @@ package instagram.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -24,16 +25,7 @@ public class ProfilePage extends SuperPage {
 		WebElement followingButton = getElement("a[href='/" + profileName + "/following/']");
 		followingButton.click();
 		WebElement followingPopup = getElement("._gs38e");
-		long previousVal = -1;
-		while (true) {
-			long currentVal = (long) executeJs("return arguments[0].scrollTop = arguments[0].scrollHeight;",
-					followingPopup);
-			if (currentVal == previousVal)
-				return;
-			previousVal = currentVal;
-			sleep(1);
-		}
-
+		scrollDownTillEnd(followingPopup);
 	}
 
 	private List<String> _getFollowingList() {
@@ -58,7 +50,7 @@ public class ProfilePage extends SuperPage {
 
 	public void unfollow() {
 		for (String name : _getFollowingList()) {
-		    if (Data.maxNoOfProfilesToUnfollow-- <= 0)
+		    if (Data.maxNoOfProfilesToUnfollow-- < 0)
 		        return;
 			Profile profile = HttpCall.getProfile(name);
 			if (profile == null)
@@ -67,6 +59,23 @@ public class ProfilePage extends SuperPage {
 			if (!thisProfile._isFollowingMe() && profile.getNoOfFollowers() < Data.minFollowersRequiredToNotUnfollow)
 				unfollow(name);
 		}
+	}
+
+	public void massLike(int count) {
+	    sleep(3);
+	    int counter = 0;
+        List<WebElement> photos = getDriver().findElements(By.cssSelector("a[href*='taken-by=" + this.profileName + "']"));
+        photos.get(0).click();
+        for (int i = 0; i < photos.size(); i++) {
+            if (counter > count)
+                return;
+            if (hasHashTag()) {
+                like(getLikeButton());
+                System.out.println((++counter) + ") Liked " + getProfileName());
+                sleep(3);
+            }
+            clickNext();
+        }
 	}
 
 	private void unfollow(String profileName) {

@@ -4,10 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import instagram.data.Data;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -109,12 +107,41 @@ public class SuperPage {
 		return likeButton;
 	}
 
+	protected void scrollDownTillEnd(WebElement element) {
+		long previousVal = -1;
+		while (true) {
+			long currentVal = (long) executeJs("return arguments[0].scrollTop = arguments[0].scrollHeight;",
+					element);
+			if (currentVal == previousVal)
+				return;
+			previousVal = currentVal;
+			sleep(1);
+		}
+	}
+
+	protected void scrollDown(int yOffset) {
+		System.out.println("Scrolling Down by " + yOffset);
+		executeJs("window.scrollBy(0, "+ yOffset +")");
+	}
+
+	protected void like(WebElement element) {
+		if (element == null)
+			return;
+        moveToElement(element);
+		element.click();
+		System.out.println("Liked");
+	}
+
+	protected boolean isAlreadyLiked() {
+		return getLikeButton() == null;
+	}
+
 	protected WebElement getRightNavArrow() {
 		return getElement(rightArrowCss);
 	}
 
 	protected String getProfileName() {
-		return getElement(profileNameCss).getText();
+		return getText(getElement(profileNameCss));
 	}
 
 	protected String getProfileName(WebElement element) {
@@ -126,7 +153,16 @@ public class SuperPage {
 	}
 
 	protected String getCommentsAsText() {
-		return getElement("._b0tqa").getText();
+		return getText(getElement("._b0tqa"));
+	}
+
+	protected String getText(WebElement element) {
+		try {
+			return element != null ? element.getText() : "";
+		} catch (StaleElementReferenceException e) {
+			System.out.println("Stale Element, " + e);
+			return "";
+		}
 	}
 
 	protected void comment(WebElement element, Object text) {
@@ -134,6 +170,12 @@ public class SuperPage {
 		actions.moveToElement(element);
 		actions.click();
 		actions.sendKeys(text.toString());
+		actions.build().perform();
+	}
+
+	protected void moveToElement(WebElement element) {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(element);
 		actions.build().perform();
 	}
 
@@ -158,11 +200,26 @@ public class SuperPage {
 
 	protected void sleep(int seconds) {
 		try {
+            System.out.println("Sleeping for " + seconds + "s...");
 			Thread.sleep(seconds * 1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
+
+    protected void randomSleep() {
+        sleep(getRandomTime(Data.timeMin, Data.timeMax));
+    }
+
+    protected boolean clickNext() {
+        WebElement rightArrow = getRightNavArrow();
+        if (rightArrow != null) {
+            rightArrow.click();
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 	protected WebElement getFollowButton() {
 		WebElement button = getElement("button");
@@ -186,6 +243,15 @@ public class SuperPage {
 		if (button != null && button.getText().equals("Following"))
 			return button;
 		return null;
+	}
+
+	protected boolean hasHashTag() {
+		return getCommentsAsText().contains(Data.hashtag);
+	}
+
+	protected void refreshPage() {
+		getDriver().navigate().refresh();
+		System.out.println("Page Refreshed");
 	}
 
 }

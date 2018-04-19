@@ -17,6 +17,7 @@ public class Data {
 	public static String password;
 	public static String hashtag;
 	public static int noOfPhotos;
+	public static int spamLikeCount;
 	public static int timeMin;
 	public static int timeMax;
 	public static int maxFollowersRequiredToFollow;
