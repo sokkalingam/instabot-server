@@ -1,7 +1,8 @@
 package session;
 
 import instagram.WebApp;
-import instagram.services.SessionService;
+import instagram.model.Data;
+import instagram.sessions.SessionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,12 @@ public class SessionServiceTest {
 
     @Test
     public void sessionTest() {
-        String session1 = "sessionOne";
-        assertThat(sessionService.isSessionActive(session1), equalTo(false));
-        assertThat(sessionService.isSessionActive(session1), equalTo(true));
-        sessionService.removeSession(session1);
-        assertThat(sessionService.isSessionActive(session1), equalTo(false));
+        Data data = new Data();
+        data.sessionId = "sessionOne";
+        assertThat(sessionService.isSessionActive(data.sessionId), equalTo(false));
+        assertThat(sessionService.addNewSession(data, null), equalTo(true));
+        assertThat(sessionService.isSessionActive(data.sessionId), equalTo(true));
+        sessionService.removeSession(data.sessionId);
+        assertThat(sessionService.isSessionActive(data.sessionId), equalTo(false));
     }
 }
