@@ -65,7 +65,10 @@ public class HomePage extends SuperPage {
 	}
 
 	public void likeHashtag() {
-	    data.hashtags.forEach(hashtag -> _performOnHashTag(Action.getLikeAction(), hashtag));
+	    data.hashtags.forEach(hashtag -> {
+	    	report.setCurrentHashtag(hashtag);
+			_performOnHashTag(Action.getLikeAction(), hashtag);
+		});
 	}
 
 	public void commentHashTag() {

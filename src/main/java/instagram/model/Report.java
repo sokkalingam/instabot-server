@@ -1,10 +1,18 @@
 package instagram.model;
 
+import java.time.LocalDateTime;
+
 public class Report {
 
+    private LocalDateTime startTime;
     private int currentLoop;
     private int photosLiked;
     private int photosCommented;
+    private String currentHashtag;
+
+    public Report() {
+        this.startTime = LocalDateTime.now();
+    }
 
     public void incrementPhotoLiked() {
         photosLiked++;
@@ -40,6 +48,22 @@ public class Report {
 
     public void setPhotosCommented(int photosCommented) {
         this.photosCommented = photosCommented;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getCurrentHashtag() {
+        return currentHashtag;
+    }
+
+    public void setCurrentHashtag(String currentHashtag) {
+        this.currentHashtag = currentHashtag;
     }
 
     @Override
