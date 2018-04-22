@@ -1,9 +1,11 @@
 package instagram.hashtag;
 
+import instagram.factory.DriverFactory;
 import instagram.messages.Messages;
 import instagram.model.Data;
-import instagram.services.SessionService;
+import instagram.sessions.SessionService;
 import instagram.utils.ThreadUtils;
+import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +29,9 @@ public class HashtagController {
         if (sessionService.isSessionActive(data.sessionId))
             return Messages.REQUEST_EXISTS.toString();
         ThreadUtils.execute(new Thread(() -> {
-            hashtagService.likeHashTagInLoop(data);
+            WebDriver driver = DriverFactory.getLoggedInDriver(data);
+            sessionService.addNewSession(data, driver);
+            hashtagService.likeHashTagInLoop(data, driver);
             sessionService.removeSession(data.sessionId);
         }));
         return Messages.REQUEST_ACCEPTED.toString();
@@ -38,7 +42,9 @@ public class HashtagController {
         if (sessionService.isSessionActive(data.sessionId))
             return Messages.REQUEST_EXISTS.toString();
         ThreadUtils.execute(new Thread(() -> {
-            hashtagService.likeHashTag(data);
+            WebDriver driver = DriverFactory.getLoggedInDriver(data);
+            sessionService.addNewSession(data, driver);
+            hashtagService.likeHashTag(data, driver);
             sessionService.removeSession(data.sessionId);
         }));
         return Messages.REQUEST_ACCEPTED.toString();

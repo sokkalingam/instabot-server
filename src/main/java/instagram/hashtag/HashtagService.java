@@ -9,15 +9,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class HashtagService {
 
-    public void likeHashTagInLoop(Data data) {
-        WebDriver driver = DriverFactory.getLoggedInDriver(data);
+    public void likeHashTagInLoop(Data data, WebDriver driver) {
         HomePage homePage = new HomePage(driver, data);
         homePage.likeHashtagInLoop();
         driver.quit();
     }
 
-    public void likeHashTag(Data data) {
-        WebDriver driver = DriverFactory.getLoggedInDriver(data);
+    public void likeHashTag(Data data, WebDriver driver) {
         HomePage homePage = new HomePage(driver, data);
         homePage.likeHashtag();
         driver.quit();
