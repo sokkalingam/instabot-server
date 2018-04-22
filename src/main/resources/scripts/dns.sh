@@ -2,7 +2,8 @@
 
 while true
     do
-        echo "Building Localtunnel DNS for $1"
+        echo "Building Localtunnel DNS"
         lt --subdomain $1 --port $2
-        sleep 2
+        sleep 5
     done
+	
