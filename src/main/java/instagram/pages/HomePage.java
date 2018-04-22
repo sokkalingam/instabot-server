@@ -128,6 +128,8 @@ public class HomePage extends SuperPage {
 
 		// Skip top posts and open the most recent
 		int indexOfFirstMostRecentPhoto = 9;
+		if (photos.size() <= indexOfFirstMostRecentPhoto)
+			return;
 		photos.get(indexOfFirstMostRecentPhoto).click();
 
 		while (action.counter < data.noOfPhotos) {
