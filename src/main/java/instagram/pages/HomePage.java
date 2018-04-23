@@ -122,7 +122,8 @@ public class HomePage extends SuperPage {
 
 		System.out.println("#" + Data.hashtag + ", " + Data.noOfPhotos + " photos, Wait time between " + Data.timeMin + " and "
 				+ Data.timeMax + " seconds");
-		List<WebElement> photos = getDriver().findElements(By.cssSelector("a[href*='tagged=" + Data.hashtag + "']"));
+		scrollDown(1000);
+		List<WebElement> photos = getElements("a[href*='tagged=" + Data.hashtag + "']");
 
 		// Skip top posts and open the most recent
 		int indexOfFirstMostRecentPhoto = 9;
@@ -191,7 +192,6 @@ public class HomePage extends SuperPage {
                     driver.quit();
                 })
         );
-        randomSleep();
     }
 
 	private void _gotoHashTagPage() {
