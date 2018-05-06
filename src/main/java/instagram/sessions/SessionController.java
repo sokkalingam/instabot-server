@@ -1,8 +1,10 @@
 package instagram.sessions;
 
+import instagram.messages.Messages;
 import instagram.model.Data;
 import instagram.model.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,8 +25,9 @@ public class SessionController {
     }
 
     @RequestMapping(value = "/kill", method = RequestMethod.POST)
-    public boolean killSession(@RequestBody Data data) {
-        return data != null && sessionService.killSession(data.sessionId);
+    public String killSession(@RequestBody String sessionId) {
+        boolean res = !StringUtils.isEmpty(sessionId) && sessionService.killSession(sessionId);
+        return res ? Messages.SESSION_ABORTED.toString() : Messages.SESSION_DOES_NOT_EXIST.toString();
     }
 
 }
