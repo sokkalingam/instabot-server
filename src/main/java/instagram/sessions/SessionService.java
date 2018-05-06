@@ -24,22 +24,19 @@ public class SessionService {
         return activeSessions.containsKey(sessionId);
     }
 
-    public synchronized boolean addNewSession(Data data, WebDriver driver) {
-        if (!isSessionActive(data.sessionId)) {
-            Session session = new Session();
-            session.setData(data);
-            session.setDriver(driver);
-            activeSessions.put(data.sessionId, session);
-            return true;
-        }
-        return false;
+    public synchronized Session addNewSession(Data data, WebDriver driver) {
+        Session session = new Session();
+        session.setData(data);
+        session.setDriver(driver);
+        activeSessions.put(data.sessionId, session);
+        return session;
     }
 
     public synchronized void removeSession(String sessionId) {
         activeSessions.remove(sessionId);
     }
 
-    public Map<String, Session> getActiveSessions() {
+    public synchronized Map<String, Session> getActiveSessions() {
         return activeSessions;
     }
 

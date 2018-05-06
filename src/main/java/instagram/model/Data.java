@@ -29,11 +29,11 @@ public class Data {
 	@NotNull @Min(value = 0, message = "Wait time cannot be negative")
 	public Integer timeMax;
 
-	@NotNull @Min(value = 0, message = "Max number of followers cannot be negative")
+	@NotNull @Min(value = 0, message = "Max number of followers should be a positive number")
 	public Integer maxNoOfFollowers;
 	public Integer minFollowersRequiredToNotUnfollow;
 
-	@NotEmpty
+	@NotEmpty (message = "Session Id cannot be empty")
 	public String sessionId;
 
 	public Set<String> protectedProfiles = new HashSet<>();

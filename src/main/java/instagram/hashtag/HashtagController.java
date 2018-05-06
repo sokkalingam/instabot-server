@@ -3,6 +3,7 @@ package instagram.hashtag;
 import instagram.factory.DriverFactory;
 import instagram.messages.Messages;
 import instagram.model.Data;
+import instagram.model.Session;
 import instagram.sessions.SessionService;
 import instagram.utils.ThreadUtils;
 import org.openqa.selenium.WebDriver;
@@ -28,9 +29,10 @@ public class HashtagController {
     public String likeHashTagInLoop(@Valid @RequestBody Data data) {
         if (sessionService.isSessionActive(data.sessionId))
             return Messages.REQUEST_EXISTS.toString();
+        Session session = sessionService.addNewSession(data, null);
         ThreadUtils.execute(new Thread(() -> {
             WebDriver driver = DriverFactory.getLoggedInDriver(data);
-            sessionService.addNewSession(data, driver);
+            session.setDriver(driver);
             hashtagService.likeHashTagInLoop(data, driver);
             sessionService.removeSession(data.sessionId);
         }));
