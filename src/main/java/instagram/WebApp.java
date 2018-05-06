@@ -11,13 +11,14 @@ public class WebApp {
 
     public static void main(String[] args) {
         SpringApplication.run(WebApp.class, args);
-        _runDns();
+        _runDns("instabot", 80); // UI
+        _runDns("api-instabot", 8080); // Server
     }
 
-    private static void _runDns() {
+    private static void _runDns(String domainName, int port) {
         try {
             new ProcessBuilder(new String[]{ConfigPropertyUtils.get("git_path"),
-                    "./src/main/resources/scripts/dns.sh", "instabot", "80"}).start();
+                    "./src/main/resources/scripts/dns.sh", domainName, String.valueOf(port)}).start();
         } catch (IOException e) {
             System.out.println("DNS could not be started\n" + e);
         }
