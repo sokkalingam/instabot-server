@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @RestController
+@RequestMapping("/api")
 public class WelcomeController {
 
     private static Map<String, Queue<Integer>> map = Collections.synchronizedMap(new LinkedHashMap<>());
@@ -19,7 +20,7 @@ public class WelcomeController {
 
     private static ExecutorService executor = Executors.newFixedThreadPool(5);
 
-    @RequestMapping("/")
+    @RequestMapping("/welcome")
     public String welcome() {
         return "Welcome!";
     }
