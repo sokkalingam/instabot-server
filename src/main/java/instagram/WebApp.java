@@ -11,8 +11,7 @@ public class WebApp {
 
     public static void main(String[] args) {
         SpringApplication.run(WebApp.class, args);
-        _runDns("instabot", 80); // UI
-        _runDns("api-instabot", 8080); // Server
+        _runDns("instabot", 8080);
     }
 
     private static void _runDns(String domainName, int port) {
