@@ -27,7 +27,7 @@ do
 		wait $pid
 	else
 		# kill all node.exe processes if the URL does not match what we want
-		taskkill -F -IM node.exe
+		killall -9 node
 	fi
 	sleep 10
 
