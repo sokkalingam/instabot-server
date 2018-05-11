@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 public class ReportService {
 
     public Report getReport(String username) {
-        return ReportManager.getReport(username);
+        return ReportManager.getReport(username.toLowerCase());
     }
 
 }
