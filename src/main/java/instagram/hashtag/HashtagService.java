@@ -1,6 +1,5 @@
 package instagram.hashtag;
 
-import instagram.factory.DriverFactory;
 import instagram.model.Data;
 import instagram.pages.HomePage;
 import org.openqa.selenium.WebDriver;
@@ -9,9 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class HashtagService {
 
-    public void likeHashTagInLoop(Data data, WebDriver driver) {
+    public void likeAndCommentHashTagInLoop(Data data, WebDriver driver) {
         HomePage homePage = new HomePage(driver, data);
-        homePage.likeHashtagInLoop();
+        homePage.likeAndCommentHashtagInLoop();
         driver.quit();
     }
 

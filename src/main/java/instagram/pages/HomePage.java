@@ -76,7 +76,10 @@ public class HomePage extends SuperPage {
 	}
 
 	public void likeAndCommentHashTag() {
-		data.hashtags.forEach(hashtag -> _performOnHashTag(Action.getLikeCommentAction(), hashtag));
+		data.hashtags.forEach(hashtag -> {
+			report.setCurrentHashtag(hashtag);
+			_performOnHashTag(Action.getLikeCommentAction(), hashtag);
+		});
 	}
 
 	public void likeAndFollowHashTag() {
@@ -98,12 +101,12 @@ public class HomePage extends SuperPage {
 		});
 	}
 
-	public void likeHashtagInLoop() {
+	public void likeAndCommentHashtagInLoop() {
 		report = ReportManager.getNewReport(data.username);
 	    for (int i = 1; i <= data.noOfTimesToLoop; i++) {
             System.out.println("Loop #" + i);
             report.incrementCurrentLoop();
-            likeHashtag();
+            likeAndCommentHashTag();
         }
 		ReportManager.clearReport(data.username);
     }
@@ -157,7 +160,8 @@ public class HomePage extends SuperPage {
 					wait = true;
 				}
 
-				if (action.comment && _isProfileNotVisited(profileName) && !_alreadyCommented(data.username)) {
+				if (action.comment && data.comments.size() > 0
+						&& _isProfileNotVisited(profileName) && !_alreadyCommented(data.username)) {
 					_comment(_getRandomComment());
 					report.incrementPhotosCommented();
 					wait = true;

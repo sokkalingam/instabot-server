@@ -29,7 +29,7 @@ public class LocalApp {
 		HomePage homePage = new HomePage(driver, data);
 
 //		homePage.likeHashtag();
-		homePage.likeHashtagInLoop();
+		homePage.likeAndCommentHashtagInLoop();
 
 //		homePage.likeNewsFeed();
 //		homePage.likeNewsFeedInLoop();

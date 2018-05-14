@@ -25,15 +25,15 @@ public class HashtagController {
     @Autowired
     private HashtagService hashtagService;
 
-    @RequestMapping(value = "/looplike", method = RequestMethod.POST)
-    public String likeHashTagInLoop(@Valid @RequestBody Data data) {
+    @RequestMapping(value = "/loop", method = RequestMethod.POST)
+    public String likeAndCommentHashtagInLoop(@Valid @RequestBody Data data) {
         if (sessionService.isSessionActive(data.sessionId))
             return Messages.REQUEST_EXISTS.toString();
         Session session = sessionService.addNewSession(data, null);
         ThreadUtils.execute(new Thread(() -> {
             WebDriver driver = DriverFactory.getLoggedInDriver(data);
             session.setDriver(driver);
-            hashtagService.likeHashTagInLoop(data, driver);
+            hashtagService.likeAndCommentHashTagInLoop(data, driver);
             sessionService.removeSession(data.sessionId);
         }));
         return Messages.REQUEST_ACCEPTED.toString();
