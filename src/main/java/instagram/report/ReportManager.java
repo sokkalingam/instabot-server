@@ -22,4 +22,6 @@ public class ReportManager {
     public synchronized static void clearReport(String username) {
         map.remove(username);
     }
+
+    public synchronized static Map<String, Report> getAll() { return map; }
 }
