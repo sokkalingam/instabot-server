@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class HashtagService {
 
-    public void likeAndCommentHashTagInLoop(Data data, WebDriver driver) {
+    public void performActionsInLoop(Data data, WebDriver driver) {
         HomePage homePage = new HomePage(driver, data);
-        homePage.likeAndCommentHashtagInLoop();
+        if (data.commentOnly)
+            homePage.commentHashtagInLoop();
+        else
+            homePage.likeAndCommentHashtagInLoop();
         driver.quit();
     }
 

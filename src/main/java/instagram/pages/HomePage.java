@@ -72,7 +72,20 @@ public class HomePage extends SuperPage {
 	}
 
 	public void commentHashTag() {
-		data.hashtags.forEach(hashtag -> _performOnHashTag(Action.getCommentAction(), hashtag));
+		data.hashtags.forEach(hashtag -> {
+			report.setCurrentHashtag(hashtag);
+			_performOnHashTag(Action.getCommentAction(), hashtag);
+		});
+	}
+
+	public void commentHashtagInLoop() {
+		report = ReportManager.getNewReport(data.username);
+		for (int i = 1; i <= data.noOfTimesToLoop; i++) {
+			System.out.println("Loop #" + i);
+			report.incrementCurrentLoop();
+			commentHashTag();
+		}
+		ReportManager.clearReport(data.username);
 	}
 
 	public void likeAndCommentHashTag() {

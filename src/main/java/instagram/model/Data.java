@@ -47,6 +47,8 @@ public class Data {
 		hashtags = list.stream().map(item -> item.toLowerCase()).collect(Collectors.toList());
 	}
 
+	public boolean commentOnly;
+
 	@Override
 	public String toString() {
 		return "Data{" +
