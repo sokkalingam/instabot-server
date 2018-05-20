@@ -24,8 +24,11 @@ public class LoginPage extends SuperPage {
 	@FindBy(tagName = "button")
 	private WebElement loginButton;
 
-	public LoginPage(WebDriver driver) {
+	private Data data;
+
+	public LoginPage(WebDriver driver, Data data) {
 		super(driver);
+		this.data = data;
 	}
 
 	public HomePage login() {
@@ -34,9 +37,9 @@ public class LoginPage extends SuperPage {
 		loginLink.click();
 		PageFactory.initElements(getDriver(), this);
 		new WebDriverWait(getDriver(), 5).until(ExpectedConditions.presenceOfElementLocated(By.name("username")));
-		_fillIn(Data.username, Data.password);
+		_fillIn(data.username, data.password);
 		sleep(5);
-		return new HomePage(getDriver());
+		return new HomePage(getDriver(), data);
 	}
 
 	private void _fillIn(String username, String password) {

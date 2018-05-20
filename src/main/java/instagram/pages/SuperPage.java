@@ -211,8 +211,8 @@ public class SuperPage {
 		}
 	}
 
-    protected void randomSleep() {
-        sleep(getRandomTime(Data.timeMin, Data.timeMax));
+    protected void randomSleep(Data data) {
+        sleep(getRandomTime(data.timeMin, data.timeMax));
     }
 
     protected boolean clickNext() {
@@ -249,8 +249,8 @@ public class SuperPage {
 		return null;
 	}
 
-	protected boolean hasHashTag() {
-		return getCommentsAsText().contains(Data.hashtag);
+	protected boolean hasHashTag(String hashtag) {
+		return getCommentsAsText().contains(hashtag);
 	}
 
 	protected void refreshPage() {

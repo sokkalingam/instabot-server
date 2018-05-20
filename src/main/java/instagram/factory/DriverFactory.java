@@ -7,10 +7,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 public class DriverFactory {
 
-    public static WebDriver getLoggedInDriver() {
-        System.setProperty(Data.DRIVER_PROPERTY_NAME, Data.DRIVER_PROPERTY_VALUE);
+    public static WebDriver getLoggedInDriver(Data data) {
+        System.setProperty(data.DRIVER_PROPERTY_NAME, data.DRIVER_PROPERTY_VALUE);
         WebDriver driver = new ChromeDriver();
-        NavigationUtils.setup(driver);
+        NavigationUtils.setup(driver, data.sessionId);
         return driver;
     }
 }
