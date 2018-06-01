@@ -13,9 +13,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SuperPage {
 
-	private final String heartCss = "span.coreSpriteHeartOpen";
-	private final String rightArrowCss = ".coreSpriteRightPaginationArrow";
-	private final String profileNameCss = "._eeohz > a";
+	private final String heartCss = "span.Szr5J.ptsdu ";
+	private final String rightArrowCss = "a.HBoOv._1bdSS";
+	private final String profileNameCss = "a.FPmhX";
 	private final String errorCss = ".error-container";
 
 	private WebDriverWait wait;
@@ -262,11 +262,8 @@ public class SuperPage {
 	}
 
 	protected String getUsername() {
-		WebElement element = getElement("a.coreSpriteDesktopNavProfile");
-		// href = http://www.instagram.com/username/
-		String href = element.getAttribute("href");
-		String[] strArr = href.split("/");
-		String username = strArr[3];
+		WebElement element = getElement("a.gmFkV");
+		String username = getText(element);
 		System.out.println("Username: " + username);
 		return username;
 	}
