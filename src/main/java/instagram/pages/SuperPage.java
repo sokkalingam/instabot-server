@@ -13,10 +13,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SuperPage {
 
-	private final String heartCss = "span.Szr5J.ptsdu ";
-	private final String rightArrowCss = "a.HBoOv._1bdSS";
+	private final String heartCss = "span.coreSpriteHeartOpen";
+	private final String rightArrowCss = "a.coreSpriteRightPaginationArrow";
 	private final String profileNameCss = "a.FPmhX";
-	private final String usernameCss = "a.Szr5J.kIKUG.kQqyt";
+	private final String usernameCss = "a.coreSpriteDesktopNavProfile";
 	private final String errorCss = ".error-container";
 
 	private WebDriverWait wait;
