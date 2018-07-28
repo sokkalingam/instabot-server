@@ -3,11 +3,12 @@ package instagram.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import instagram.model.ConfigData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import instagram.data.Data;
+import instagram.model.Data;
 import instagram.http.HttpCall;
 import instagram.model.Profile;
 
@@ -19,14 +20,14 @@ public class ProfilePage extends SuperPage {
 	public ProfilePage(WebDriver driver, Data data) {
 		super(driver);
 		this.data = data;
-		getDriver().get(Data.BASE_URL + "/" + profileName);
+		getDriver().get(ConfigData.BASE_URL + "/" + profileName);
 		this.profileName = data.username;
 	}
 
 	public ProfilePage(WebDriver driver, Data data, String profileName) {
 		super(driver);
 		this.data = data;
-		getDriver().get(Data.BASE_URL + "/" + profileName);
+		getDriver().get(ConfigData.BASE_URL + "/" + profileName);
 		this.profileName = profileName;
 	}
 

@@ -3,21 +3,18 @@ package instagram.pages;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 
 import instagram.factory.DriverFactory;
 import instagram.model.Action;
+import instagram.model.ConfigData;
 import instagram.utils.ThreadUtils;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
-import instagram.data.Data;
+import instagram.model.Data;
 import instagram.http.HttpCall;
 import instagram.model.Profile;
 
@@ -198,7 +195,7 @@ public class HomePage extends SuperPage {
 
 	private void _gotoHashTagPage() {
         data.hashtag = data.hashtag.toLowerCase();
-        getDriver().get(data.HASHTAG_URL + data.hashtag);
+        getDriver().get(ConfigData.HASHTAG_URL + data.hashtag);
         sleep(3);
     }
 

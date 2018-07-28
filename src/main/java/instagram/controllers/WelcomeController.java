@@ -1,4 +1,4 @@
-package instagram.webservice.controllers;
+package instagram.controllers;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
