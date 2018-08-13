@@ -20,6 +20,7 @@ public class HashtagController {
 
     @RequestMapping(value = "/looplike", method = RequestMethod.POST)
     public String likeHashtag(@RequestBody Data data) {
+        System.out.println(data);
         if (sessionService.isSessionActive(data.sessionId))
             return "Job is already running for your session. Please wait till your current job is complete";
         new Thread(() -> {
@@ -29,7 +30,7 @@ public class HashtagController {
                 homePage.likeInLoop();
                 driver.quit();
             } catch (Throwable e) {
-                
+                System.err.println(e.toString());
             }
             sessionService.removeSession(data.sessionId);
         }).start();

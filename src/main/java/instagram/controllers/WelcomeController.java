@@ -19,7 +19,7 @@ public class WelcomeController {
 
     private static ExecutorService executor = Executors.newFixedThreadPool(5);
 
-    @RequestMapping("/welcome")
+    @RequestMapping("/")
     public String welcome() {
         return "Welcome!";
     }
