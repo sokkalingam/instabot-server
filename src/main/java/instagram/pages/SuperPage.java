@@ -13,7 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SuperPage {
 
-	private final String heartCss = "span.coreSpriteHeartOpen";
+	private final String heartCss = ".coreSpriteHeartOpen";
 	private final String rightArrowCss = "a.coreSpriteRightPaginationArrow";
 	private final String profileNameCss = "a.FPmhX";
 	private final String usernameCss = "a.coreSpriteDesktopNavProfile";

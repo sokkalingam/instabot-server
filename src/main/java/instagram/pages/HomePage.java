@@ -135,6 +135,9 @@ public class HomePage extends SuperPage {
 		if (!action.like && !action.comment && !action.follow && !action.spamLike)
 			return;
 
+		if (hashtag == null) return;
+		hashtag = hashtag.trim();
+
 		_gotoHashTagPage(hashtag);
 
 		System.out.println("\n#" + hashtag + ", " + data.noOfPhotos + " photos, Wait time between " + data.timeMin + " and "
