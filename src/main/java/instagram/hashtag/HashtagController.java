@@ -8,10 +8,12 @@ import instagram.sessions.SessionService;
 import instagram.utils.ThreadUtils;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import sun.swing.StringUIClientPropertyKey;
 
 import javax.validation.Valid;
 
@@ -31,10 +33,13 @@ public class HashtagController {
             return Messages.REQUEST_EXISTS.toString();
         Session session = sessionService.addNewSession(data, null);
         ThreadUtils.execute(new Thread(() -> {
-            WebDriver driver = DriverFactory.getLoggedInDriver(data);
-            session.setDriver(driver);
-            hashtagService.performActionsInLoop(data, driver);
-            sessionService.removeSession(data.sessionId);
+            try {
+                WebDriver driver = DriverFactory.getLoggedInDriver(data);
+                session.setDriver(driver);
+                hashtagService.performActionsInLoop(data, driver);
+            } finally {
+                sessionService.removeSession(data.sessionId);
+            }
         }));
         return Messages.REQUEST_ACCEPTED.toString();
     }
