@@ -1,7 +1,9 @@
 package instagram.report;
 
 import instagram.model.Report;
+import instagram.model.enums.JobStatus;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 

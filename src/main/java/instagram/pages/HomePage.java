@@ -3,6 +3,7 @@ package instagram.pages;
 import instagram.factory.DriverFactory;
 import instagram.http.HttpCall;
 import instagram.model.*;
+import instagram.model.enums.JobStatus;
 import instagram.report.ReportManager;
 import instagram.utils.ThreadUtils;
 import org.openqa.selenium.Keys;
@@ -85,7 +86,7 @@ public class HomePage extends SuperPage {
 			report.incrementCurrentLoop();
 			commentHashTag();
 		}
-		ReportManager.clearReport(data.username);
+		report.setJobAsCompleted();
 	}
 
 	public void likeAndCommentHashTag() {
@@ -121,7 +122,7 @@ public class HomePage extends SuperPage {
             report.incrementCurrentLoop();
             likeAndCommentHashTag();
         }
-		ReportManager.clearReport(data.username);
+	    report.setJobAsCompleted();
     }
 
     public void spamLike() {
@@ -154,6 +155,8 @@ public class HomePage extends SuperPage {
 			e.printStackTrace();
 			return;
 		}
+
+		report.setJobStatus(JobStatus.RUNNING);
 
 		while (action.counter < data.noOfPhotos) {
 
@@ -211,12 +214,12 @@ public class HomePage extends SuperPage {
 
 	private void _spamLike(String profileName, String hashtag) {
         ThreadUtils.execute(
-                new Thread(() -> {
-                    WebDriver driver = DriverFactory.getLoggedInDriver(data);
-                    ProfilePage profilePage = new ProfilePage(driver, data, profileName);
-                    profilePage.massLike(data.spamLikeCount, hashtag);
-                    driver.quit();
-                })
+				new Thread(() -> {
+					WebDriver driver = DriverFactory.getLoggedInDriver(data);
+					ProfilePage profilePage = new ProfilePage(driver, data, profileName);
+					profilePage.massLike(data.spamLikeCount, hashtag);
+					driver.quit();
+				})
         );
     }
 

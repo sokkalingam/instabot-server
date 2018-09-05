@@ -4,6 +4,7 @@ import instagram.factory.DriverFactory;
 import instagram.messages.Messages;
 import instagram.model.Data;
 import instagram.model.Session;
+import instagram.report.ReportService;
 import instagram.sessions.SessionService;
 import instagram.utils.ThreadUtils;
 import org.openqa.selenium.WebDriver;

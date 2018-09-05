@@ -1,17 +1,22 @@
 package instagram.model;
 
+import instagram.model.enums.JobStatus;
+
 import java.time.LocalDateTime;
 
 public class Report {
 
     private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private int currentLoop;
     private int photosLiked;
     private int photosCommented;
     private String currentHashtag;
+    private JobStatus jobStatus;
 
     public Report() {
         this.startTime = LocalDateTime.now();
+        this.jobStatus = JobStatus.CREATED;
     }
 
     public void incrementPhotoLiked() {
@@ -66,9 +71,46 @@ public class Report {
         this.currentHashtag = currentHashtag;
     }
 
+    public JobStatus getJobStatus() {
+        return jobStatus;
+    }
+
+    public void setJobStatus(JobStatus jobStatus) {
+        this.jobStatus = jobStatus;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setEndTimeAsNow() {
+        this.endTime = LocalDateTime.now();
+    }
+
+    public void setJobAsCompleted() {
+        this.jobStatus = JobStatus.COMPLETED;
+        setEndTimeAsNow();
+    }
+
+    public void setJobAsAborted() {
+        this.jobStatus = JobStatus.ABORTED;
+        setEndTimeAsNow();
+    }
+
     @Override
     public String toString() {
-        return "Report{" + "currentLoop=" + currentLoop + ", photosLiked=" + photosLiked + ", photosCommented="
-                        + photosCommented + '}';
+        return "Report{" +
+                "startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", currentLoop=" + currentLoop +
+                ", photosLiked=" + photosLiked +
+                ", photosCommented=" + photosCommented +
+                ", currentHashtag='" + currentHashtag + '\'' +
+                ", jobStatus=" + jobStatus +
+                '}';
     }
 }

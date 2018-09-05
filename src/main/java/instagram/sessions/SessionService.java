@@ -1,7 +1,9 @@
 package instagram.sessions;
 
 import instagram.model.Data;
+import instagram.model.Report;
 import instagram.model.Session;
+import instagram.model.enums.JobStatus;
 import instagram.report.ReportManager;
 import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Service;
@@ -48,9 +50,11 @@ public class SessionService {
             WebDriver driver = session.getDriver();
             if (driver != null)
                 driver.quit();
-            ReportManager.clearReport(session.getData().username);
+            Report report = ReportManager.getReport(session.getData().username);
+            if (report != null)
+                report.setJobAsAborted();
         }
-        activeSessions.remove(sessionId);
+        removeSession(sessionId);
         return true;
     }
 }
