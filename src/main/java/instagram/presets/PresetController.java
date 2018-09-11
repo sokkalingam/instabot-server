@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;q
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/presets")
@@ -17,6 +18,11 @@ public class PresetController {
     private PresetService presetService;
 
     private static final String PRESET_NAME = "presetName";
+
+    @RequestMapping("/list")
+    public List<PresetData> getList() {
+        return presetService.getAll();
+    }
 
     @RequestMapping("/")
     public PresetData getPresetByCookie(@CookieValue(value = PRESET_NAME, defaultValue = "") String presetName,
@@ -33,7 +39,7 @@ public class PresetController {
         return presetService.getPreset(presetName);
     }
 
-    @RequestMapping("/add")
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     public String addPreset(@Valid @RequestBody PresetData data) {
         presetService.addPreset(data);
         return data.getName() + " preset has been saved successfully!";
