@@ -11,6 +11,7 @@ public class NavigationUtils {
         driver.get(ConfigData.BASE_URL);
         driver.manage().addCookie(new Cookie("sessionid", sessionId));
         driver.navigate().refresh();
+        driver.manage().window().maximize();
     }
 
 }
