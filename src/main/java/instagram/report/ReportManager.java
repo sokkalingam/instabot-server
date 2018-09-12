@@ -12,7 +12,7 @@ public class ReportManager {
     private static Map<String, Report> map = new HashMap<>();
 
     public synchronized static Report getNewReport(String username) {
-        Report report = new Report();
+        Report report = new Report(username);
         map.put(username, report);
         return report;
     }

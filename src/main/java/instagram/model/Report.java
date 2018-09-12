@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public class Report {
 
+    private String username;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int currentLoop;
@@ -14,9 +15,18 @@ public class Report {
     private String currentHashtag;
     private JobStatus jobStatus;
 
-    public Report() {
+    public Report(String username) {
+        this.username = username;
         this.startTime = LocalDateTime.now();
         this.jobStatus = JobStatus.CREATED;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void incrementPhotoLiked() {

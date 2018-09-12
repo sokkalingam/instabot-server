@@ -25,17 +25,13 @@ public class PresetController {
     }
 
     @RequestMapping("/")
-    public PresetData getPresetByCookie(@CookieValue(value = PRESET_NAME, defaultValue = "") String presetName,
-                                HttpServletResponse response) {
-        return getPresetByName(presetName, response);
+    public PresetData getPresetByCookie(@CookieValue(value = PRESET_NAME, defaultValue = "") String presetName) {
+        return presetService.getPreset(presetName);
     }
 
     @RequestMapping("/{presetName}")
     public PresetData getPresetByName(@PathVariable String presetName, HttpServletResponse response) {
-
-        if (!StringUtils.isEmpty(presetName))
-            response.addCookie(new Cookie(PRESET_NAME, presetName));
-
+        response.addCookie(new Cookie(PRESET_NAME, presetName));
         return presetService.getPreset(presetName);
     }
 
