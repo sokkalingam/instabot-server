@@ -71,7 +71,7 @@ public class ProfilePage extends SuperPage {
 		}
 	}
 
-	public void massLike(int count) {
+	public void massLike(int count, String hashtag) {
 	    sleep(3);
 	    int counter = 1;
         List<WebElement> photos = getDriver().findElements(By.cssSelector("a[href*='taken-by=" + this.profileName + "']"));
@@ -79,7 +79,7 @@ public class ProfilePage extends SuperPage {
         for (int i = 0; i < photos.size(); i++) {
             if (counter > count)
                 return;
-            if (hasHashTag(data.hashtag)) {
+            if (hasHashTag(hashtag)) {
                 like(getLikeButton());
                 System.out.println((++counter) + ") Liked " + getProfileName());
                 sleep(3);
