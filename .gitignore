@@ -6,3 +6,5 @@
 /.idea/
 /screenshots/
 *.log
+*.DS_Store
+static
