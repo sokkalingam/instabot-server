@@ -20,6 +20,6 @@ public class WelcomeControllerTest {
 
     @org.junit.Test
     public void welcomeTest() {
-        assertThat(this.restTemplate.getForObject("/", String.class), equalTo("Welcome!"));
+        assertThat(this.restTemplate.getForObject("/api/welcome", String.class), equalTo("Welcome!"));
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = WebApp.class)
@@ -24,7 +26,7 @@ public class SessionServiceTest {
         Data data = new Data();
         data.sessionId = "sessionOne";
         assertThat(sessionService.isSessionActive(data.sessionId), equalTo(false));
-        assertThat(sessionService.addNewSession(data, null), equalTo(true));
+        assertThat(sessionService.addNewSession(data, null), is(notNullValue()));
         assertThat(sessionService.isSessionActive(data.sessionId), equalTo(true));
         sessionService.removeSession(data.sessionId);
         assertThat(sessionService.isSessionActive(data.sessionId), equalTo(false));
