@@ -1,5 +1,7 @@
 package instagram.controllers;
 
+import instagram.email.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +14,9 @@ import java.util.concurrent.Executors;
 @RestController
 @RequestMapping("/api")
 public class WelcomeController {
+
+    @Autowired
+    private EmailService emailService;
 
     private static Map<String, Queue<Integer>> map = Collections.synchronizedMap(new LinkedHashMap<>());
     private static Queue<Integer> jobQueue = new ConcurrentLinkedQueue<>();
@@ -45,6 +50,11 @@ public class WelcomeController {
         System.out.println("Request Map: " + map);
         executor.execute(WelcomeController::processMap);
         return jobQueue;
+    }
+
+    @RequestMapping("/email/{emailId}")
+    public void sendEmail(@PathVariable String emailId) {
+        emailService.testEmail(emailId);
     }
 
     public static synchronized void processMap() {

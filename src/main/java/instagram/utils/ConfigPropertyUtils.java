@@ -5,14 +5,10 @@ import java.util.Properties;
 
 public class ConfigPropertyUtils {
 
-    private static Properties properties = new Properties();
+    private static Properties properties;
 
     static {
-        try {
-            properties.load(ConfigPropertyUtils.class.getClassLoader().getResourceAsStream("properties/config.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        properties = PropertyUtils.loadFile("properties/config.properties");
     }
 
     public static String getDriverPath() {
