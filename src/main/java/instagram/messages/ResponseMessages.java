@@ -1,6 +1,6 @@
 package instagram.messages;
 
-public enum Messages {
+public enum ResponseMessages {
 
     REQUEST_ACCEPTED ("Request accepted and will be processed immediately"),
     REQUEST_REJECTED ("Your request cannot be accepted at this time, please try again later"),
@@ -14,7 +14,7 @@ public enum Messages {
 
     private String message;
 
-    Messages(String message) {
+    ResponseMessages(String message) {
         this.message = message;
     }
 

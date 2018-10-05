@@ -11,6 +11,8 @@ public class Data {
 	public String username;
 	public String password;
 
+	public String email;
+
 	@NotEmpty(message = "Hashtags list cannot be empty")
 	public List<String> hashtags = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 package instagram.model;
 
 import instagram.model.enums.JobStatus;
+import instagram.utils.DateUtils;
 
 import java.time.LocalDateTime;
 
@@ -113,14 +114,14 @@ public class Report {
 
     @Override
     public String toString() {
-        return "Report{" +
-                "startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", currentLoop=" + currentLoop +
-                ", photosLiked=" + photosLiked +
-                ", photosCommented=" + photosCommented +
-                ", currentHashtag='" + currentHashtag + '\'' +
-                ", jobStatus=" + jobStatus +
-                '}';
+        return "REPORT \n\n" +
+                "Start Time: " + DateUtils.format(startTime) +
+                "\nEnd Time: " + DateUtils.format(endTime) +
+                "\nLoop Count:" + currentLoop +
+                "\nPhotos Liked: " + photosLiked +
+                "\nPhotos Commented: " + photosCommented +
+                "\nCurrent Hashtag: " + currentHashtag +
+                "\nJob Status: " + jobStatus;
     }
+
 }
