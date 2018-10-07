@@ -120,7 +120,6 @@ public class Report {
                 "\nLoop Count:" + currentLoop +
                 "\nPhotos Liked: " + photosLiked +
                 "\nPhotos Commented: " + photosCommented +
-                "\nCurrent Hashtag: " + currentHashtag +
                 "\nJob Status: " + jobStatus;
     }
 
