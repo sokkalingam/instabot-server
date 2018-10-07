@@ -7,6 +7,7 @@ import instagram.report.ReportService;
 import instagram.services.EncryptDecryptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
@@ -38,10 +39,17 @@ public class EmailService {
         sendEmail(message);
     }
 
-    public void sendEmail(SimpleMailMessage message) {
+    public boolean sendEmail(SimpleMailMessage message) {
         emailSender.setUsername(encryptDecryptService.decrypt(email));
         emailSender.setPassword(encryptDecryptService.decrypt(password));
-        emailSender.send(message);
+        try {
+            emailSender.send(message);
+            return true;
+        } catch (MailException e) {
+            System.out.println("Could not send email, SimpleMailMessage: " + message);
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void sendJobFinishedEmail(Data data) {
@@ -56,7 +64,7 @@ public class EmailService {
         sendEmail(message);
     }
 
-    public void sendJobAbortedForMaintenaceEmail(Data data) {
+    public void sendJobAbortedForMaintenanceEmail(Data data) {
         SimpleMailMessage message = getBasicEmail(data);
         message.setSubject(EmailMessages.JOB_ABORTED_FOR_MAINTENACE.toString());
         sendEmail(message);
@@ -64,10 +72,25 @@ public class EmailService {
 
     public SimpleMailMessage getBasicEmail(Data data) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(data.email);
+        message.setTo(getToList(data.email));
         Report report = reportService.getReport(data.username);
         if (report != null)
             message.setText(String.valueOf(report));
         return message;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    private static String[] getToList(String email) {
+        String[] emails = null;
+        if (email != null) {
+            emails = email.split(",");
+            for (int i = 0; i < emails.length; i++)
+                emails[i] = emails[i].trim();
+        }
+        return emails;
+    }
+
 }
