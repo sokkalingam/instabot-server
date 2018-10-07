@@ -10,7 +10,10 @@ public enum ResponseMessages {
     SESSION_DOES_NOT_EXIST ("Your session does not exist"),
     SESSION_ABORTED ("Your session is aborted successfully"),
 
-    NO_JOB_TO_ABORT ("No job found to abort");
+    NO_JOB_TO_ABORT ("No job found to abort"),
+
+    EMAIL_SENT ("Email sent successfully!"),
+    EMAIL_FAILED ("Email could not be sent");
 
     private String message;
 
