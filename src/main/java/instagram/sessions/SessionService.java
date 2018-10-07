@@ -1,20 +1,22 @@
 package instagram.sessions;
 
+import instagram.email.EmailService;
 import instagram.model.Data;
 import instagram.model.Report;
 import instagram.model.Session;
-import instagram.model.enums.JobStatus;
 import instagram.report.ReportManager;
 import org.openqa.selenium.WebDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 public class SessionService {
+
+    @Autowired
+    private EmailService emailService;
 
     private Map<String, Session> activeSessions;
 
@@ -42,9 +44,9 @@ public class SessionService {
         return activeSessions;
     }
 
-    public boolean killSession(String sessionId) {
+    public Session killSession(String sessionId) {
         if (!isSessionActive(sessionId))
-            return false;
+            return null;
         Session session = activeSessions.get(sessionId);
         if (session != null) {
             WebDriver driver = session.getDriver();
@@ -55,6 +57,14 @@ public class SessionService {
                 report.setJobAsAborted();
         }
         removeSession(sessionId);
-        return true;
+        return session;
     }
+
+    public void killAllSessions() {
+        activeSessions.keySet().forEach(sessionId -> {
+            Session session = killSession(sessionId);
+            emailService.sendJobAbortedForMaintenanceEmail(session.getData());
+        });
+    }
+
 }

@@ -1,5 +1,6 @@
 package instagram.sessions;
 
+import instagram.email.EmailService;
 import instagram.messages.ResponseMessages;
 import instagram.model.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/session")
+@RequestMapping("/api/sessions")
 public class SessionController {
 
     @Autowired
     private SessionService sessionService;
+
+    @Autowired
+    private EmailService emailService;
 
     @RequestMapping("/list")
     public Map<String, Session> getActiveSessions() {
@@ -25,8 +29,16 @@ public class SessionController {
 
     @RequestMapping(value = "/kill", method = RequestMethod.POST)
     public String killSession(@RequestBody String sessionId) {
-        boolean res = !StringUtils.isEmpty(sessionId) && sessionService.killSession(sessionId);
-        return res ? ResponseMessages.SESSION_ABORTED.toString() : ResponseMessages.SESSION_DOES_NOT_EXIST.toString();
+        Session session = sessionService.killSession(sessionId);
+        if (session == null)
+            return ResponseMessages.SESSION_DOES_NOT_EXIST.toString();
+        emailService.sendJobAbortedEmail(session.getData());
+        return ResponseMessages.SESSION_ABORTED.toString();
+    }
+
+    @RequestMapping("/killAll")
+    public void killAllSessions() {
+        sessionService.killAllSessions();
     }
 
 }
