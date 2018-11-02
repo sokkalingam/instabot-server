@@ -31,12 +31,14 @@ public class HashtagController {
             return ResponseMessages.REQUEST_EXISTS.toString();
         Session session = sessionService.addNewSession(data, null);
         ThreadUtils.execute(new Thread(() -> {
+            WebDriver driver = null;
             try {
-                WebDriver driver = DriverFactory.getLoggedInDriver(data);
+                driver = DriverFactory.getLoggedInDriver(data);
                 session.setDriver(driver);
                 hashtagService.performActionsInLoop(data, driver);
             } finally {
                 sessionService.removeSession(data.sessionId);
+                if (driver != null) driver.quit();
             }
         }));
         return ResponseMessages.REQUEST_ACCEPTED.toString();
@@ -51,6 +53,7 @@ public class HashtagController {
             sessionService.addNewSession(data, driver);
             hashtagService.likeHashTag(data, driver);
             sessionService.removeSession(data.sessionId);
+            driver.quit();
         }));
         return ResponseMessages.REQUEST_ACCEPTED.toString();
     }

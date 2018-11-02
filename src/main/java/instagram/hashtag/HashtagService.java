@@ -20,13 +20,11 @@ public class HashtagService {
         else
             homePage.likeAndCommentHashtagInLoop();
         emailService.sendJobFinishedEmail(data);
-        driver.quit();
     }
 
     public void likeHashTag(Data data, WebDriver driver) {
         HomePage homePage = new HomePage(driver, data);
         homePage.likeHashtag();
-        driver.quit();
     }
 
 }

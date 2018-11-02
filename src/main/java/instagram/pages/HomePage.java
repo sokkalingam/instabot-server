@@ -144,13 +144,19 @@ public class HomePage extends SuperPage {
 		System.out.println("\n#" + hashtag + ", " + data.noOfPhotos + " photos, Wait time between " + data.timeMin + " and "
 				+ data.timeMax + " seconds");
 		scrollDown(1000);
-		List<WebElement> photos = getElements("a[href*='tagged=" + hashtag + "']");
+		List<WebElement> photos = getElements("img[alt*='" + hashtag + "']");
 
-		// Skip top posts and open the most recent
-		int indexOfFirstMostRecentPhoto = 9;
+		/* Skip top posts and open the most recent
+		   0 is for dogsofinstagram main photo
+		   1 to 9 for top posts (Sometimes it could be less than 9 photos for top posts)
+		   10th photo will surely be the most recent even if sometimes it may not be the first
+		 */
+		int indexOfFirstMostRecentPhoto = 10;
 
 		try {
-			photos.get(indexOfFirstMostRecentPhoto).click();
+			// photos.get(indexOfFirstMostRecentPhoto).click() does not work, throws not clickable exception
+            // Hence using JS click
+            executeJs("arguments[0].click();", photos.get(indexOfFirstMostRecentPhoto));
 		} catch (IndexOutOfBoundsException e) {
 			e.printStackTrace();
 			return;
