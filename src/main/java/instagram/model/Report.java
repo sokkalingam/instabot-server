@@ -15,6 +15,7 @@ public class Report {
     private int photosCommented;
     private String currentHashtag;
     private JobStatus jobStatus;
+    private Data data;
 
     public Report(String username) {
         this.username = username;
@@ -110,6 +111,14 @@ public class Report {
     public void setJobAsAborted() {
         this.jobStatus = JobStatus.ABORTED;
         setEndTimeAsNow();
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
     }
 
     @Override

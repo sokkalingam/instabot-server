@@ -3,6 +3,7 @@ package instagram.hashtag;
 import instagram.factory.DriverFactory;
 import instagram.messages.ResponseMessages;
 import instagram.model.Data;
+import instagram.model.PresetData;
 import instagram.model.Session;
 import instagram.sessions.SessionService;
 import instagram.utils.ThreadUtils;
@@ -27,6 +28,8 @@ public class HashtagController {
 
     @RequestMapping(value = "/loop", method = RequestMethod.POST)
     public String performActionsInLoop(@Valid @RequestBody Data data) {
+        if (data == null)
+            return ResponseMessages.REQUEST_INVALID.toString();
         if (sessionService.isSessionActive(data.sessionId))
             return ResponseMessages.REQUEST_EXISTS.toString();
         Session session = sessionService.addNewSession(data, null);

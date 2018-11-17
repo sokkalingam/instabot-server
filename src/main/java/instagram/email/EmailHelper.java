@@ -6,6 +6,8 @@ import instagram.utils.DateUtils;
 public class EmailHelper {
 
     public static String getHtmlReport(Report report) {
+        String URL = "http://localhost:8080/api/email/rerun/" + report.getUsername();
+
         return "<h1><span style=\"color: #800080;\">InstaBot Report</span></h1>\n" +
                 "<table style=\"height: 228px; width: 516px;\">\n" +
                 "<tbody>\n" +
@@ -46,6 +48,7 @@ public class EmailHelper {
                 "</td>\n" +
                 "</tr>\n" +
                 "</tbody>\n" +
-                "</table>";
+                "</table>" +
+                "<a href='" + URL + "'" + " target='_blank'><h2>CLICK TO RESTART JOB</h2></a>";
     }
 }

@@ -6,6 +6,7 @@ public enum ResponseMessages {
     REQUEST_REJECTED ("Your request cannot be accepted at this time, please try again later"),
     REQUEST_QUEUED ("Your request is queued. Will be processed as soon we have availability"),
     REQUEST_EXISTS ("Request cannot be accepted since your previous request is already in place"),
+    REQUEST_INVALID ("Your request is invalid"),
 
     SESSION_DOES_NOT_EXIST ("Your session does not exist"),
     SESSION_ABORTED ("Your session is aborted successfully"),

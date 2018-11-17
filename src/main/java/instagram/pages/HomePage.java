@@ -28,6 +28,8 @@ public class HomePage extends SuperPage {
 		PageFactory.initElements(driver, this);
 		alreadyVisited = new HashSet<>();
 		this.data.username = getUsername();
+		this.report = ReportManager.getNewReport(this.data.username);
+		this.report.setData(this.data);
 	}
 
 	public void likeNewsFeedInLoop() {
@@ -80,7 +82,6 @@ public class HomePage extends SuperPage {
 	}
 
 	public void commentHashtagInLoop() {
-		report = ReportManager.getNewReport(data.username);
 		for (int i = 1; i <= data.noOfTimesToLoop; i++) {
 			System.out.println("Loop #" + i);
 			report.incrementCurrentLoop();
@@ -116,7 +117,6 @@ public class HomePage extends SuperPage {
 	}
 
 	public void likeAndCommentHashtagInLoop() {
-		report = ReportManager.getNewReport(data.username);
 	    for (int i = 1; i <= data.noOfTimesToLoop; i++) {
             System.out.println("Loop #" + i);
             report.incrementCurrentLoop();
