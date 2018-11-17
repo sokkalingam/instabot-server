@@ -6,7 +6,7 @@ import instagram.utils.DateUtils;
 public class EmailHelper {
 
     public static String getHtmlReport(Report report) {
-        String URL = "http://localhost:8080/api/email/rerun/" + report.getUsername();
+        String URL = "http://instabot.localtunnel.me/api/email/rerun/" + report.getUsername();
 
         return "<h1><span style=\"color: #800080;\">InstaBot Report</span></h1>\n" +
                 "<table style=\"height: 228px; width: 516px;\">\n" +
