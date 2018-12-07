@@ -26,10 +26,10 @@ public class LocalApp {
 
 		WebDriver driver = DriverFactory.getLoggedInDriver(data);
 
-		HomePage homePage = new HomePage(driver, data);
+//		HomePage homePage = new HomePage(driver, data);
 
 //		homePage.likeHashtag();
-		homePage.likeAndCommentHashtagInLoop();
+//		homePage.likeAndCommentHashtagInLoop();
 
 //		homePage.likeNewsFeed();
 //		homePage.likeNewsFeedInLoop();

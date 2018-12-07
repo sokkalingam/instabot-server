@@ -13,7 +13,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SuperPage {
 
-	private final String heartCss = ".coreSpriteHeartOpen";
+	private final String likeButtonCss = "[aria-label='Like']";
+	private final String unlikeButtonCss = "[aria-label='Unlike']";
 	private final String rightArrowCss = "a.coreSpriteRightPaginationArrow";
 	private final String profileNameCss = "a.FPmhX";
 	private final String usernameCss = "a.coreSpriteDesktopNavProfile";
@@ -105,12 +106,20 @@ public class SuperPage {
 	}
 
 	protected List<WebElement> getLikeButtons() {
-		return getElements(heartCss);
+		return getElements(likeButtonCss);
 	}
 
 	protected WebElement getLikeButton() {
+		return _getButton(likeButtonCss);
+	}
+
+	protected WebElement getUnlikeButton() {
+		return _getButton(unlikeButtonCss);
+	}
+
+	private WebElement _getButton(String css) {
 		setWait(2);
-		WebElement likeButton = getElement(heartCss);
+		WebElement likeButton = getElement(css);
 		setWait(WAIT_TIME);
 		return likeButton;
 	}
@@ -141,7 +150,7 @@ public class SuperPage {
 	}
 
 	protected boolean isAlreadyLiked() {
-		return getLikeButton() == null;
+		return getUnlikeButton() != null;
 	}
 
 	protected WebElement getRightNavArrow() {

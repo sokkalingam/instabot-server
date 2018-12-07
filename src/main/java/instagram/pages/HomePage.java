@@ -6,6 +6,7 @@ import instagram.model.*;
 import instagram.model.enums.JobStatus;
 import instagram.report.ReportManager;
 import instagram.utils.ThreadUtils;
+import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -21,13 +22,17 @@ public class HomePage extends SuperPage {
 	private Set<String> alreadyVisited;
 	private Data data;
 	private Report report;
+	private int rightArrowNotFoundCounter;
+	private final Integer RIGHT_ARROW_NOT_FOUND_LIMIT = 3;
 
-	public HomePage(WebDriver driver, Data data) {
+	public HomePage(WebDriver driver, Data data) throws Exception {
 		super(driver);
 		this.data = data;
 		PageFactory.initElements(driver, this);
 		alreadyVisited = new HashSet<>();
 		this.data.username = getUsername();
+		if (StringUtils.isBlank(this.data.username))
+			throw new Exception("ISSUE with fetching username");
 		this.report = ReportManager.getNewReport(this.data.username);
 		this.report.setData(this.data);
 	}
@@ -67,21 +72,21 @@ public class HomePage extends SuperPage {
 		profilePage.unfollow();
 	}
 
-	public void likeHashtag() {
-	    data.hashtags.forEach(hashtag -> {
-	    	report.setCurrentHashtag(hashtag);
+	public void likeHashtag() throws Exception {
+	    for (String hashtag : data.hashtags) {
+			report.setCurrentHashtag(hashtag);
 			_performOnHashTag(Action.getLikeAction(), hashtag);
-		});
+		}
 	}
 
-	public void commentHashTag() {
-		data.hashtags.forEach(hashtag -> {
+	public void commentHashTag() throws Exception {
+		for (String hashtag : data.hashtags) {
 			report.setCurrentHashtag(hashtag);
 			_performOnHashTag(Action.getCommentAction(), hashtag);
-		});
+		}
 	}
 
-	public void commentHashtagInLoop() {
+	public void commentHashtagInLoop() throws Exception {
 		for (int i = 1; i <= data.noOfTimesToLoop; i++) {
 			System.out.println("Loop #" + i);
 			report.incrementCurrentLoop();
@@ -90,11 +95,11 @@ public class HomePage extends SuperPage {
 		report.setJobAsCompleted();
 	}
 
-	public void likeAndCommentHashTag() {
-		data.hashtags.forEach(hashtag -> {
+	public void likeAndCommentHashTag() throws Exception {
+		for (String hashtag : data.hashtags) {
 			report.setCurrentHashtag(hashtag);
 			_performOnHashTag(Action.getLikeCommentAction(), hashtag);
-		});
+		}
 	}
 
 	public void likeAndFollowHashTag() {
@@ -102,7 +107,11 @@ public class HomePage extends SuperPage {
 			Action action = new Action();
 			action.like = true;
 			action.follow = true;
-			_performOnHashTag(action, hashtag);
+			try {
+				_performOnHashTag(action, hashtag);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		});
 	}
 
@@ -112,11 +121,15 @@ public class HomePage extends SuperPage {
 			action.like = true;
 			action.comment = true;
 			action.follow = true;
-			_performOnHashTag(action, hashtag);
+			try {
+				_performOnHashTag(action, hashtag);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		});
 	}
 
-	public void likeAndCommentHashtagInLoop() {
+	public void likeAndCommentHashtagInLoop() throws Exception {
 	    for (int i = 1; i <= data.noOfTimesToLoop; i++) {
             System.out.println("Loop #" + i);
             report.incrementCurrentLoop();
@@ -128,10 +141,16 @@ public class HomePage extends SuperPage {
     public void spamLike() {
         Action action = new Action();
         action.spamLike = true;
-		data.hashtags.forEach(hashtag -> _performOnHashTag(action, hashtag));
+		data.hashtags.forEach(hashtag -> {
+			try {
+				_performOnHashTag(action, hashtag);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
     }
 
-	private void _performOnHashTag(Action action, String hashtag) {
+	private void _performOnHashTag(Action action, String hashtag) throws Exception {
 
 		if (!action.like && !action.comment && !action.follow && !action.spamLike)
 			return;
@@ -146,6 +165,9 @@ public class HomePage extends SuperPage {
 		scrollDown(1000);
 		List<WebElement> photos = getElements("img");
 		System.out.println("No of photos found: " + photos.size());
+
+		if (photos.size() == 0)
+			throw new Exception("No posts found for hashtag " + hashtag);
 
 		/* Skip top posts and open the most recent
 		   0 is for dogsofinstagram main photo
@@ -174,14 +196,18 @@ public class HomePage extends SuperPage {
 
 			boolean wait = false;
 			String profileName = getProfileName();
+			if (StringUtils.isBlank(profileName))
+				throw new Exception("ISSUE with fetching Profile Name");
 
-			System.out.println("\n" + (action.counter + 1) + ") " + profileName);
+			System.out.println("\nUser: " + data.username + "\n" + (action.counter + 1) + ") " + profileName);
 			Profile currentProfile = HttpCall.getProfile(profileName);
 			System.out.println("Am I following? - " + _alreadyFollowing());
 
 			if (currentProfile.getNoOfFollowers() <= data.maxNoOfFollowers){
 				if (action.like && !isAlreadyLiked()) {
 					like(getLikeButton());
+					if (!isAlreadyLiked())
+						throw new Exception("Issue with LIKE");
 					report.incrementPhotoLiked();
 					wait = true;
 				}
@@ -189,6 +215,8 @@ public class HomePage extends SuperPage {
 				if (action.comment && data.comments.size() > 0
 						&& _isProfileNotVisited(profileName) && !_alreadyCommented(data.username)) {
 					_comment(_getRandomComment());
+					if (!_alreadyCommented(data.username))
+						throw new Exception("Issue with COMMENT");
 					report.incrementPhotosCommented();
 					wait = true;
 				}
@@ -213,9 +241,14 @@ public class HomePage extends SuperPage {
 			boolean clickedNext = clickNext();
 			if (!clickedNext) {
                 System.out.println("Right Arrow Not Found, Retrying Hashtag");
+                rightArrowNotFoundCounter++;
+                if (rightArrowNotFoundCounter > RIGHT_ARROW_NOT_FOUND_LIMIT)
+                	throw new Exception("Issue with clicking RIGHT ARROW");
                 _performOnHashTag(action, hashtag);
                 return;
-            }
+            } else {
+				rightArrowNotFoundCounter = 0;
+			}
 		}
 	}
 

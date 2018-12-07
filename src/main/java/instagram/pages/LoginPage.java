@@ -31,7 +31,7 @@ public class LoginPage extends SuperPage {
 		this.data = data;
 	}
 
-	public HomePage login() {
+	public HomePage login() throws Exception {
 		sleep(3);
 		PageFactory.initElements(getDriver(), this);
 		loginLink.click();

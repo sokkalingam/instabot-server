@@ -113,6 +113,14 @@ public class EmailService {
         }
     }
 
+    public boolean sendEmailToBot(String subject, String body) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(encryptDecryptService.decrypt(getEmail()));
+        message.setSubject(subject);
+        message.setText(body);
+        return sendEmail(message);
+    }
+
     public MimeMessage getBasicEmail(Data data) throws MessagingException {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         Report report = reportService.getReport(data.username);
