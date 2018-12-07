@@ -144,7 +144,8 @@ public class HomePage extends SuperPage {
 		System.out.println("\n#" + hashtag + ", " + data.noOfPhotos + " photos, Wait time between " + data.timeMin + " and "
 				+ data.timeMax + " seconds");
 		scrollDown(1000);
-		List<WebElement> photos = getElements("img[alt*='" + hashtag + "']");
+		List<WebElement> photos = getElements("img");
+		System.out.println("No of photos found: " + photos.size());
 
 		/* Skip top posts and open the most recent
 		   0 is for dogsofinstagram main photo
