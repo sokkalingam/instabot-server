@@ -20,5 +20,10 @@ public class NotificationController {
     public void setNotification(@RequestBody Notification notification) {
         notificationService.wetNotification(notification);
     }
+
+    @PostMapping("/clear")
+    public void clearNotification() {
+        notificationService.wetNotification(null);
+    }
     
 }
