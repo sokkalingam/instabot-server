@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class Data {
 
+	@NotEmpty(message = "Please provide your instagram username")
 	public String username;
 	public String password;
 

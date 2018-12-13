@@ -17,7 +17,6 @@ public class SuperPage {
 	private final String unlikeButtonCss = "[aria-label='Unlike']";
 	private final String rightArrowCss = "a.coreSpriteRightPaginationArrow";
 	private final String profileNameCss = "a.FPmhX";
-	private final String usernameCss = ".SKguc > a";
 	private final String errorCss = ".error-container";
 
 	private WebDriverWait wait;
@@ -269,16 +268,6 @@ public class SuperPage {
 	protected void refreshPage() {
 		getDriver().navigate().refresh();
 		System.out.println("Page Refreshed");
-	}
-
-	protected String getUsername() {
-		WebElement element = getElement(usernameCss);
-		// href = http://www.instagram.com/username/
-		String href = element.getAttribute("href");
-		String[] strArr = href.split("/");
-		String username = strArr[3];
-		System.out.println("Username: " + username);
-		return username;
 	}
 
 }

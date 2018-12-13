@@ -30,9 +30,9 @@ public class HomePage extends SuperPage {
 		this.data = data;
 		PageFactory.initElements(driver, this);
 		alreadyVisited = new HashSet<>();
-		this.data.username = getUsername();
 		if (StringUtils.isBlank(this.data.username))
 			throw new Exception("ISSUE with fetching username");
+		this.data.username = this.data.username.toLowerCase();
 		this.report = ReportManager.getNewReport(this.data.username);
 		this.report.setData(this.data);
 	}
