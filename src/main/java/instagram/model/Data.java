@@ -16,20 +16,25 @@ public class Data {
 	@NotEmpty(message = "Hashtags list cannot be empty")
 	public List<String> hashtags = new ArrayList<>();
 
-	@NotNull @Min(value = 1, message = "No of photos should be greater than 0")
+	@NotNull(message = "Please provide No of Posts")
+	@Min(value = 1, message = "No of photos should be greater than 0")
 	public Integer noOfPhotos;
 
 	@Min(value = 1, message = "Spam like count should be greater than 0")
 	public Integer spamLikeCount;
 
-	@NotNull @Min(value = 0, message = "Wait time cannot be negative")
+	@NotNull(message = "Please provide Min Wait Time")
+	@Min(value = 0, message = "Wait time cannot be negative")
 	public Integer timeMin;
 
-	@NotNull @Min(value = 0, message = "Wait time cannot be negative")
+	@NotNull(message = "Please provide Max Wait Time")
+	@Min(value = 0, message = "Wait time cannot be negative")
 	public Integer timeMax;
 
-	@NotNull @Min(value = 0, message = "Max number of followers should be a positive number")
+	@NotNull(message = "Please provide Max No of Followers")
+	@Min(value = 0, message = "Max number of followers should be a positive number")
 	public Integer maxNoOfFollowers;
+	
 	public Integer minFollowersRequiredToNotUnfollow;
 
 	@NotEmpty (message = "Session Id cannot be empty")
