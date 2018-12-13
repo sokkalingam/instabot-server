@@ -17,7 +17,7 @@ public class SuperPage {
 	private final String unlikeButtonCss = "[aria-label='Unlike']";
 	private final String rightArrowCss = "a.coreSpriteRightPaginationArrow";
 	private final String profileNameCss = "a.FPmhX";
-	private final String usernameCss = "a.coreSpriteDesktopNavProfile";
+	private final String usernameCss = ".SKguc > a";
 	private final String errorCss = ".error-container";
 
 	private WebDriverWait wait;

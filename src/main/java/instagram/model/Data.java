@@ -34,7 +34,7 @@ public class Data {
 	@NotNull(message = "Please provide Max No of Followers")
 	@Min(value = 0, message = "Max number of followers should be a positive number")
 	public Integer maxNoOfFollowers;
-	
+
 	public Integer minFollowersRequiredToNotUnfollow;
 
 	@NotEmpty (message = "Session Id cannot be empty")
