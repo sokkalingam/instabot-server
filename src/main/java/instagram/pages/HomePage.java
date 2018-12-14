@@ -1,5 +1,7 @@
 package instagram.pages;
 
+import instagram.email.EmailHelper;
+import instagram.exceptions.ExceptionHelper;
 import instagram.factory.DriverFactory;
 import instagram.http.HttpCall;
 import instagram.model.*;
@@ -25,13 +27,13 @@ public class HomePage extends SuperPage {
 	private int rightArrowNotFoundCounter;
 	private final Integer RIGHT_ARROW_NOT_FOUND_LIMIT = 3;
 
-	public HomePage(WebDriver driver, Data data) throws Exception {
+	public HomePage(WebDriver driver, Data data) {
 		super(driver);
 		this.data = data;
 		PageFactory.initElements(driver, this);
 		alreadyVisited = new HashSet<>();
 		if (StringUtils.isBlank(this.data.username))
-			throw new Exception("ISSUE with fetching username");
+			ExceptionHelper.addException(new Exception("ISSUE with fetching username\n" + this.data));
 		this.data.username = this.data.username.toLowerCase();
 		this.report = ReportManager.getNewReport(this.data.username);
 		this.report.setData(this.data);
@@ -72,21 +74,21 @@ public class HomePage extends SuperPage {
 		profilePage.unfollow();
 	}
 
-	public void likeHashtag() throws Exception {
+	public void likeHashtag() {
 	    for (String hashtag : data.hashtags) {
 			report.setCurrentHashtag(hashtag);
 			_performOnHashTag(Action.getLikeAction(), hashtag);
 		}
 	}
 
-	public void commentHashTag() throws Exception {
+	public void commentHashTag() {
 		for (String hashtag : data.hashtags) {
 			report.setCurrentHashtag(hashtag);
 			_performOnHashTag(Action.getCommentAction(), hashtag);
 		}
 	}
 
-	public void commentHashtagInLoop() throws Exception {
+	public void commentHashtagInLoop() {
 		for (int i = 1; i <= data.noOfTimesToLoop; i++) {
 			System.out.println("Loop #" + i);
 			report.incrementCurrentLoop();
@@ -95,7 +97,7 @@ public class HomePage extends SuperPage {
 		report.setJobAsCompleted();
 	}
 
-	public void likeAndCommentHashTag() throws Exception {
+	public void likeAndCommentHashTag() {
 		for (String hashtag : data.hashtags) {
 			report.setCurrentHashtag(hashtag);
 			_performOnHashTag(Action.getLikeCommentAction(), hashtag);
@@ -129,7 +131,7 @@ public class HomePage extends SuperPage {
 		});
 	}
 
-	public void likeAndCommentHashtagInLoop() throws Exception {
+	public void likeAndCommentHashtagInLoop() {
 	    for (int i = 1; i <= data.noOfTimesToLoop; i++) {
             System.out.println("Loop #" + i);
             report.incrementCurrentLoop();
@@ -150,7 +152,7 @@ public class HomePage extends SuperPage {
 		});
     }
 
-	private void _performOnHashTag(Action action, String hashtag) throws Exception {
+	private void _performOnHashTag(Action action, String hashtag) {
 
 		if (!action.like && !action.comment && !action.follow && !action.spamLike)
 			return;
@@ -160,14 +162,14 @@ public class HomePage extends SuperPage {
 
 		_gotoHashTagPage(hashtag);
 
-		System.out.println("\n#" + hashtag + ", " + data.noOfPhotos + " photos, Wait time between " + data.timeMin + " and "
+		System.out.println("\nUser: " + data.username + " #" + hashtag + ", " + data.noOfPhotos + " photos, Wait time between " + data.timeMin + " and "
 				+ data.timeMax + " seconds");
 		scrollDown(1000);
 		List<WebElement> photos = getElements("img");
 		System.out.println("No of photos found: " + photos.size());
 
 		if (photos.size() == 0)
-			throw new Exception("No posts found for hashtag " + hashtag);
+			ExceptionHelper.addException(new Exception("No posts found for hashtag " + hashtag + "\n" + this.data));
 
 		/* Skip top posts and open the most recent
 		   0 is for dogsofinstagram main photo
@@ -197,7 +199,7 @@ public class HomePage extends SuperPage {
 			boolean wait = false;
 			String profileName = getProfileName();
 			if (StringUtils.isBlank(profileName))
-				throw new Exception("ISSUE with fetching Profile Name");
+				ExceptionHelper.addException(new Exception("ISSUE with fetching Profile Name\n" + this.data));
 
 			System.out.println("\nUser: " + data.username + "\n" + (action.counter + 1) + ") " + profileName);
 			Profile currentProfile = HttpCall.getProfile(profileName);
@@ -207,8 +209,9 @@ public class HomePage extends SuperPage {
 				if (action.like && !isAlreadyLiked()) {
 					like(getLikeButton());
 					if (!isAlreadyLiked())
-						throw new Exception("Issue with LIKE");
-					report.incrementPhotoLiked();
+						ExceptionHelper.addException(new Exception("Issue with LIKE\n" + this.data));
+					else
+						report.incrementPhotoLiked();
 					wait = true;
 				}
 
@@ -216,8 +219,9 @@ public class HomePage extends SuperPage {
 						&& _isProfileNotVisited(profileName) && !_alreadyCommented(data.username)) {
 					_comment(_getRandomComment());
 					if (!_alreadyCommented(data.username))
-						throw new Exception("Issue with COMMENT");
-					report.incrementPhotosCommented();
+						ExceptionHelper.addException(new Exception("Issue with COMMENT\n" + this.data));
+					else
+						report.incrementPhotosCommented();
 					wait = true;
 				}
 
@@ -243,7 +247,7 @@ public class HomePage extends SuperPage {
                 System.out.println("Right Arrow Not Found, Retrying Hashtag");
                 rightArrowNotFoundCounter++;
                 if (rightArrowNotFoundCounter > RIGHT_ARROW_NOT_FOUND_LIMIT)
-                	throw new Exception("Issue with clicking RIGHT ARROW");
+					ExceptionHelper.addException(new Exception("Issue with clicking RIGHT ARROW\n" + this.data));
                 _performOnHashTag(action, hashtag);
                 return;
             } else {

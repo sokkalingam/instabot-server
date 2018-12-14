@@ -1,17 +1,21 @@
 package instagram.email;
 
+import instagram.exceptions.ExceptionHelper;
 import instagram.messages.EmailMessages;
 import instagram.model.Data;
 import instagram.model.Report;
+import instagram.model.enums.EmailSubjects;
 import instagram.model.enums.JobStatus;
 import instagram.report.ReportService;
 import instagram.services.EncryptDecryptService;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -130,6 +134,23 @@ public class EmailService {
             mimeMessage.setContent(EmailHelper.getHtmlReport(report), "text/html");
         }
         return mimeMessage;
+    }
+
+    // Runs every 60 seconds
+    @Scheduled(fixedDelay = 60 * 1000)
+    public boolean sendExceptionEmailsFromQueue() {
+        if (ExceptionHelper.getExceptionQueue().size() == 0)
+            return false;
+        System.out.println("Running sendExceptionEmailsFromQueue");
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(encryptDecryptService.decrypt(getEmail()));
+        message.setSubject(EmailSubjects.FAILURE.toString());
+        StringBuilder sb = new StringBuilder();
+        for (Exception exception : ExceptionHelper.getExceptionQueue())
+            sb.append(ExceptionUtils.getStackTrace(exception)).append("\n\n\n\n\n");
+        ExceptionHelper.clearExceptions();
+        message.setText(sb.toString());
+        return sendEmail(message);
     }
 
     public String getEmail() {

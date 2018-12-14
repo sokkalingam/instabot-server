@@ -20,34 +20,21 @@ public class HashtagService {
     @Autowired
     private EmailService emailService;
 
-    @Autowired
-    private ReportService reportService;
-
     public void performActionsInLoop(Data data, WebDriver driver) {
 
-        try {
-            _removeEmptyComments(data);
-            HomePage homePage = new HomePage(driver, data);
-            if (data.commentOnly)
-                homePage.commentHashtagInLoop();
-            else
-                homePage.likeAndCommentHashtagInLoop();
-            emailService.sendJobFinishedEmail(data);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            emailService.sendEmailToBot(EmailSubjects.FAILURE.toString(), ExceptionUtils.getStackTrace(ex));
-        }
+        _removeEmptyComments(data);
+        HomePage homePage = new HomePage(driver, data);
+        if (data.commentOnly)
+            homePage.commentHashtagInLoop();
+        else
+            homePage.likeAndCommentHashtagInLoop();
+        emailService.sendJobFinishedEmail(data);
     }
 
     public void likeHashTag(Data data, WebDriver driver) {
-        try {
-            _removeEmptyComments(data);
-            HomePage homePage = new HomePage(driver, data);
-            homePage.likeHashtag();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            emailService.sendEmailToBot(EmailSubjects.FAILURE.toString(), ExceptionUtils.getStackTrace(ex));
-        }
+        _removeEmptyComments(data);
+        HomePage homePage = new HomePage(driver, data);
+        homePage.likeHashtag();
     }
 
     private void _removeEmptyComments(Data data) {
