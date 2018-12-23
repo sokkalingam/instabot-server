@@ -4,7 +4,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import instagram.data.CssData;
 import instagram.model.Data;
+import instagram.model.enums.CSS;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
@@ -12,12 +14,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SuperPage {
-
-	private final String likeButtonCss = "[aria-label='Like']";
-	private final String unlikeButtonCss = "[aria-label='Unlike']";
-	private final String rightArrowCss = "a.coreSpriteRightPaginationArrow";
-	private final String profileNameCss = "a.FPmhX";
-	private final String errorCss = ".error-container";
 
 	private WebDriverWait wait;
 	private WebDriver driver;
@@ -75,12 +71,12 @@ public class SuperPage {
 	}
 
 	protected void waitForCommentToLoad() {
-		waitForElementToBeInvisible("textarea[disabled]");
+		waitForElementToBeInvisible(CssData.get(CSS.COMMENT_INPUT_DISABLED));
 	}
 
 	protected boolean isPageNotFound() {
 		setWait(2);
-		boolean isNotFound = getElement(errorCss) != null;
+		boolean isNotFound = getElement(CssData.get(CSS.ERROR)) != null;
 		setWait(WAIT_TIME);
 
 		if (isNotFound)
@@ -105,15 +101,15 @@ public class SuperPage {
 	}
 
 	protected List<WebElement> getLikeButtons() {
-		return getElements(likeButtonCss);
+		return getElements(CssData.get(CSS.LIKE_BUTTON));
 	}
 
 	protected WebElement getLikeButton() {
-		return _getButton(likeButtonCss);
+		return _getButton(CssData.get(CSS.LIKE_BUTTON));
 	}
 
 	protected WebElement getUnlikeButton() {
-		return _getButton(unlikeButtonCss);
+		return _getButton(CssData.get(CSS.UNLIKE_BUTTON));
 	}
 
 	private WebElement _getButton(String css) {
@@ -153,23 +149,23 @@ public class SuperPage {
 	}
 
 	protected WebElement getRightNavArrow() {
-		return getElement(rightArrowCss);
+		return getElement(CssData.get(CSS.RIGHT_ARROW));
 	}
 
 	protected String getProfileName() {
-		return getText(getElement(profileNameCss));
+		return getText(getElement(CssData.get(CSS.PROFILE_NAME)));
 	}
 
 	protected String getProfileName(WebElement element) {
-		return getElement(element, profileNameCss).getText();
+		return getText(getElement(element, CssData.get(CSS.PROFILE_NAME)));
 	}
 
 	protected WebElement getCommentInput() {
-		return getElement("textarea[placeholder*='comment']");
+		return getElement(CssData.get(CSS.COMMENT_INPUT));
 	}
 
 	protected String getCommentsAsText() {
-		return getText(getElement("._b0tqa"));
+		return getText(getElement(CssData.get(CSS.COMMENTS)));
 	}
 
 	protected String getText(WebElement element) {
