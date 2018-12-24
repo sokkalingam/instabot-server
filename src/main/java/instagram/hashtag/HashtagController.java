@@ -1,5 +1,6 @@
 package instagram.hashtag;
 
+import instagram.exceptions.ExceptionHelper;
 import instagram.factory.DriverFactory;
 import instagram.messages.ResponseMessages;
 import instagram.model.Data;
@@ -39,6 +40,8 @@ public class HashtagController {
                 driver = DriverFactory.getLoggedInDriver(data);
                 session.setDriver(driver);
                 hashtagService.performActionsInLoop(data, driver);
+            } catch(Exception e) {
+                ExceptionHelper.addException(e);
             } finally {
                 sessionService.removeSession(data.sessionId);
                 if (driver != null) driver.quit();
