@@ -3,7 +3,6 @@ package instagram.http;
 import instagram.model.ConfigData;
 import org.springframework.web.client.RestTemplate;
 
-import instagram.model.Data;
 import instagram.model.Profile;
 import instagram.utils.ProfileUtils;
 
@@ -11,7 +10,7 @@ public class HttpCall {
 
 	public static String getResponse(String url) {
 		RestTemplate restTemplate = new RestTemplate();
-		String response = "";
+		String response;
 		try {
 			response = restTemplate.getForObject(url, String.class);
 		} catch (Exception e) {
