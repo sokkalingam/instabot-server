@@ -226,7 +226,8 @@ public class SuperPage {
     protected boolean clickNext() {
         WebElement rightArrow = getRightNavArrow();
         if (rightArrow != null) {
-            rightArrow.click();
+        	// We sometimes get webdriver exception, hence clicking through JS
+        	executeJs("arguments[0].click();", rightArrow);
             return true;
         } else {
             return false;
