@@ -25,7 +25,9 @@ public class HomePage extends SuperPage {
 	private Data data;
 	private Report report;
 	private int rightArrowNotFoundCounter;
+	private int newPostNotFoundCounter;
 	private final Integer RIGHT_ARROW_NOT_FOUND_LIMIT = 3;
+	private final Integer NEW_POST_NOT_FOUND_LIMIT = 10;
 
 	public HomePage(WebDriver driver, Data data) {
 		super(driver);
@@ -239,6 +241,13 @@ public class HomePage extends SuperPage {
 				if (wait) {
 					sleep(getRandomTime(data.timeMin, data.timeMax));
 					action.counter++;
+					newPostNotFoundCounter = 0;
+				} else {
+					newPostNotFoundCounter++;
+					if (newPostNotFoundCounter > NEW_POST_NOT_FOUND_LIMIT) {
+						_performOnHashTag(action, hashtag);
+						return;
+					}
 				}
 			}
 

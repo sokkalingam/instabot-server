@@ -75,7 +75,7 @@ public class SuperPage {
 	}
 
 	protected boolean isPageNotFound() {
-		setWait(2);
+		setWait(1);
 		boolean isNotFound = getElement(CssData.get(CSS.ERROR)) != null;
 		setWait(WAIT_TIME);
 
@@ -113,7 +113,7 @@ public class SuperPage {
 	}
 
 	private WebElement _getButton(String css) {
-		setWait(2);
+		setWait(1);
 		WebElement likeButton = getElement(css);
 		setWait(WAIT_TIME);
 		return likeButton;
