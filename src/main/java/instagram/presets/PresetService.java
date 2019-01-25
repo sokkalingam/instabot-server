@@ -24,10 +24,10 @@ public class PresetService {
 
     public void addPreset(PresetData data) {
         PresetData currentData = getPreset(data.getName());
-        currentData = processPreset(currentData);
         if (currentData != null) {
             userPresetRepo.delete(currentData);
         }
+        data = processPreset(data);
         userPresetRepo.save(data);
     }
 

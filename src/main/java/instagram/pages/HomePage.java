@@ -205,7 +205,6 @@ public class HomePage extends SuperPage {
 
 			System.out.println("\nUser: " + data.username + "\n" + (action.counter + 1) + ") " + profileName);
 			Profile currentProfile = HttpCall.getProfile(profileName);
-			System.out.println("Am I following? - " + _alreadyFollowing());
 
 			if (currentProfile.getNoOfFollowers() <= data.maxNoOfFollowers){
 				if (action.like && !isAlreadyLiked()) {
