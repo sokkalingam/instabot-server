@@ -1,6 +1,6 @@
 package instagram;
 
-import instagram.css.CssService;
+import instagram.instabot.InstabotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +13,7 @@ import javax.annotation.PostConstruct;
 public class WebApp {
 
     @Autowired
-    private CssService cssService;
+    private InstabotService instabotService;
 
     public static void main(String[] args) {
         SpringApplication.run(WebApp.class, args);
@@ -21,7 +21,7 @@ public class WebApp {
 
     @PostConstruct
     public void postConstruct() {
-        cssService.buildCssMap();
+        instabotService.startup();
     }
 
 }
