@@ -30,25 +30,7 @@ public class HashtagController {
     @RequestMapping(value = "/loop", method = RequestMethod.POST)
     public String performActionsInLoop(@Valid @RequestBody Data data) {
         try {
-            if (data == null)
-                return ResponseMessages.REQUEST_INVALID.toString();
-            if (sessionService.isSessionActive(data.sessionId))
-                return ResponseMessages.REQUEST_EXISTS.toString();
-            Session session = sessionService.addNewSession(data, null);
-            ThreadUtils.execute(new Thread(() -> {
-                WebDriver driver = null;
-                try {
-                    driver = DriverFactory.getLoggedInDriver(data);
-                    session.setDriver(driver);
-                    hashtagService.performActionsInLoop(data, driver);
-                } catch (Exception e) {
-                    ExceptionHelper.addException(e);
-                } finally {
-                    sessionService.removeSession(data.sessionId);
-                    if (driver != null) driver.quit();
-                }
-            }));
-            return ResponseMessages.REQUEST_ACCEPTED.toString();
+            return hashtagService.performActionsInLoop(data);
         } catch (Exception e) {
             ExceptionHelper.addException(e);
             return null;
