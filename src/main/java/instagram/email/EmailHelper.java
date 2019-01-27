@@ -1,18 +1,21 @@
 package instagram.email;
 
-import instagram.messages.EmailMessage;
+import instagram.messages.EmailSubject;
 import instagram.model.Report;
-import instagram.model.enums.JobStatus;
 import instagram.utils.DateUtils;
 
 public class EmailHelper {
 
-    public static String getHtmlReport(Report report, EmailMessage emailMessage) {
+    public static String getHtmlReport(String username, Report report, EmailSubject emailSubject) {
         StringBuilder htmlReportBuilder = new StringBuilder();
-        htmlReportBuilder.append(getHtmlReport(report));
-        if (emailMessage == EmailMessage.JOB_FINISHED) {
-            htmlReportBuilder.append(getHtmlJobRerun(report));
+        htmlReportBuilder.append(getHtmlUsername(username));
+        if (report != null) {
+            htmlReportBuilder.append(getHtmlReport(report));
+            if (emailSubject == EmailSubject.JOB_FINISHED) {
+                htmlReportBuilder.append(getHtmlJobRerun(report));
+            }
         }
+        htmlReportBuilder.append(getHtmlThankYou());
         return htmlReportBuilder.toString();
     }
 
@@ -63,5 +66,13 @@ public class EmailHelper {
     private static String getHtmlJobRerun(Report report) {
         String URL = "http://instabot.localtunnel.me/api/email/rerun/" + report.getUsername();
         return "<a href='" + URL + "'" + " target='_blank'><h2>CLICK TO RESTART JOB</h2></a>";
+    }
+
+    private static String getHtmlThankYou() {
+        return "<p>Thank you for using Instabot.</p>";
+    }
+
+    private static String getHtmlUsername(String username) {
+        return "<h2>Instagram Username: <span style=\"color: #800080;\">" + username + "</span></h2>";
     }
 }

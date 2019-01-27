@@ -1,16 +1,16 @@
 package instagram.messages;
 
-public enum EmailMessage {
+public enum EmailSubject {
 
-    JOB_FINISHED ("Your Instabot job is finished!"),
-    JOB_ABORTED ("Your Instabot job is aborted!"),
-    JOB_ABORTED_FOR_MAINTENACE ("Sorry! Your Instabot job is aborted for maintenance"),
-    JOB_ABORTED_WILL_AUTO_RESUME ("Your job has been aborted but will auto resume after maintenace"),
-    JOB_RESUMED ("Your job has auto resumed after maintenace!");
+    JOB_FINISHED ("Your Instabot Job Is Finished!"),
+    JOB_ABORTED ("Your Instabot Job Is Aborted!"),
+    JOB_ABORTED_FOR_MAINTENACE ("Sorry! Your Instabot Job Is Aborted For Maintenance."),
+    JOB_ABORTED_WILL_AUTO_RESUME ("Your Job Has Been Aborted But Will Auto Resume After Maintenance"),
+    JOB_RESUMED ("Your Job Has Auto Resumed After Maintenance!");
 
     private String message;
 
-    EmailMessage(String message) {
+    EmailSubject(String message) {
         this.message = message;
     }
 

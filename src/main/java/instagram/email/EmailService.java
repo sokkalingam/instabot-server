@@ -1,7 +1,7 @@
 package instagram.email;
 
 import instagram.exceptions.ExceptionHelper;
-import instagram.messages.EmailMessage;
+import instagram.messages.EmailSubject;
 import instagram.model.Data;
 import instagram.model.Report;
 import instagram.model.enums.EmailSubjects;
@@ -50,7 +50,7 @@ public class EmailService {
             report.setStartTime(LocalDateTime.now());
             report.setEndTimeAsNow();
             report.setCurrentLoop(24);
-            mimeMessage.setContent(EmailHelper.getHtmlReport(report, EmailMessage.JOB_FINISHED), "text/html");
+            mimeMessage.setContent(EmailHelper.getHtmlReport("username", report, EmailSubject.JOB_FINISHED), "text/html");
             mimeMessageHelper.setTo("lings24@gmail.com");
             mimeMessageHelper.setSubject("Test Email for HTML from Instabot");
             sendEmail(mimeMessage);
@@ -60,6 +60,10 @@ public class EmailService {
     }
 
     public boolean sendEmail(MimeMessage message) {
+
+        if (message == null)
+            return false;
+
         emailSender.setUsername(encryptDecryptService.decrypt(email));
         emailSender.setPassword(encryptDecryptService.decrypt(password));
         try {
@@ -87,32 +91,23 @@ public class EmailService {
     }
 
     public void sendJobFinishedEmail(Data data) {
-        try {
-            MimeMessage message = getBasicEmail(data, EmailMessage.JOB_FINISHED);
-            message.setSubject(EmailMessage.JOB_FINISHED.toString());
-            sendEmail(message);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        MimeMessage message = getBasicEmail(data, EmailSubject.JOB_FINISHED);
+        sendEmail(message);
     }
 
     public void sendJobAbortedEmail(Data data) {
-        try {
-            MimeMessage message = getBasicEmail(data, EmailMessage.JOB_ABORTED);
-            sendEmail(message);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-
+        MimeMessage message = getBasicEmail(data, EmailSubject.JOB_ABORTED);
+        sendEmail(message);
     }
 
     public void sendJobAbortedForMaintenanceEmail(Data data) {
-        try {
-            MimeMessage message = getBasicEmail(data, EmailMessage.JOB_ABORTED_WILL_AUTO_RESUME);
-            sendEmail(message);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        MimeMessage message = getBasicEmail(data, EmailSubject.JOB_ABORTED_WILL_AUTO_RESUME);
+        sendEmail(message);
+    }
+
+    public void sendJobAutoResumedEmail(Data data) {
+        MimeMessage message = getBasicEmail(data, EmailSubject.JOB_RESUMED);
+        sendEmail(message);
     }
 
     public boolean sendEmailToBot(String subject, String body) {
@@ -123,15 +118,20 @@ public class EmailService {
         return sendEmail(message);
     }
 
-    public MimeMessage getBasicEmail(Data data, EmailMessage emailMessage) throws MessagingException {
+    public MimeMessage getBasicEmail(Data data, EmailSubject emailSubject) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
-        Report report = reportService.getReport(data.username);
-        if (report != null) {
+        try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "utf-8");
             mimeMessageHelper.setTo(getToList(data.email));
-            mimeMessage.setContent(EmailHelper.getHtmlReport(report, emailMessage), "text/html");
-            mimeMessage.setSubject(emailMessage.toString());
+            mimeMessage.setSubject(emailSubject.toString());
+
+            Report report = reportService.getReport(data.username);
+            mimeMessage.setContent(EmailHelper.getHtmlReport(data.username, report, emailSubject), "text/html");
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
+
         return mimeMessage;
     }
 
