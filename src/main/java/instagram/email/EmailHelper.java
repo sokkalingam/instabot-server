@@ -64,8 +64,10 @@ public class EmailHelper {
     }
 
     private static String getHtmlJobRerun(Report report) {
-        String URL = "http://instabot.localtunnel.me/api/email/rerun/" + report.getUsername();
-        return "<a href='" + URL + "'" + " target='_blank'><h2>CLICK TO RESTART JOB</h2></a>";
+        return "<h2>Click to restart job</h2>" +
+                "<a href='http://instabot.localtunnel.me/api/email/rerun/" + report.getUsername() +"' target='_blank'><h3>Restart Link 1</h3></a>" +
+                "<a href='http://instabot1.localtunnel.me/api/email/rerun/" + report.getUsername() +"' target='_blank'><h3>Restart Link 2</h3></a>" +
+                "<a href='http://instabot2.localtunnel.me/api/email/rerun/" + report.getUsername() +"' target='_blank'><h3>Restart Link 3</h3></a>";
     }
 
     private static String getHtmlThankYou() {
