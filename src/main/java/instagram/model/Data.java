@@ -1,5 +1,7 @@
 package instagram.model;
 
+import org.springframework.data.annotation.Id;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -7,6 +9,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Data {
+
+	@Id
+	private String _id;
 
 	@NotEmpty(message = "Please provide your instagram username")
 	public String username;

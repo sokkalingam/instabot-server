@@ -1,5 +1,8 @@
 package instagram.utils;
 
+import instagram.model.Data;
+import instagram.model.Report;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,5 +64,26 @@ public class DataUtils {
             comments.add(tag);
         }
         return comments;
+    }
+
+    public static Data getRemainingJobData(Data data, Report report) {
+
+        if (report == null)
+            return data;
+
+        // If there was only one hashtag then subtract already run number of times to loop from report
+        if (data.hashtags.size() == 1)
+            data.noOfTimesToLoop = data.noOfTimesToLoop - report.getCurrentLoop();
+
+        // Remove already finished hashtags
+        List<String> hashtags = new ArrayList<>();
+        int index = data.hashtags.indexOf(report.getCurrentHashtag());
+        index = Math.max(index, 0);
+        for (int i = index; i < data.hashtags.size(); i++) {
+            hashtags.add(data.hashtags.get(i));
+        }
+        data.hashtags = hashtags;
+
+        return data;
     }
 }

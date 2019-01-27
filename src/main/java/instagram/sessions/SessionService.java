@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class SessionService {
@@ -21,7 +22,7 @@ public class SessionService {
     private Map<String, Session> activeSessions;
 
     public SessionService() {
-        activeSessions = new HashMap<>();
+        activeSessions = new ConcurrentHashMap<>();
     }
 
     public synchronized boolean isSessionActive(String sessionId) {
@@ -61,6 +62,7 @@ public class SessionService {
     }
 
     public void killAllSessions() {
+        System.out.println("Killing all active sessions");
         activeSessions.keySet().forEach(sessionId -> {
             Session session = killSession(sessionId);
             emailService.sendJobAbortedForMaintenanceEmail(session.getData());
