@@ -2,6 +2,7 @@ package instagram.instabot;
 
 import instagram.css.CssService;
 import instagram.database.RunningJobsRepo;
+import instagram.email.EmailService;
 import instagram.hashtag.HashtagService;
 import instagram.model.Data;
 import instagram.model.Report;
@@ -31,9 +32,13 @@ public class InstabotService {
     private RunningJobsRepo runningJobsRepo;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private CssService cssService;
 
     public void shutdown() {
+        System.out.println("Shutting down...");
         saveRunningJobs();
         sessionService.killAllSessions();
     }
@@ -47,7 +52,10 @@ public class InstabotService {
 
     public void runPendingJobs() {
         List<Data> jobsToRun = runningJobsRepo.findAll();
-        jobsToRun.forEach(data -> hashtagService.performActionsInLoop(data));
+        jobsToRun.forEach(data -> {
+            hashtagService.performActionsInLoop(data);
+            emailService.sendJobAutoResumedEmail(data);
+        });
     }
 
     public void clearRemainingJobs() {
