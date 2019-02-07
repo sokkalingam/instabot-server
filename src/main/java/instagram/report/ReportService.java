@@ -3,21 +3,28 @@ package instagram.report;
 import instagram.model.Report;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class ReportService {
 
-    public Report getReport(String username) {
-        return ReportManager.getReport(username.toLowerCase());
-    }
+    private Map<String, Report> map = new HashMap<>();
 
     public Report getNewReport(String username) {
-        return ReportManager.getNewReport(username);
+        Report report = new Report(username);
+        map.put(username, report);
+        return report;
     }
 
-    public Map<String, Report> getAll() {
-        return ReportManager.getAll();
+    public Report getReport(String username) {
+        return map.get(username);
     }
+
+    public void clearReport(String username) {
+        map.remove(username);
+    }
+
+    public Map<String, Report> getAll() { return map; }
 
 }

@@ -37,18 +37,4 @@ public class HashtagController {
         }
     }
 
-    @RequestMapping(value = "/like", method = RequestMethod.POST)
-    public String likeHashTag(@Valid @RequestBody Data data) {
-        if (sessionService.isSessionActive(data.sessionId))
-            return ResponseMessages.REQUEST_EXISTS.toString();
-        ThreadUtils.execute(new Thread(() -> {
-            WebDriver driver = DriverFactory.getLoggedInDriver(data);
-            sessionService.addNewSession(data, driver);
-            hashtagService.likeHashTag(data, driver);
-            sessionService.removeSession(data.sessionId);
-            driver.quit();
-        }));
-        return ResponseMessages.REQUEST_ACCEPTED.toString();
-    }
-
 }

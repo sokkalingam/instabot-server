@@ -32,6 +32,7 @@ public class SessionController {
         Session session = sessionService.killSession(sessionId);
         if (session == null)
             return ResponseMessages.SESSION_DOES_NOT_EXIST.toString();
+
         emailService.sendJobAbortedEmail(session.getData());
         return ResponseMessages.SESSION_ABORTED.toString();
     }

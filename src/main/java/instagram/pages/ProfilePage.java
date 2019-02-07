@@ -18,14 +18,14 @@ public class ProfilePage extends SuperPage {
 	private Data data;
 
 	public ProfilePage(WebDriver driver, Data data) {
-		super(driver);
+		superPage(driver);
 		this.data = data;
 		getDriver().get(ConfigData.BASE_URL + "/" + profileName);
 		this.profileName = data.username;
 	}
 
 	public ProfilePage(WebDriver driver, Data data, String profileName) {
-		super(driver);
+		superPage(driver);
 		this.data = data;
 		getDriver().get(ConfigData.BASE_URL + "/" + profileName);
 		this.profileName = profileName;

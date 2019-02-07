@@ -20,11 +20,7 @@ public class SuperPage {
 
 	private static final int WAIT_TIME = 10;
 
-	protected SuperPage(WebDriver driver) {
-		setDriver(driver);
-	}
-
-	protected void setDriver(WebDriver driver) {
+	protected void superPage(WebDriver driver) {
 		this.driver = driver;
 		this.wait = new WebDriverWait(driver, WAIT_TIME);
 		PageFactory.initElements(driver, this);
@@ -156,10 +152,6 @@ public class SuperPage {
 		return getText(getElement(CssData.get(CSS.PROFILE_NAME)));
 	}
 
-	protected String getProfileName(WebElement element) {
-		return getText(getElement(element, CssData.get(CSS.PROFILE_NAME)));
-	}
-
 	protected WebElement getCommentInput() {
 		return getElement(CssData.get(CSS.COMMENT_INPUT));
 	}
@@ -219,10 +211,6 @@ public class SuperPage {
 		}
 	}
 
-    protected void randomSleep(Data data) {
-        sleep(getRandomTime(data.timeMin, data.timeMax));
-    }
-
     protected boolean clickNext() {
         WebElement rightArrow = getRightNavArrow();
         if (rightArrow != null) {
@@ -233,23 +221,6 @@ public class SuperPage {
             return false;
         }
     }
-
-	protected WebElement getFollowButton() {
-		WebElement button = getElement("button");
-		if (button != null && button.getText().equals("Follow"))
-			return button;
-		return null;
-	}
-
-	protected boolean isFollowButtonVisible() {
-		WebElement button = getElement("button");
-		return button != null && button.getText().equals("Follow");
-	}
-
-	protected boolean isUnfollowButtonVisible() {
-		WebElement button = getElement("button");
-		return button != null && button.getText().equals("Following");
-	}
 
 	protected WebElement getUnfollowButton() {
 		WebElement button = getElement("button");

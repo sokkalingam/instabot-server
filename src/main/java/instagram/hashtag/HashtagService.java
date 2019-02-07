@@ -1,12 +1,11 @@
 package instagram.hashtag;
 
-import instagram.email.EmailService;
 import instagram.exceptions.ExceptionHelper;
 import instagram.factory.DriverFactory;
 import instagram.messages.ResponseMessages;
 import instagram.model.Data;
 import instagram.model.Session;
-import instagram.pages.HomePage;
+import instagram.pages.HomePageService;
 import instagram.sessions.SessionService;
 import instagram.utils.ThreadUtils;
 import org.apache.commons.lang.StringUtils;
@@ -20,10 +19,10 @@ import java.util.stream.Collectors;
 public class HashtagService {
 
     @Autowired
-    private EmailService emailService;
+    private SessionService sessionService;
 
     @Autowired
-    private SessionService sessionService;
+    private HomePageService homePageService;
 
     public String performActionsInLoop(Data data) {
         if (data == null)
@@ -36,32 +35,17 @@ public class HashtagService {
             try {
                 driver = DriverFactory.getLoggedInDriver(data);
                 session.setDriver(driver);
-                performActionsInLoop(data, driver);
+                _removeEmptyComments(data);
+                homePageService.performActionsInLoop(data, driver);
             } catch (Exception e) {
                 ExceptionHelper.addException(e);
+                e.printStackTrace();
             } finally {
                 sessionService.removeSession(data.sessionId);
                 if (driver != null) driver.quit();
             }
         }));
         return ResponseMessages.REQUEST_ACCEPTED.toString();
-    }
-
-    private void performActionsInLoop(Data data, WebDriver driver) {
-
-        _removeEmptyComments(data);
-        HomePage homePage = new HomePage(driver, data);
-        if (data.commentOnly)
-            homePage.commentHashtagInLoop();
-        else
-            homePage.likeAndCommentHashtagInLoop();
-        emailService.sendJobFinishedEmail(data);
-    }
-
-    public void likeHashTag(Data data, WebDriver driver) {
-        _removeEmptyComments(data);
-        HomePage homePage = new HomePage(driver, data);
-        homePage.likeHashtag();
     }
 
     private void _removeEmptyComments(Data data) {
