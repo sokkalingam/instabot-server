@@ -4,12 +4,11 @@ import instagram.email.EmailService;
 import instagram.model.Data;
 import instagram.model.Report;
 import instagram.model.Session;
-import instagram.report.ReportManager;
+import instagram.report.ReportService;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,6 +17,9 @@ public class SessionService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private ReportService reportService;
 
     private Map<String, Session> activeSessions;
 
@@ -53,7 +55,7 @@ public class SessionService {
             WebDriver driver = session.getDriver();
             if (driver != null)
                 driver.quit();
-            Report report = ReportManager.getReport(session.getData().username);
+            Report report = reportService.getReport(session.getData().username);
             if (report != null)
                 report.setJobAsAborted();
         }

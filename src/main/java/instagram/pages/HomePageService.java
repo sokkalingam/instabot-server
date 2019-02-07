@@ -114,7 +114,7 @@ public class HomePageService extends SuperPage {
 			ExceptionHelper.addException(new Exception("No posts found for hashtag " + hashtag + "\n" + this.data));
 
 		/* Skip top posts and open the most recent
-		   0 is for dogsofinstagram main photo
+		   0 is the main photo on top for the hashtag, it is not a post.
 		   1 to 9 for top posts (Sometimes it could be less than 9 photos for top posts)
 		   10th photo will surely be the most recent even if sometimes it may not be the first
 		 */
