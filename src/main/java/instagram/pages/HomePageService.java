@@ -104,14 +104,17 @@ public class HomePageService extends SuperPage {
 
 		_gotoHashTagPage(hashtag);
 
-		System.out.println("\nUser: " + data.username + " #" + hashtag + ", " + data.noOfPhotos + " photos, Wait time between " + data.timeMin + " and "
+		System.out.println("\nUser: " + data.username +
+				" #" + hashtag + ", " + data.noOfPhotos + " photos, " +
+				"Wait time between " + data.timeMin + " and "
 				+ data.timeMax + " seconds");
+
 		scrollDown(1000);
 		List<WebElement> photos = getElements("img");
 		System.out.println("No of photos found: " + photos.size());
 
 		if (photos.size() == 0)
-			ExceptionHelper.addException(new Exception("No posts found for hashtag " + hashtag + "\n" + this.data));
+			ExceptionHelper.addException(new Exception("No posts found for #" + hashtag + "\n" + this.data));
 
 		/* Skip top posts and open the most recent
 		   0 is the main photo on top for the hashtag, it is not a post.
