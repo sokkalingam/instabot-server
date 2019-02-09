@@ -5,6 +5,6 @@ public enum JobStatus {
     CREATED,
     RUNNING,
     COMPLETED,
-    ABORTED
-
+    ABORTED,
+    BLOCKED;
 }

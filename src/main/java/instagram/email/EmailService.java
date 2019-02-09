@@ -8,7 +8,6 @@ import instagram.model.enums.EmailSubjects;
 import instagram.model.enums.JobStatus;
 import instagram.report.ReportService;
 import instagram.services.EncryptDecryptService;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -90,24 +89,36 @@ public class EmailService {
         }
     }
 
+    public void sendEmail(Data data, EmailSubject emailSubject) {
+        sendEmail(getBasicEmail(data, emailSubject));
+    }
+
     public void sendJobFinishedEmail(Data data) {
-        MimeMessage message = getBasicEmail(data, EmailSubject.JOB_FINISHED);
-        sendEmail(message);
+        sendEmail(data, EmailSubject.JOB_FINISHED);
     }
 
     public void sendJobAbortedEmail(Data data) {
-        MimeMessage message = getBasicEmail(data, EmailSubject.JOB_ABORTED);
-        sendEmail(message);
+        sendEmail(data, EmailSubject.JOB_ABORTED);
     }
 
     public void sendJobAbortedForMaintenanceEmail(Data data) {
-        MimeMessage message = getBasicEmail(data, EmailSubject.JOB_ABORTED_WILL_AUTO_RESUME);
-        sendEmail(message);
+        sendEmail(data, EmailSubject.JOB_ABORTED_WILL_AUTO_RESUME);
     }
 
     public void sendJobAutoResumedEmail(Data data) {
-        MimeMessage message = getBasicEmail(data, EmailSubject.JOB_RESUMED);
-        sendEmail(message);
+        sendEmail(data, EmailSubject.JOB_RESUMED);
+    }
+
+    public void sendLikeIsBlockedEmail(Data data) {
+        sendEmail(data, EmailSubject.LIKE_IS_BLOCKED);
+    }
+
+    public void sendCommentIsBlockedEmail(Data data) {
+        sendEmail(data, EmailSubject.COMMENT_IS_BLOCKED);
+    }
+
+    public void sendUserIsBlockedEmail(Data data) {
+        sendEmail(data, EmailSubject.USER_IS_BLOCKED);
     }
 
     public boolean sendEmailToBot(String subject, String body) {

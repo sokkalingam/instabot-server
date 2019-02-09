@@ -30,8 +30,10 @@ public class HomePageService extends SuperPage {
 	private Report report;
 	private int rightArrowNotFoundCounter;
 	private int newPostNotFoundCounter;
+	private boolean isLikingBlocked;
+	private boolean isCommentingBlocked;
 	private final Integer RIGHT_ARROW_NOT_FOUND_LIMIT = 3;
-	private final Integer NEW_POST_NOT_FOUND_LIMIT = 10;
+	private final Integer GENERAL_LIMIT = 20;
 
 	@Autowired
 	private ReportService reportService;
@@ -59,7 +61,10 @@ public class HomePageService extends SuperPage {
 			commentHashtagInLoop();
 		else
 			likeAndCommentHashtagInLoop();
-		emailService.sendJobFinishedEmail(data);
+		if (_isUserBlocked())
+			emailService.sendUserIsBlockedEmail(data);
+		else
+			emailService.sendJobFinishedEmail(data);
 	}
 
 	public void commentHashTag() {
@@ -94,12 +99,33 @@ public class HomePageService extends SuperPage {
 	    report.setJobAsCompleted();
     }
 
+	/**
+	 * If LIKE is blocked and COMMENT is blocked
+	 * OR LIKE is blocked and there is nothing to comment
+	 * Return because the user is basically blocked
+	 */
+    private boolean _isUserBlocked() {
+		return isLikingBlocked && (isCommentingBlocked || data.comments.isEmpty());
+	}
+
 	private void _performOnHashTag(Action action, String hashtag) {
 
-		if (!action.like && !action.comment)
+		/*
+		 * If action is not LIKE and it is not COMMENT
+		 * OR if it is COMMENT but there are no comments
+		 * Then nothing else to do, hence return
+		 */
+		if (!action.like && (!action.comment || data.comments.isEmpty()))
 			return;
 
-		if (hashtag == null) return;
+		if (_isUserBlocked()) {
+			report.setJobStatus(JobStatus.BLOCKED);
+			return;
+		}
+
+		if (hashtag == null)
+			return;
+
 		hashtag = hashtag.trim();
 
 		_gotoHashTagPage(hashtag);
@@ -141,7 +167,6 @@ public class HomePageService extends SuperPage {
 				return;
 			}
 
-			boolean wait = false;
 			String profileName = getProfileName();
 			if (StringUtils.isBlank(profileName))
 				ExceptionHelper.addException(new Exception("ISSUE with fetching Profile Name\n" + this.data));
@@ -150,32 +175,19 @@ public class HomePageService extends SuperPage {
 			Profile currentProfile = HttpCall.getProfile(profileName);
 
 			if (currentProfile.getNoOfFollowers() <= data.maxNoOfFollowers){
-				if (action.like && !isAlreadyLiked()) {
-					like(getLikeButton());
-					if (!isAlreadyLiked())
-						ExceptionHelper.addException(new Exception("Issue with LIKE\n" + this.data));
-					else
-						report.incrementPhotoLiked();
-					wait = true;
-				}
 
-				if (action.comment && data.comments.size() > 0
-						&& _isProfileNotVisitedAndAddToSet(profileName) && !_alreadyCommented(data.username)) {
-					_comment(_getRandomComment());
-					if (!_alreadyCommented(data.username))
-						ExceptionHelper.addException(new Exception("Issue with COMMENT\n" + this.data));
-					else
-						report.incrementPhotosCommented();
-					wait = true;
-				}
+				// This is where actual liking and commenting happens
+				boolean liked = _performLike(action);
+				boolean commented = _performComment(action, profileName);
 
-				if (wait) {
+				// Sleep only if we have successfully liked or commented on a post
+				if (liked || commented) {
 					sleep(getRandomTime(data.timeMin, data.timeMax));
 					action.counter++;
 					newPostNotFoundCounter = 0;
 				} else {
 					newPostNotFoundCounter++;
-					if (newPostNotFoundCounter > NEW_POST_NOT_FOUND_LIMIT) {
+						if (newPostNotFoundCounter > GENERAL_LIMIT) {
 						_performOnHashTag(action, hashtag);
 						return;
 					}
@@ -194,6 +206,64 @@ public class HomePageService extends SuperPage {
 				rightArrowNotFoundCounter = 0;
 			}
 		}
+	}
+
+	private boolean _performLike(Action action) {
+		if (isLikingBlocked || !action.like || isAlreadyLiked())
+			return false;
+		like(getLikeButton());
+		if (!isAlreadyLiked()) {
+			ExceptionHelper.addException(new Exception("Issue with LIKE\n" + this.data));
+			return false;
+		}
+
+		if (checkIfLikeIsBlocked()) {
+			isLikingBlocked = true;
+			emailService.sendLikeIsBlockedEmail(this.data);
+			return false;
+		}
+
+		report.incrementPhotoLiked();
+		return true;
+	}
+
+	private boolean _performComment(Action action, String profileName) {
+		if (isCommentingBlocked || action.comment && data.comments.size() > 0
+				&& _isProfileNotVisitedAndAddToSet(profileName) && !isAlreadyCommented(data.username)) {
+			_comment(_getRandomComment());
+			if (!isAlreadyCommented(data.username)) {
+				ExceptionHelper.addException(new Exception("Issue with COMMENT\n" + this.data));
+				return false;
+			}
+
+			if (checkIfCommentIsBlocked(data.username)) {
+				isCommentingBlocked = true;
+				emailService.sendCommentIsBlockedEmail(data);
+				return false;
+			}
+
+			report.incrementPhotosCommented();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Is it time to check if photo LIKING is BLOCKED for every <GENERAL_LIMIT> photos
+	 * @return
+	 */
+	private boolean checkIfLikeIsBlocked() {
+    	int photosLiked = report.getPhotosLiked();
+    	return (photosLiked != 0) && (photosLiked % GENERAL_LIMIT == 0) && isLikeBlocked();
+	}
+
+	/**
+	 * Is it time to Check if photo COMMENTING is BLOCKED for every <GENERAL_LIMIT> photos
+	 * @return
+	 */
+	private boolean checkIfCommentIsBlocked(String username) {
+		int photosLiked = report.getPhotosLiked();
+		return (photosLiked != 0) && (photosLiked % GENERAL_LIMIT == 0) && isCommentBlocked(username);
 	}
 
 	private void _gotoHashTagPage(String hashtag) {
@@ -223,9 +293,5 @@ public class HomePageService extends SuperPage {
 	private String _getRandomComment() {
 		int index = ThreadLocalRandom.current().nextInt(0, data.comments.size());
 		return data.comments.get(index);
-	}
-
-	private boolean _alreadyCommented(String accountName) {
-		return getCommentsAsText().contains(accountName);
 	}
 }

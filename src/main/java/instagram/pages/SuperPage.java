@@ -144,6 +144,32 @@ public class SuperPage {
 		return getUnlikeButton() != null;
 	}
 
+	protected boolean isAlreadyCommented(String username) {
+		return getCommentsAsText().contains(username);
+	}
+
+	/**
+	 * Refresh page and check if the post is already liked
+	 * @return
+	 */
+	protected boolean isLikeBlocked() {
+		sleep(1);
+		System.out.println("Checking if liking is blocked");
+		refreshPage();
+		return !isAlreadyLiked();
+	}
+
+	/**
+	 * Refresh page and check if the post has your comment
+	 * @return
+	 */
+	protected boolean isCommentBlocked(String username) {
+		sleep(1);
+		System.out.println("Checking if commenting is blocked");
+		refreshPage();
+		return !isAlreadyCommented(username);
+	}
+
 	protected WebElement getRightNavArrow() {
 		return getElement(CssData.get(CSS.RIGHT_ARROW));
 	}
