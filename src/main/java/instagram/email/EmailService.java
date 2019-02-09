@@ -1,6 +1,6 @@
 package instagram.email;
 
-import instagram.exceptions.ExceptionHelper;
+import instagram.exceptions.ExceptionService;
 import instagram.messages.EmailSubject;
 import instagram.model.Data;
 import instagram.model.Report;
@@ -39,6 +39,9 @@ public class EmailService {
 
     @Autowired
     private EncryptDecryptService encryptDecryptService;
+    
+    @Autowired
+    private ExceptionService exceptionService;
 
     public void testEmail(String to) {
         try {
@@ -149,16 +152,16 @@ public class EmailService {
     // Runs every 10 minutes
     @Scheduled(fixedDelay = 10 * 60 * 1000)
     public boolean sendExceptionEmailsFromQueue() {
-        if (ExceptionHelper.getExceptionQueue().size() == 0)
+        if (exceptionService.getExceptionQueue().size() == 0)
             return false;
         System.out.println("Running sendExceptionEmailsFromQueue");
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(encryptDecryptService.decrypt(getEmail()));
         message.setSubject(EmailSubjects.FAILURE.toString());
         StringBuilder sb = new StringBuilder();
-        for (Exception exception : ExceptionHelper.getExceptionQueue())
+        for (Exception exception : exceptionService.getExceptionQueue())
             sb.append(exception.getMessage()).append("\n\n");
-        ExceptionHelper.clearExceptions();
+        exceptionService.clearExceptions();
         message.setText(sb.toString());
         return sendEmail(message);
     }

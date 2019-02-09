@@ -1,7 +1,7 @@
 package instagram.pages;
 
 import instagram.email.EmailService;
-import instagram.exceptions.ExceptionHelper;
+import instagram.exceptions.ExceptionService;
 import instagram.http.HttpCall;
 import instagram.model.*;
 import instagram.model.enums.JobStatus;
@@ -33,13 +33,16 @@ public class HomePageService extends SuperPage {
 	private boolean isLikingBlocked;
 	private boolean isCommentingBlocked;
 	private final Integer RIGHT_ARROW_NOT_FOUND_LIMIT = 3;
-	private final Integer GENERAL_LIMIT = 20;
+	private final Integer GENERAL_LIMIT = 10;
 
 	@Autowired
 	private ReportService reportService;
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private ExceptionService exceptionService;
 
 	public void init(WebDriver driver, Data data) {
 		superPage(driver);
@@ -140,7 +143,7 @@ public class HomePageService extends SuperPage {
 		System.out.println("No of photos found: " + photos.size());
 
 		if (photos.size() == 0)
-			ExceptionHelper.addException(new Exception("No posts found for #" + hashtag + "\n" + this.data));
+			exceptionService.addException(new Exception("No posts found for #" + hashtag + "\n" + this.data));
 
 		/* Skip top posts and open the most recent
 		   0 is the main photo on top for the hashtag, it is not a post.
@@ -169,7 +172,7 @@ public class HomePageService extends SuperPage {
 
 			String profileName = getProfileName();
 			if (StringUtils.isBlank(profileName))
-				ExceptionHelper.addException(new Exception("ISSUE with fetching Profile Name\n" + this.data));
+				exceptionService.addException(new Exception("ISSUE with fetching Profile Name\n" + this.data));
 
 			System.out.println("\nUser: " + data.username + "\n" + (action.counter + 1) + ") " + profileName);
 			Profile currentProfile = HttpCall.getProfile(profileName);
@@ -199,7 +202,7 @@ public class HomePageService extends SuperPage {
                 System.out.println("Right Arrow Not Found, Retrying Hashtag");
                 rightArrowNotFoundCounter++;
                 if (rightArrowNotFoundCounter > RIGHT_ARROW_NOT_FOUND_LIMIT)
-					ExceptionHelper.addException(new Exception("Issue with clicking RIGHT ARROW\n" + this.data));
+					exceptionService.addException(new Exception("Issue with clicking RIGHT ARROW\n" + this.data));
                 _performOnHashTag(action, hashtag);
                 return;
             } else {
@@ -213,7 +216,7 @@ public class HomePageService extends SuperPage {
 			return false;
 		like(getLikeButton());
 		if (!isAlreadyLiked()) {
-			ExceptionHelper.addException(new Exception("Issue with LIKE\n" + this.data));
+			exceptionService.addException(new Exception("Issue with LIKE\n" + this.data));
 			return false;
 		}
 
@@ -232,7 +235,7 @@ public class HomePageService extends SuperPage {
 				&& _isProfileNotVisitedAndAddToSet(profileName) && !isAlreadyCommented(data.username)) {
 			_comment(_getRandomComment());
 			if (!isAlreadyCommented(data.username)) {
-				ExceptionHelper.addException(new Exception("Issue with COMMENT\n" + this.data));
+				exceptionService.addException(new Exception("Issue with COMMENT\n" + this.data));
 				return false;
 			}
 

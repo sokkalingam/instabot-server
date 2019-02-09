@@ -1,6 +1,6 @@
 package instagram.hashtag;
 
-import instagram.exceptions.ExceptionHelper;
+import instagram.exceptions.ExceptionService;
 import instagram.factory.DriverFactory;
 import instagram.messages.ResponseMessages;
 import instagram.model.Data;
@@ -24,6 +24,9 @@ public class HashtagService {
     @Autowired
     private HomePageService homePageService;
 
+    @Autowired
+    private ExceptionService exceptionService;
+
     public String performActionsInLoop(Data data) {
         if (data == null)
             return ResponseMessages.REQUEST_INVALID.toString();
@@ -38,7 +41,7 @@ public class HashtagService {
                 _removeEmptyComments(data);
                 homePageService.performActionsInLoop(data, driver);
             } catch (Exception e) {
-                ExceptionHelper.addException(e);
+                exceptionService.addException(e);
                 e.printStackTrace();
             } finally {
                 sessionService.removeSession(data.sessionId);

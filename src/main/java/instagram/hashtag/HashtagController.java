@@ -1,14 +1,8 @@
 package instagram.hashtag;
 
-import instagram.exceptions.ExceptionHelper;
-import instagram.factory.DriverFactory;
-import instagram.messages.ResponseMessages;
+import instagram.exceptions.ExceptionService;
 import instagram.model.Data;
-import instagram.model.PresetData;
-import instagram.model.Session;
 import instagram.sessions.SessionService;
-import instagram.utils.ThreadUtils;
-import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,12 +21,15 @@ public class HashtagController {
     @Autowired
     private HashtagService hashtagService;
 
+    @Autowired
+    private ExceptionService exceptionService;
+
     @RequestMapping(value = "/loop", method = RequestMethod.POST)
     public String performActionsInLoop(@Valid @RequestBody Data data) {
         try {
             return hashtagService.performActionsInLoop(data);
         } catch (Exception e) {
-            ExceptionHelper.addException(e);
+            exceptionService.addException(e);
             return null;
         }
     }
