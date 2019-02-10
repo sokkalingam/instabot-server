@@ -67,7 +67,7 @@ public class Data {
 	private Integer likesToCommentRatio;
 
 	public Integer getLikesToCommentRatio() {
-		return likesToCommentRatio == null ? 0 : likesToCommentRatio;
+		return likesToCommentRatio == null ? 1 : likesToCommentRatio;
 	}
 
 	public void setLikesToCommentRatio(Integer likesToCommentRatio) {
