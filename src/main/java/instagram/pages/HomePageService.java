@@ -3,10 +3,12 @@ package instagram.pages;
 import instagram.email.EmailService;
 import instagram.exceptions.ExceptionService;
 import instagram.http.HttpCall;
+import instagram.logger.LogService;
 import instagram.model.*;
 import instagram.model.enums.JobStatus;
 import instagram.report.ReportService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -28,6 +30,8 @@ public class HomePageService extends SuperPage {
 	private Set<String> alreadyVisited;
 	private Data data;
 	private Report report;
+	private LogService logger;
+
 	private int rightArrowNotFoundCounter;
 	private int newPostNotFoundCounter;
 	private boolean isLikingBlocked;
@@ -45,6 +49,7 @@ public class HomePageService extends SuperPage {
 	private ExceptionService exceptionService;
 
 	public void init(WebDriver driver, Data data) {
+		logger = new LogService();
 		superPage(driver);
 		this.data = data;
 		PageFactory.initElements(driver, this);
@@ -77,9 +82,14 @@ public class HomePageService extends SuperPage {
 		}
 	}
 
+	private void logLoopCount(int i) {
+		logger.append(data).append("loopCount")
+				.append(data.noOfTimesToLoop).append("loop").append(i).log();
+	}
+
 	public void commentHashtagInLoop() {
 		for (int i = 1; i <= data.noOfTimesToLoop; i++) {
-			System.out.println("Loop #" + i);
+			logLoopCount(i);
 			report.incrementCurrentLoop();
 			commentHashTag();
 		}
@@ -95,7 +105,7 @@ public class HomePageService extends SuperPage {
 
 	public void likeAndCommentHashtagInLoop() {
 	    for (int i = 1; i <= data.noOfTimesToLoop; i++) {
-            System.out.println("Loop #" + i);
+            logLoopCount(i);
             report.incrementCurrentLoop();
             likeAndCommentHashTag();
         }
@@ -112,6 +122,8 @@ public class HomePageService extends SuperPage {
 	}
 
 	private void _performOnHashTag(Action action, String hashtag) {
+
+    	logger.appendErr("Testing").appendErr("Error").err();
 
 		/*
 		 * If action is not LIKE and it is not COMMENT
@@ -133,14 +145,11 @@ public class HomePageService extends SuperPage {
 
 		_gotoHashTagPage(hashtag);
 
-		System.out.println("\nUser: " + data.username +
-				" #" + hashtag + ", " + data.noOfPhotos + " photos, " +
-				"Wait time between " + data.timeMin + " and "
-				+ data.timeMax + " seconds");
+		logger.appendData(data).append("#" + hashtag);
 
 		scrollDown(1000);
 		List<WebElement> photos = getElements("img");
-		System.out.println("No of photos found: " + photos.size());
+		logger.append("photosFound").append(photos.size()).log();
 
 		if (photos.size() == 0)
 			exceptionService.addException(new Exception("No posts found for #" + hashtag + "\n" + this.data));
@@ -174,8 +183,9 @@ public class HomePageService extends SuperPage {
 			if (StringUtils.isBlank(profileName))
 				exceptionService.addException(new Exception("ISSUE with fetching Profile Name\n" + this.data));
 
-			System.out.println("\nUser: " + data.username + "\n" + (action.counter + 1) + ") " + profileName);
+			logger.append(data).append("maxNoOfFollowers").append(data.maxNoOfFollowers);
 			Profile currentProfile = HttpCall.getProfile(profileName);
+			logger.append(currentProfile);
 
 			if (currentProfile.getNoOfFollowers() <= data.maxNoOfFollowers){
 
@@ -197,9 +207,11 @@ public class HomePageService extends SuperPage {
 				}
 			}
 
+			logger.log();
+
 			boolean clickedNext = clickNext();
 			if (!clickedNext) {
-                System.out.println("Right Arrow Not Found, Retrying Hashtag");
+                logger.appendErr(data.username).appendErr("Right Arrow Not Found, Retrying Hashtag").err();
                 rightArrowNotFoundCounter++;
                 if (rightArrowNotFoundCounter > RIGHT_ARROW_NOT_FOUND_LIMIT)
 					exceptionService.addException(new Exception("Issue with clicking RIGHT ARROW\n" + this.data));
@@ -227,6 +239,7 @@ public class HomePageService extends SuperPage {
 		}
 
 		report.incrementPhotoLiked();
+		logger.append("liked");
 		return true;
 	}
 
@@ -246,6 +259,7 @@ public class HomePageService extends SuperPage {
 			}
 
 			report.incrementPhotosCommented();
+			logger.append("commented");
 			return true;
 		}
 		return false;
@@ -290,7 +304,7 @@ public class HomePageService extends SuperPage {
 		comment(getCommentInput(), Keys.ENTER);
 		sleep(2);
 		waitForCommentToLoad();
-		System.out.println("Commented: " + comment);
+		logger.append(data).append("comment").append(comment);
 	}
 
 	private String _getRandomComment() {

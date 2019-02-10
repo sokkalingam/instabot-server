@@ -1,6 +1,7 @@
 package instagram.email;
 
 import instagram.exceptions.ExceptionService;
+import instagram.logger.LogService;
 import instagram.messages.EmailSubject;
 import instagram.model.Data;
 import instagram.model.Report;
@@ -43,6 +44,9 @@ public class EmailService {
     @Autowired
     private ExceptionService exceptionService;
 
+    @Autowired
+    private LogService logger;
+
     public void testEmail(String to) {
         try {
             MimeMessage mimeMessage = emailSender.createMimeMessage();
@@ -55,13 +59,15 @@ public class EmailService {
             mimeMessage.setContent(EmailHelper.getHtmlReport("username", report, EmailSubject.JOB_FINISHED), "text/html");
             mimeMessageHelper.setTo("lings24@gmail.com");
             mimeMessageHelper.setSubject("Test Email for HTML from Instabot");
-            sendEmail(mimeMessage);
+            Data data = new Data();
+            data.username = "TestEmail";
+            sendEmail(mimeMessage, data);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
     }
 
-    public boolean sendEmail(MimeMessage message) {
+    public boolean sendEmail(MimeMessage message, Data data) {
 
         if (message == null)
             return false;
@@ -70,30 +76,30 @@ public class EmailService {
         emailSender.setPassword(encryptDecryptService.decrypt(password));
         try {
             emailSender.send(message);
-            System.out.println("Email Sent to: " + Arrays.asList(message.getAllRecipients()));
+            logger.append(data.username).append("Email Sent to: " + Arrays.asList(message.getAllRecipients())).log();
             return true;
         } catch (MailException | MessagingException e) {
-            System.out.println("Could not send email, SimpleMailMessage: " + message);
+            logger.appendErr(data.username).appendErr("Could not send email, SimpleMailMessage: " + message).err();
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean sendEmail(SimpleMailMessage message) {
+    public boolean sendEmail(SimpleMailMessage message, Data data) {
         emailSender.setUsername(encryptDecryptService.decrypt(email));
         emailSender.setPassword(encryptDecryptService.decrypt(password));
         try {
             emailSender.send(message);
             return true;
         } catch (MailException e) {
-            System.out.println("Could not send email, SimpleMailMessage: " + message);
+            logger.appendErr(data.username).appendErr("Could not send email, SimpleMailMessage: " + message).err();
             e.printStackTrace();
             return false;
         }
     }
 
     public void sendEmail(Data data, EmailSubject emailSubject) {
-        sendEmail(getBasicEmail(data, emailSubject));
+        sendEmail(getBasicEmail(data, emailSubject), data);
     }
 
     public void sendJobFinishedEmail(Data data) {
@@ -129,7 +135,9 @@ public class EmailService {
         message.setTo(encryptDecryptService.decrypt(getEmail()));
         message.setSubject(subject);
         message.setText(body);
-        return sendEmail(message);
+        Data data = new Data();
+        data.username = "InstaBot";
+        return sendEmail(message, null);
     }
 
     public MimeMessage getBasicEmail(Data data, EmailSubject emailSubject) {
@@ -154,7 +162,7 @@ public class EmailService {
     public boolean sendExceptionEmailsFromQueue() {
         if (exceptionService.getExceptionQueue().size() == 0)
             return false;
-        System.out.println("Running sendExceptionEmailsFromQueue");
+        logger.append("Running sendExceptionEmailsFromQueue").log();
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(encryptDecryptService.decrypt(getEmail()));
         message.setSubject(EmailSubjects.FAILURE.toString());
@@ -163,7 +171,9 @@ public class EmailService {
             sb.append(exception.getMessage()).append("\n\n");
         exceptionService.clearExceptions();
         message.setText(sb.toString());
-        return sendEmail(message);
+        Data data = new Data();
+        data.username = "Exceptions";
+        return sendEmail(message, data);
     }
 
     public String getEmail() {

@@ -66,20 +66,13 @@ public class Data {
 	public String toString() {
 		return "Data{" +
 				"username='" + username + '\'' +
-				", password='" + password + '\'' +
 				", hashtag='" + hashtags + '\'' +
 				", noOfPhotos=" + noOfPhotos +
-				", spamLikeCount=" + spamLikeCount +
 				", timeMin=" + timeMin +
 				", timeMax=" + timeMax +
 				", maxFollowersRequiredToFollow=" + maxNoOfFollowers +
-				", minFollowersRequiredToNotUnfollow=" + minFollowersRequiredToNotUnfollow +
-				", sessionId='" + sessionId + '\'' +
-				", protectedProfiles=" + protectedProfiles +
 				", comments=" + comments +
-				", noOfMostRecentPhotos=" + noOfMostRecentPhotos +
 				", noOfTimesToLoop=" + noOfTimesToLoop +
-				", maxNoOfProfilesToUnfollow=" + maxNoOfProfilesToUnfollow +
 				'}';
 	}
 
