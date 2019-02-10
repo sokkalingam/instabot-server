@@ -193,7 +193,7 @@ public class HomePageService extends SuperPage {
 
 				boolean commented = false;
 
-				if (data.commentOnly || (report.getPhotosLiked() > 0 && report.getPhotosLiked() % data.likesToCommentRatio == 0))
+				if (data.commentOnly || (report.getPhotosLiked() > 0 && report.getPhotosLiked() % data.getLikesToCommentRatio() == 0))
 					commented = _performComment(action, profileName);
 
 				// Sleep only if we have successfully liked or commented on a post

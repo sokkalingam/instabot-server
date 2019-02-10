@@ -64,7 +64,15 @@ public class Data {
 
 	// Ex: If value is 5. For every 5 photos liked, 1 comment will be added
 	@Min(value = 1, message = "Likes to Comment Ratio cannot be less than 1")
-	public Integer likesToCommentRatio;
+	private Integer likesToCommentRatio;
+
+	public Integer getLikesToCommentRatio() {
+		return likesToCommentRatio == null ? 0 : likesToCommentRatio;
+	}
+
+	public void setLikesToCommentRatio(Integer likesToCommentRatio) {
+		this.likesToCommentRatio = likesToCommentRatio;
+	}
 
 	@Override
 	public String toString() {
