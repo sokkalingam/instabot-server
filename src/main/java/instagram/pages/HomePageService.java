@@ -8,7 +8,6 @@ import instagram.model.*;
 import instagram.model.enums.JobStatus;
 import instagram.report.ReportService;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -123,8 +122,6 @@ public class HomePageService extends SuperPage {
 
 	private void _performOnHashTag(Action action, String hashtag) {
 
-    	logger.appendErr("Testing").appendErr("Error").err();
-
 		/*
 		 * If action is not LIKE and it is not COMMENT
 		 * OR if it is COMMENT but there are no comments
@@ -189,9 +186,15 @@ public class HomePageService extends SuperPage {
 
 			if (currentProfile.getNoOfFollowers() <= data.maxNoOfFollowers){
 
-				// This is where actual liking and commenting happens
+				/*
+				 * This is where actual liking and commenting happens
+				 */
 				boolean liked = _performLike(action);
-				boolean commented = _performComment(action, profileName);
+
+				boolean commented = false;
+
+				if (data.commentOnly || (report.getPhotosLiked() > 0 && report.getPhotosLiked() % data.likesToCommentRatio == 0))
+					commented = _performComment(action, profileName);
 
 				// Sleep only if we have successfully liked or commented on a post
 				if (liked || commented) {

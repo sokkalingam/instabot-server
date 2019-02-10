@@ -62,6 +62,10 @@ public class Data {
 
 	public boolean commentOnly;
 
+	// Ex: If value is 5. For every 5 photos liked, 1 comment will be added
+	@Min(value = 1, message = "Likes to Comment Ratio cannot be less than 1")
+	public Integer likesToCommentRatio;
+
 	@Override
 	public String toString() {
 		return "Data{" +
