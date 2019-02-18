@@ -14,12 +14,12 @@ public class SessionService {
         activeSessions = new HashSet<>();
     }
 
-    public boolean isSessionActive(String sessionId) {
+    public synchronized boolean isSessionActive(String sessionId) {
         return !activeSessions.add(sessionId);
     }
 
-    public boolean removeSession(String sessionId) {
-        return activeSessions.remove(sessionId);
+    public synchronized void removeSession(String sessionId) {
+        activeSessions.remove(sessionId);
     }
 
 }
