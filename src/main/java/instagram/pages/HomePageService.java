@@ -33,10 +33,13 @@ public class HomePageService extends SuperPage {
 
 	private int rightArrowNotFoundCounter;
 	private int newPostNotFoundCounter;
+	private int likedBlockedCounter;
+	private int commentBlockedCounter;
 	private boolean isLikingBlocked;
 	private boolean isCommentingBlocked;
 	private final Integer RIGHT_ARROW_NOT_FOUND_LIMIT = 3;
 	private final Integer GENERAL_LIMIT = 10;
+	private final Integer BLOCKED_LIMIT = 3;
 
 	@Autowired
 	private ReportService reportService;
@@ -236,10 +239,16 @@ public class HomePageService extends SuperPage {
 		}
 
 		if (checkIfLikeIsBlocked()) {
-			isLikingBlocked = true;
-			emailService.sendLikeIsBlockedEmail(this.data);
-			return false;
+			if (likedBlockedCounter > BLOCKED_LIMIT) {
+			    logger.append("LIKING IS BLOCKED");
+                isLikingBlocked = true;
+                emailService.sendLikeIsBlockedEmail(this.data);
+                return false;
+            }
+            likedBlockedCounter++;
+            logger.append("LIKING MAY BE BLOCKED, Attempt " + likedBlockedCounter);
 		}
+		likedBlockedCounter = 0;
 
 		report.incrementPhotoLiked();
 		logger.append("liked");
@@ -256,10 +265,16 @@ public class HomePageService extends SuperPage {
 			}
 
 			if (checkIfCommentIsBlocked(data.username)) {
-				isCommentingBlocked = true;
-				emailService.sendCommentIsBlockedEmail(data);
-				return false;
+			    if (commentBlockedCounter > BLOCKED_LIMIT) {
+                    logger.append("COMMENTING IS BLOCKED");
+                    isCommentingBlocked = true;
+                    emailService.sendCommentIsBlockedEmail(data);
+                    return false;
+                }
+                commentBlockedCounter++;
+			    logger.append("COMMENTING MAY BE BLOCKED, Attempt " + commentBlockedCounter);
 			}
+			commentBlockedCounter = 0;
 
 			report.incrementPhotosCommented();
 			logger.append("commented");
