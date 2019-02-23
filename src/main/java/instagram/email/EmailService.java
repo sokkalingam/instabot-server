@@ -167,7 +167,7 @@ public class EmailService {
         message.setTo(encryptDecryptService.decrypt(getEmail()));
         message.setSubject(EmailSubjects.FAILURE.toString());
         StringBuilder sb = new StringBuilder();
-        for (Exception exception : exceptionService.getExceptionQueue())
+        for (Throwable exception : exceptionService.getExceptionQueue())
             sb.append(exception.getMessage()).append("\n\n");
         exceptionService.clearExceptions();
         message.setText(sb.toString());

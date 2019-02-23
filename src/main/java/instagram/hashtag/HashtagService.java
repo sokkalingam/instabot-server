@@ -40,7 +40,7 @@ public class HashtagService {
                 session.setDriver(driver);
                 _removeEmptyComments(data);
                 homePageService.performActionsInLoop(data, driver);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 exceptionService.addException(e);
                 e.printStackTrace();
             } finally {

@@ -28,7 +28,7 @@ public class HashtagController {
     public String performActionsInLoop(@Valid @RequestBody Data data) {
         try {
             return hashtagService.performActionsInLoop(data);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             exceptionService.addException(e);
             return null;
         }

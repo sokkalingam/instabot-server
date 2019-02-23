@@ -8,17 +8,17 @@ import java.util.Queue;
 @Service
 public class ExceptionService {
 
-    private Queue<Exception> exceptionQueue;
+    private Queue<Throwable> exceptionQueue;
 
     public ExceptionService() {
         exceptionQueue = new LinkedList<>();
     }
 
-    public synchronized Queue<Exception> getExceptionQueue() {
+    public synchronized Queue<Throwable> getExceptionQueue() {
         return exceptionQueue;
     }
 
-    public synchronized void addException(Exception e) {
+    public synchronized void addException(Throwable e) {
         exceptionQueue.add(e);
     }
 

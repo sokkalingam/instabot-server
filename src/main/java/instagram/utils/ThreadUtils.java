@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ThreadUtils {
 
-    private final static int poolSize = 5;
+    private final static int poolSize = 20;
     private static ExecutorService executorService;
 
     public static ExecutorService getExecutorService() {
