@@ -6,6 +6,8 @@ import instagram.utils.DateUtils;
 
 public class EmailHelper {
 
+    private final static String BASE_URL = "http://instabot360.com/api/email/rerun/";
+
     public static String getHtmlReport(String username, Report report, EmailSubject emailSubject) {
         StringBuilder htmlReportBuilder = new StringBuilder();
         htmlReportBuilder.append(getHtmlUsername(username));
@@ -65,9 +67,7 @@ public class EmailHelper {
 
     private static String getHtmlJobRerun(Report report) {
         return "<h2>Click to restart job</h2>" +
-                "<a href='http://instabot.localtunnel.me/api/email/rerun/" + report.getUsername() +"' target='_blank'><h3>Restart Link 1</h3></a>" +
-                "<a href='http://instabot1.localtunnel.me/api/email/rerun/" + report.getUsername() +"' target='_blank'><h3>Restart Link 2</h3></a>" +
-                "<a href='http://instabot2.localtunnel.me/api/email/rerun/" + report.getUsername() +"' target='_blank'><h3>Restart Link 3</h3></a>";
+                "<a href='" + BASE_URL + report.getUsername() +"' target='_blank'><h3>Restart Link</h3></a>";
     }
 
     private static String getHtmlThankYou() {

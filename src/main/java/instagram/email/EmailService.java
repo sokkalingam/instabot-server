@@ -157,8 +157,8 @@ public class EmailService {
         return mimeMessage;
     }
 
-    // Runs every 10 minutes
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+    // Runs every 60 minutes
+    @Scheduled(fixedDelay = 60 * 60 * 1000)
     public boolean sendExceptionEmailsFromQueue() {
         if (exceptionService.getExceptionQueue().size() == 0)
             return false;
@@ -167,8 +167,8 @@ public class EmailService {
         message.setTo(encryptDecryptService.decrypt(getEmail()));
         message.setSubject(EmailSubjects.FAILURE.toString());
         StringBuilder sb = new StringBuilder();
-        for (Throwable exception : exceptionService.getExceptionQueue())
-            sb.append(exception.getMessage()).append("\n\n");
+        for (String exceptionMessage : exceptionService.getExceptionQueue())
+            sb.append(exceptionMessage).append("\n\n");
         exceptionService.clearExceptions();
         message.setText(sb.toString());
         Data data = new Data();
