@@ -238,7 +238,7 @@ public class HomePageService extends SuperPage {
 			return false;
 		}
 
-		if (checkIfLikeIsBlocked()) {
+		if (checkIfLikeIsBlocked() || likedBlockedCounter > 0) {
 			if (likedBlockedCounter > BLOCKED_LIMIT) {
 			    logger.append("LIKING IS BLOCKED");
                 isLikingBlocked = true;
@@ -264,7 +264,7 @@ public class HomePageService extends SuperPage {
 				return false;
 			}
 
-			if (checkIfCommentIsBlocked(data.username)) {
+			if (checkIfCommentIsBlocked(data.username) || commentBlockedCounter > 0) {
 			    if (commentBlockedCounter > BLOCKED_LIMIT) {
                     logger.append("COMMENTING IS BLOCKED");
                     isCommentingBlocked = true;
