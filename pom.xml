@@ -5,7 +5,7 @@
   <groupId>automation</groupId>
   <artifactId>instagram</artifactId>
   <version>1.0</version>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
 
   <name>browser</name>
   <url>http://maven.apache.org</url>
