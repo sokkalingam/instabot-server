@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
-@Service
-@Scope("prototype")
 public class LogService {
 
     private final static Logger logger = Logger.getLogger(LogService.class);
@@ -26,14 +24,18 @@ public class LogService {
 
     public LogService appendData(Data data) {
         logBuilder.append(data.username).append("|")
-                .append("waitTime|").append(data.timeMin).append("|")
-                .append(data.timeMax).append("|").append("noOfPhotos|")
+                .append("waitTime|").append("|").append("noOfPhotos|")
                 .append(data.noOfPhotos).append("|");
         return this;
     }
 
     public LogService appendErr(Object text) {
         errBuilder.append(text).append("|");
+        return this;
+    }
+
+    public LogService appendErr(Data data) {
+        errBuilder.append(data.username).append("|");
         return this;
     }
 
