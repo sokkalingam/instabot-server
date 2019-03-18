@@ -120,17 +120,20 @@ public class HomePageService extends SuperPage {
 	 */
     private void isUserBlockedOrFinished(UserData userData, Data data, Report report) {
         if (_isUserBlocked(userData, data)) {
+			report.setJobStatus(JobStatus.BLOCKED);
+			report.setEndTimeAsNow();
             emailService.sendUserIsBlockedEmail(data);
-            report.setJobStatus(JobStatus.BLOCKED);
         }
 
         if (userData.getHashtags().isEmpty()) {
             report.setJobStatus(JobStatus.COMPLETED);
+			report.setEndTimeAsNow();
             emailService.sendJobFinishedEmail(data);
         }
 
         if (userData.getNewPostNotFoundCounter() > NEW_POST_NOT_FOUND_LIMIT) {
         	report.setJobStatus(JobStatus.TERMINATED);
+			report.setEndTimeAsNow();
         	emailService.sendJobTerminatedEmail(data);
 		}
     }
