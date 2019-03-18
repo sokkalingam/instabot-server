@@ -26,7 +26,7 @@ public class SessionServiceTest {
         Data data = new Data();
         data.sessionId = "sessionOne";
         assertThat(sessionService.isSessionActive(data.sessionId), equalTo(false));
-        assertThat(sessionService.addNewSession(data, null), is(notNullValue()));
+        assertThat(sessionService.addNewSession(data), is(notNullValue()));
         assertThat(sessionService.isSessionActive(data.sessionId), equalTo(true));
         sessionService.removeSession(data.sessionId);
         assertThat(sessionService.isSessionActive(data.sessionId), equalTo(false));

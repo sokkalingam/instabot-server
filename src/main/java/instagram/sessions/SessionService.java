@@ -1,16 +1,16 @@
 package instagram.sessions;
 
 import instagram.email.EmailService;
+import instagram.logger.LogService;
 import instagram.model.Data;
 import instagram.model.Report;
 import instagram.model.Session;
 import instagram.report.ReportService;
-import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class SessionService {
@@ -21,21 +21,25 @@ public class SessionService {
     @Autowired
     private ReportService reportService;
 
+    private LogService logger;
+
     private Map<String, Session> activeSessions;
 
     public SessionService() {
-        activeSessions = new ConcurrentHashMap<>();
+        logger = new LogService();
+        activeSessions = new LinkedHashMap<>();
     }
 
     public synchronized boolean isSessionActive(String sessionId) {
         return activeSessions.containsKey(sessionId);
     }
 
-    public synchronized Session addNewSession(Data data, WebDriver driver) {
+    public synchronized Session addNewSession(Data data) {
         Session session = new Session();
         session.setData(data);
-        session.setDriver(driver);
         activeSessions.put(data.sessionId, session);
+        reportService.getNewReport(data.username);
+        logger.append("New Session").append(data).log();
         return session;
     }
 
@@ -52,19 +56,17 @@ public class SessionService {
             return null;
         Session session = activeSessions.get(sessionId);
         if (session != null) {
-            WebDriver driver = session.getDriver();
-            if (driver != null)
-                driver.quit();
             Report report = reportService.getReport(session.getData().username);
             if (report != null)
                 report.setJobAsAborted();
+            logger.append("Killed Session").append(session.getData()).log();
         }
         removeSession(sessionId);
         return session;
     }
 
     public void killAllSessions() {
-        System.out.println("Killing all active sessions");
+        logger.append("Killing all active sessions").log();
         activeSessions.keySet().forEach(sessionId -> {
             Session session = killSession(sessionId);
             emailService.sendJobAbortedForMaintenanceEmail(session.getData());

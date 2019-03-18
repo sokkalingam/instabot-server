@@ -2,11 +2,14 @@ package instagram.utils;
 
 import instagram.model.Data;
 import instagram.model.Report;
+import instagram.model.UserData;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class DataUtils {
 
@@ -71,10 +74,6 @@ public class DataUtils {
         if (report == null)
             return data;
 
-        // If there was only one hashtag then subtract already run number of times to loop from report
-        if (data.hashtags.size() == 1)
-            data.noOfTimesToLoop = data.noOfTimesToLoop - report.getCurrentLoop();
-
         // Remove already finished hashtags
         List<String> hashtags = new ArrayList<>();
         int index = data.hashtags.indexOf(report.getCurrentHashtag());
@@ -85,5 +84,17 @@ public class DataUtils {
         data.hashtags = hashtags;
 
         return data;
+    }
+
+    public static void resetUserData(UserData userData) {
+        userData.setNewPostNotFoundCounter(0);
+    }
+
+    public static void removeEmptyComments(Data data) {
+        data.comments = data.comments.stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
+    }
+
+    public static void processData(Data data) {
+        removeEmptyComments(data);
     }
 }

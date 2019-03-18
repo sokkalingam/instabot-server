@@ -5,7 +5,9 @@ import org.springframework.data.annotation.Id;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Data {
@@ -26,17 +28,6 @@ public class Data {
 	@Min(value = 1, message = "No of photos should be greater than 0")
 	public Integer noOfPhotos;
 
-	@Min(value = 1, message = "Spam like count should be greater than 0")
-	public Integer spamLikeCount;
-
-	@NotNull(message = "Please provide Min Wait Time")
-	@Min(value = 0, message = "Wait time cannot be negative")
-	public Integer timeMin;
-
-	@NotNull(message = "Please provide Max Wait Time")
-	@Min(value = 0, message = "Wait time cannot be negative")
-	public Integer timeMax;
-
 	@NotNull(message = "Please provide Max No of Followers")
 	@Min(value = 0, message = "Max number of followers should be a positive number")
 	public Integer maxNoOfFollowers;
@@ -46,18 +37,10 @@ public class Data {
 	@NotEmpty (message = "Session Id cannot be empty")
 	public String sessionId;
 
-	public Set<String> protectedProfiles = new HashSet<>();
 	public List<String> comments = new ArrayList<>();
 
-	public Integer noOfMostRecentPhotos;
-
-	@NotNull @Min(value = 0, message = "Number of times to loop should be positive")
-	public Integer noOfTimesToLoop;
-
-	public Integer maxNoOfProfilesToUnfollow;
-
 	public void setHashtags(List<String> list) {
-		hashtags = list.stream().map(item -> item.toLowerCase()).collect(Collectors.toList());
+		hashtags = list.stream().map(String::toLowerCase).collect(Collectors.toList());
 	}
 
 	public boolean commentOnly;
@@ -80,11 +63,8 @@ public class Data {
 				"username='" + username + '\'' +
 				", hashtag='" + hashtags + '\'' +
 				", noOfPhotos=" + noOfPhotos +
-				", timeMin=" + timeMin +
-				", timeMax=" + timeMax +
 				", maxFollowersRequiredToFollow=" + maxNoOfFollowers +
 				", comments=" + comments +
-				", noOfTimesToLoop=" + noOfTimesToLoop +
 				'}';
 	}
 

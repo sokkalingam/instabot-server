@@ -1,25 +1,56 @@
 package instagram.factory;
 
-import instagram.model.Data;
+import instagram.model.ConfigData;
 import instagram.utils.ConfigPropertyUtils;
-import instagram.utils.NavigationUtils;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+import java.util.Arrays;
 
 public class DriverFactory {
 
-    public static WebDriver getLoggedInDriver(Data data) {
-        System.setProperty("webdriver.gecko.driver", ConfigPropertyUtils.getDriverPath());
+    private static WebDriver driver;
+    private static final String SESSION_ID_KEY = "sessionid";
 
-        FirefoxOptions options = new FirefoxOptions();
-        options.setHeadless(true);
-        options.setLogLevel(FirefoxDriverLogLevel.FATAL);
+    private static synchronized void setupDriver() {
 
-        WebDriver driver = new FirefoxDriver(options);
+        if (driver == null) {
+            System.setProperty("webdriver.chrome.driver", ConfigPropertyUtils.getDriverPath());
 
-        NavigationUtils.setup(driver, data.sessionId);
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments(Arrays.asList(
+                    "--headless",
+                    "--no-sandbox"
+            ));
+
+            driver = new ChromeDriver(options);
+            driver.get(ConfigData.BASE_URL);
+        }
+    }
+
+    public static WebDriver getDriver(String sessionId) {
+        setupDriver();
+        setupCookie(sessionId);
         return driver;
+    }
+
+    public static void setupCookie(String sessionId) {
+        Cookie sessionCookie = driver.manage().getCookieNamed(SESSION_ID_KEY);
+        if (sessionCookie == null || !sessionId.equals(sessionCookie.getValue())) {
+            driver.manage().deleteCookieNamed(SESSION_ID_KEY);
+            driver.manage().addCookie(new Cookie(SESSION_ID_KEY, sessionId));
+            driver.navigate().refresh();
+        }
+    }
+
+    public static synchronized void closeDriverIfOpen() {
+        if (driver != null) {
+            driver.quit();
+            // Must set driver to null after quit
+            // By default if driver is not null, it is assumed to be open for tasks
+            driver = null;
+        }
     }
 }
