@@ -41,8 +41,7 @@ public class Profile {
 
 	@Override
 	public String toString() {
-		return "Profile [name=" + name + ", posts=" + posts + ", noOfFollowers=" + noOfFollowers + ", noOfFollowing="
-				+ noOfFollowing + "]";
+		return "Profile [name=" + name + ", noOfFollowers=" + noOfFollowers + "]";
 	}
 
 }

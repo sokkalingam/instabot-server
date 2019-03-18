@@ -44,8 +44,11 @@ public class EmailService {
     @Autowired
     private ExceptionService exceptionService;
 
-    @Autowired
     private LogService logger;
+
+    public EmailService() {
+        logger = new LogService();
+    }
 
     public void testEmail(String to) {
         try {
@@ -55,7 +58,6 @@ public class EmailService {
             report.setJobStatus(JobStatus.COMPLETED);
             report.setStartTime(LocalDateTime.now());
             report.setEndTimeAsNow();
-            report.setCurrentLoop(24);
             mimeMessage.setContent(EmailHelper.getHtmlReport("username", report, EmailSubject.JOB_FINISHED), "text/html");
             mimeMessageHelper.setTo("lings24@gmail.com");
             mimeMessageHelper.setSubject("Test Email for HTML from Instabot");
@@ -76,7 +78,7 @@ public class EmailService {
         emailSender.setPassword(encryptDecryptService.decrypt(password));
         try {
             emailSender.send(message);
-            logger.append(data.username).append("Email Sent to: " + Arrays.asList(message.getAllRecipients())).log();
+            logger.append(data.username).append(message.getSubject()).append("Email Sent to: " + Arrays.asList(message.getAllRecipients())).log();
             return true;
         } catch (MailException | MessagingException e) {
             logger.appendErr(data.username).appendErr("Could not send email, SimpleMailMessage: " + message).err();
@@ -128,6 +130,10 @@ public class EmailService {
 
     public void sendUserIsBlockedEmail(Data data) {
         sendEmail(data, EmailSubject.USER_IS_BLOCKED);
+    }
+
+    public void sendJobTerminatedEmail(Data data) {
+        sendEmail(data, EmailSubject.JOB_TERMINATED);
     }
 
     public boolean sendEmailToBot(String subject, String body) {

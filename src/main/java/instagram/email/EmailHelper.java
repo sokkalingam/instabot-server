@@ -43,13 +43,6 @@ public class EmailHelper {
                 "<pre><strong>" + DateUtils.format(report.getEndTime()) + "</strong></pre>\n" +
                 "</td>\n" +
                 "</tr>\n" +
-                "<tr>\n" +
-                "<td style=\"width: 178px;\"><strong><span style=\"color: #800080;\">Loop Count</span></strong></td>\n" +
-                "<td style=\"width: 342px;\">\n" +
-                "<pre><strong>" + report.getCurrentLoop() + "</strong></pre>\n" +
-                "</td>\n" +
-                "</tr>\n" +
-                "<tr>\n" +
                 "<td style=\"width: 178px;\"><strong><span style=\"color: #800080;\">Photos Liked</span></strong></td>\n" +
                 "<td style=\"width: 342px;\">\n" +
                 "<pre><strong>" + report.getPhotosLiked() + "</strong></pre>\n" +

@@ -2,9 +2,11 @@ package instagram.model.enums;
 
 public enum JobStatus {
 
-    CREATED,
+    QUEUED,
     RUNNING,
     COMPLETED,
     ABORTED,
-    BLOCKED;
+    BLOCKED,
+    TERMINATED
+
 }

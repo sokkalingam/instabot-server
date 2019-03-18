@@ -10,7 +10,6 @@ public class Report {
     private String username;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private int currentLoop;
     private int photosLiked;
     private int photosCommented;
     private String currentHashtag;
@@ -20,7 +19,7 @@ public class Report {
     public Report(String username) {
         this.username = username;
         this.startTime = LocalDateTime.now();
-        this.jobStatus = JobStatus.CREATED;
+        this.jobStatus = JobStatus.QUEUED;
     }
 
     public String getUsername() {
@@ -35,20 +34,8 @@ public class Report {
         photosLiked++;
     }
 
-    public void incrementCurrentLoop() {
-        currentLoop++;
-    }
-
     public void incrementPhotosCommented() {
         photosCommented++;
-    }
-
-    public int getCurrentLoop() {
-        return currentLoop;
-    }
-
-    public void setCurrentLoop(int currentLoop) {
-        this.currentLoop = currentLoop;
     }
 
     public int getPhotosLiked() {
@@ -126,7 +113,6 @@ public class Report {
         return "REPORT \n\n" +
                 "Start Time: " + DateUtils.format(startTime) +
                 "\nEnd Time: " + DateUtils.format(endTime) +
-                "\nLoop Count:" + currentLoop +
                 "\nPhotos Liked: " + photosLiked +
                 "\nPhotos Commented: " + photosCommented +
                 "\nJob Status: " + jobStatus;
