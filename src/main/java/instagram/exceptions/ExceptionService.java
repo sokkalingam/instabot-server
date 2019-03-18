@@ -12,13 +12,12 @@ import java.util.Queue;
 @Service
 public class ExceptionService {
 
-    @Autowired
-    private LogService logService;
-
     private Queue<String> exceptionQueue;
+    private LogService logger;
 
     public ExceptionService() {
         exceptionQueue = new LinkedList<>();
+        logger = new LogService();
     }
 
     public synchronized Queue<String> getExceptionQueue() {
@@ -28,7 +27,7 @@ public class ExceptionService {
     public synchronized void addException(Throwable e) {
         if (e == null)
             return;
-        logService.appendErr(e.getMessage()).err();
+        logger.appendErr(e.getMessage()).err();
         exceptionQueue.add(new Date() + " - " + e.getMessage());
     }
 

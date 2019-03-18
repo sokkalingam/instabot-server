@@ -128,7 +128,7 @@ public class SuperPage {
 	}
 
 	protected void scrollDown(int yOffset) {
-		System.out.println("Scrolling Down by " + yOffset);
+//		System.out.println("Scrolling Down by " + yOffset);
 		executeJs("window.scrollBy(0, "+ yOffset +")");
 	}
 
@@ -137,7 +137,7 @@ public class SuperPage {
 			return;
         moveToElement(element);
 		element.click();
-		System.out.println("Liked");
+//		System.out.println("Liked");
 	}
 
 	protected boolean isAlreadyLiked() {
@@ -154,7 +154,7 @@ public class SuperPage {
 	 */
 	protected boolean isLikeBlocked() {
 		sleep(1);
-		System.out.println("Checking if liking is blocked");
+//		System.out.println("Checking if liking is blocked");
 		refreshPage();
 		return !isAlreadyLiked();
 	}
@@ -165,7 +165,7 @@ public class SuperPage {
 	 */
 	protected boolean isCommentBlocked(String username) {
 		sleep(1);
-		System.out.println("Checking if commenting is blocked");
+//		System.out.println("Checking if commenting is blocked");
 		refreshPage();
 		return !isAlreadyCommented(username);
 	}
@@ -261,7 +261,7 @@ public class SuperPage {
 
 	protected void refreshPage() {
 		getDriver().navigate().refresh();
-		System.out.println("Page Refreshed");
+//		System.out.println("Page Refreshed");
 	}
 
 }

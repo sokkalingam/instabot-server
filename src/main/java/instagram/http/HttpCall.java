@@ -1,5 +1,6 @@
 package instagram.http;
 
+import instagram.logger.LogService;
 import instagram.model.ConfigData;
 import org.springframework.web.client.RestTemplate;
 
@@ -8,13 +9,15 @@ import instagram.utils.ProfileUtils;
 
 public class HttpCall {
 
+	private static LogService logger = new LogService();
+
 	public static String getResponse(String url) {
 		RestTemplate restTemplate = new RestTemplate();
 		String response;
 		try {
 			response = restTemplate.getForObject(url, String.class);
 		} catch (Exception e) {
-			System.out.println("Error fetching data for URL: " + url);
+			logger.append("Error fetching data for URL: " + url).log();
 			return "";
 		}
 		return response;
@@ -36,10 +39,10 @@ public class HttpCall {
 			String posts = profileText.split("Following, ")[1].split(" ")[0];
 			profile.setPosts(ProfileUtils.getNumberCount(posts));
 		} catch (Exception e) {
-			System.out.println("Exception in getting profile details");
+			logger.append("Exception in getting profile details").log();
 			return profile;
 		}
-		System.out.println(profile);
+//		System.out.println(profile);
 		return profile;
 	}
 

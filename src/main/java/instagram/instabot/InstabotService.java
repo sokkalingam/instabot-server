@@ -3,7 +3,7 @@ package instagram.instabot;
 import instagram.css.CssService;
 import instagram.database.RunningJobsRepo;
 import instagram.email.EmailService;
-import instagram.hashtag.HashtagService;
+import instagram.logger.LogService;
 import instagram.model.Data;
 import instagram.model.Report;
 import instagram.model.Session;
@@ -26,9 +26,6 @@ public class InstabotService {
     private ReportService reportService;
 
     @Autowired
-    private HashtagService hashtagService;
-
-    @Autowired
     private RunningJobsRepo runningJobsRepo;
 
     @Autowired
@@ -37,45 +34,55 @@ public class InstabotService {
     @Autowired
     private CssService cssService;
 
+    private LogService logger;
+
+    public InstabotService() {
+        logger = new LogService();
+    }
+
     public void shutdown() {
-        System.out.println("Shutting down...");
+        logger.append("Shutting Down").log();
         saveRunningJobs();
         sessionService.killAllSessions();
+        logger.append("Shutdown Complete").log();
     }
 
     // startUp is called when server is started
     public void startup() {
+        logger.append("Startup").log();
         cssService.buildCssMap();
         runPendingJobs();
         clearRemainingJobs();
     }
 
     public void runPendingJobs() {
+        logger.append("Run Pending Jobs").log();
         List<Data> jobsToRun = runningJobsRepo.findAll();
         jobsToRun.forEach(data -> {
-            hashtagService.performActionsInLoop(data);
+            sessionService.addNewSession(data);
             emailService.sendJobAutoResumedEmail(data);
         });
     }
 
     public void clearRemainingJobs() {
         runningJobsRepo.deleteAll();
+        logger.append("Cleared Remaining Jobs").log();
     }
 
     public List<Data> getRunningJobs() {
+        logger.append("Get Running Jobs").log();
         List<Data> dataList = new ArrayList<>();
-
         for (Session session : sessionService.getActiveSessions().values()) {
             Data data = session.getData();
             Report report = reportService.getReport(data.username);
             data = DataUtils.getRemainingJobData(data, report);
             dataList.add(data);
         }
-
         return dataList;
     }
 
     public void saveRunningJobs() {
         runningJobsRepo.saveAll(getRunningJobs());
+        logger.append("Saved Running Jobs").log();
     }
 }
