@@ -176,9 +176,6 @@ public class HomePage extends SuperPage {
                 return;
             }
 		}
-
-		ThreadUtils.shutdown();
-		ThreadUtils.awaitTermination();
 	}
 
 	private void _spamLike(String profileName, String hashtag) {

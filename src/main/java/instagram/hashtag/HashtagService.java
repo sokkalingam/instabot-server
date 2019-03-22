@@ -6,7 +6,8 @@ import instagram.pages.HomePage;
 import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Service;
 
-@Service public class HashtagService {
+@Service
+public class HashtagService {
 
     public void likeHashTagInLoop(Data data) {
         WebDriver driver = DriverFactory.getLoggedInDriver(data);
