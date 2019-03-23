@@ -1,5 +1,6 @@
 package instagram.factory;
 
+import instagram.logger.LogService;
 import instagram.model.ConfigData;
 import instagram.utils.ConfigPropertyUtils;
 import org.openqa.selenium.Cookie;
@@ -13,6 +14,7 @@ public class DriverFactory {
 
     private static WebDriver driver;
     private static final String SESSION_ID_KEY = "sessionid";
+    private static LogService logger = new LogService();
 
     private static synchronized void setupDriver() {
 
@@ -27,6 +29,8 @@ public class DriverFactory {
 
             driver = new ChromeDriver(options);
             driver.get(ConfigData.BASE_URL);
+
+            logger.append("New Driver Created").log();
         }
     }
 
@@ -41,6 +45,7 @@ public class DriverFactory {
         if (sessionCookie == null || !sessionId.equals(sessionCookie.getValue())) {
             driver.manage().deleteCookieNamed(SESSION_ID_KEY);
             driver.manage().addCookie(new Cookie(SESSION_ID_KEY, sessionId));
+            logger.append("New Session Cookie").append(sessionId).log();
             driver.navigate().refresh();
         }
     }
@@ -51,6 +56,7 @@ public class DriverFactory {
             // Must set driver to null after quit
             // By default if driver is not null, it is assumed to be open for tasks
             driver = null;
+            logger.append("Driver is closed").log();
         }
     }
 }
