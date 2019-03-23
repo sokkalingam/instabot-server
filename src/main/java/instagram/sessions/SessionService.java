@@ -38,7 +38,7 @@ public class SessionService {
         Session session = new Session();
         session.setData(data);
         activeSessions.put(data.sessionId, session);
-        reportService.getNewReport(data.username);
+        reportService.getNewReport(data);
         logger.append("New Session").append(data).log();
         return session;
     }

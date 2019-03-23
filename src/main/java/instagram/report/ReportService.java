@@ -1,5 +1,6 @@
 package instagram.report;
 
+import instagram.model.Data;
 import instagram.model.Report;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -18,19 +19,13 @@ public class ReportService {
         return map.get(username.toLowerCase());
     }
 
-    public Report getNewReport(String username) {
-        if (StringUtils.isBlank(username))
+    public Report getNewReport(Data data) {
+        if (data == null || StringUtils.isBlank(data.username))
             return null;
-        username = username.toLowerCase();
-        Report report = new Report(username);
-        map.put(username, report);
-        return report;
-    }
-
-    public Report getReportOrCreateNew(String username) {
-        Report report = getReport(username);
-        if (report == null)
-            return getNewReport(username);
+        data.username = data.username.toLowerCase();
+        Report report = new Report(data.username);
+        report.setData(data);
+        map.put(data.username, report);
         return report;
     }
 

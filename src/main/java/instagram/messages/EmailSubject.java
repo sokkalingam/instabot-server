@@ -13,7 +13,8 @@ public enum EmailSubject {
     LIKE_IS_BLOCKED ("Liking Is Blocked By Instagram"),
     COMMENT_IS_BLOCKED ("Commenting Is Blocked By Instagram"),
     USER_IS_BLOCKED("Your Job Is Aborted Because It Is Blocked By Instagram"),
-    JOB_TERMINATED ("Your Job Is Terminated Because No New Posts Were Found");
+    JOB_TERMINATED ("Your Job Is Terminated Because No New Posts Were Found"),
+    INVALID_SESSION ("Your Job Is Terminated Due To Invalid Session Id");
 
     private String message;
 
