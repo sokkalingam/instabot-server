@@ -7,6 +7,7 @@ public enum JobStatus {
     COMPLETED,
     ABORTED,
     BLOCKED,
-    TERMINATED
+    TERMINATED,
+    INVALID_SESSION;
 
 }

@@ -25,17 +25,11 @@ public class UserData {
         alreadyVisitedSet = new HashSet<>();
     }
 
-    public UserData(int numberOfPosts, List<String> hashtags) {
-        this();
-        this.numberOfPosts = numberOfPosts;
-        this.hashtags = hashtags;
-    }
-
     public UserData(Data data) {
         this();
         this.username = data.username;
         this.numberOfPosts = data.noOfPhotos;
-        this.hashtags = data.hashtags;
+        this.hashtags = new ArrayList<>(data.hashtags);
     }
 
     public int getNumberOfPosts() {
