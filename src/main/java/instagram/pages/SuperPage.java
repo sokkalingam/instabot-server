@@ -264,4 +264,9 @@ public class SuperPage {
 //		System.out.println("Page Refreshed");
 	}
 
+	protected boolean isSessionValid(String username) {
+		username = username.toLowerCase();
+		return getElement("a[href*='/" + username + "/']") != null;
+	}
+
 }

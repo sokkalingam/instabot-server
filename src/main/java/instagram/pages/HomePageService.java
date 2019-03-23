@@ -31,6 +31,9 @@ public class HomePageService extends SuperPage {
 	private final Integer NEW_POST_NOT_FOUND_LIMIT = 10;
 	private final Integer GENERAL_LIMIT = 10;
 	private final Integer BLOCKED_LIMIT = 3;
+	private final Integer RENEW_BROWSER_LIMIT = 100;
+
+	private int noOfExecsBrowserIsOpen;
 
 	@Autowired
 	private ReportService reportService;
@@ -49,17 +52,27 @@ public class HomePageService extends SuperPage {
 		userDataMap = new ConcurrentHashMap<>();
 	}
 
-	@Scheduled(initialDelay = 10 * 1000, fixedRate = 60 * 1000)
-	public synchronized void execute() {
+    /**
+     * Scheduled Task
+     * Starts 10s after the application starts
+     * Runs every 30 seconds
+     * If the previous call has not finished, it waits and
+     * starts immediately after the previous call is over
+     */
+	@Scheduled(initialDelay = 10 * 1000, fixedRate = 30 * 1000)
+	public void execute() {
 
         Map<String, Session> sessionMap = sessionService.getActiveSessions();
 
 		if (sessionMap.size() == 0) {
 		    DriverFactory.closeDriverIfOpen();
+		    noOfExecsBrowserIsOpen = 0;
             return;
         }
 
 		logger.append("HomePageService::execute").append("activeSessionCount").append(sessionMap.size()).log();
+
+		closeBrowserIfRenewalLimitIsReached();
 
 		// Using iterator because key may be removed within iteration when job is completed or blocked
 		Iterator<Map.Entry<String, Session>> iterator = sessionMap.entrySet().iterator();
@@ -74,13 +87,14 @@ public class HomePageService extends SuperPage {
 			superPage(driver);
 
 			Data data = session.getData();
+
 			DataUtils.processData(data);
 
 			UserData userData = getExistingOrNewUserData(sessionId, data);
 
 			Report report = reportService.getReport(data.username);
 
-			isUserBlockedOrFinished(userData, data, report);
+			validateUserData(userData, data, report);
 
 			if (isJobFinished(report.getJobStatus())) {
 			    userDataMap.remove(sessionId);
@@ -91,6 +105,16 @@ public class HomePageService extends SuperPage {
 
 			perform(userData, data, report);
 
+		}
+
+	}
+
+	private void closeBrowserIfRenewalLimitIsReached() {
+		noOfExecsBrowserIsOpen++;
+		if (noOfExecsBrowserIsOpen > RENEW_BROWSER_LIMIT) {
+			logger.append("Closing browser for renewal").log();
+			DriverFactory.closeDriverIfOpen();
+			noOfExecsBrowserIsOpen = 0;
 		}
 	}
 
@@ -105,11 +129,12 @@ public class HomePageService extends SuperPage {
 
 	private boolean isJobFinished(JobStatus jobStatus) {
 	    return jobStatus == JobStatus.COMPLETED || jobStatus == JobStatus.BLOCKED ||
-				jobStatus == JobStatus.TERMINATED;
+				jobStatus == JobStatus.TERMINATED || jobStatus == JobStatus.INVALID_SESSION;
     }
 
 	/**
 	 * Check if user is
+	 * - has Invalid Session
 	 * - blocked - Blocked from liking and commenting
 	 * - completed - Job has finished execution
 	 * - resource heavy - No new posts are found and just looping through
@@ -118,25 +143,25 @@ public class HomePageService extends SuperPage {
 	 * @param data
 	 * @param report
 	 */
-    private void isUserBlockedOrFinished(UserData userData, Data data, Report report) {
-        if (_isUserBlocked(userData, data)) {
+	private void validateUserData(UserData userData, Data data, Report report) {
+		if (!isSessionValid(data.username)) {
+			report.setJobStatus(JobStatus.INVALID_SESSION);
+			report.setEndTimeAsNow();
+			emailService.sendInvalidSessionEmail(data);
+		} else if (_isUserBlocked(userData, data)) {
 			report.setJobStatus(JobStatus.BLOCKED);
 			report.setEndTimeAsNow();
-            emailService.sendUserIsBlockedEmail(data);
-        }
-
-        if (userData.getHashtags().isEmpty()) {
-            report.setJobStatus(JobStatus.COMPLETED);
+			emailService.sendUserIsBlockedEmail(data);
+		} else if (userData.getHashtags().isEmpty()) {
+			report.setJobStatus(JobStatus.COMPLETED);
 			report.setEndTimeAsNow();
-            emailService.sendJobFinishedEmail(data);
-        }
-
-        if (userData.getNewPostNotFoundCounter() > NEW_POST_NOT_FOUND_LIMIT) {
-        	report.setJobStatus(JobStatus.TERMINATED);
+			emailService.sendJobFinishedEmail(data);
+		} else if (userData.getNewPostNotFoundCounter() > NEW_POST_NOT_FOUND_LIMIT) {
+			report.setJobStatus(JobStatus.TERMINATED);
 			report.setEndTimeAsNow();
-        	emailService.sendJobTerminatedEmail(data);
+			emailService.sendJobTerminatedEmail(data);
 		}
-    }
+	}
 
 	/**
 	 * Go to Hashtag page and try to like or comment
