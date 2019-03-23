@@ -136,6 +136,10 @@ public class EmailService {
         sendEmail(data, EmailSubject.JOB_TERMINATED);
     }
 
+    public void sendInvalidSessionEmail(Data data) {
+        sendEmail(data, EmailSubject.INVALID_SESSION);
+    }
+
     public boolean sendEmailToBot(String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(encryptDecryptService.decrypt(getEmail()));

@@ -1,5 +1,6 @@
 package instagram.email;
 
+import instagram.logger.LogService;
 import instagram.messages.ResponseMessages;
 import instagram.model.Report;
 import instagram.report.ReportService;
@@ -13,6 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/email")
 public class EmailController {
 
+    private LogService logger;
+
+    public EmailController() {
+        logger = new LogService();
+    }
+
     @Autowired
     private ReportService reportService;
 
@@ -21,6 +28,7 @@ public class EmailController {
 
     @RequestMapping("/rerun/{username}")
     public String rerun(@PathVariable String username) {
+        logger.append(username).append("Email Rerun Request").log();
         Report report = reportService.getReport(username);
         if (report != null) {
             sessionService.addNewSession(report.getData());
