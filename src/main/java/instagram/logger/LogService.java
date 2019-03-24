@@ -23,9 +23,7 @@ public class LogService {
     }
 
     public LogService appendData(Data data) {
-        logBuilder.append(data.username).append("|")
-                .append("waitTime|").append("|").append("noOfPhotos|")
-                .append(data.noOfPhotos).append("|");
+        logBuilder.append(data.username).append(String.valueOf(data));
         return this;
     }
 

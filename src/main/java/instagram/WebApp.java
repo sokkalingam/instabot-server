@@ -17,7 +17,7 @@ public class WebApp {
     private InstabotService instabotService;
 
     public static void main(String[] args) throws IOException {
-        Runtime.getRuntime().exec("src/main/resources/shell_scripts/before_startup.sh");
+//        Runtime.getRuntime().exec("src/main/resources/shell_scripts/before_startup.sh");
         SpringApplication.run(WebApp.class, args);
     }
 

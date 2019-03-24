@@ -59,7 +59,7 @@ public class HomePageService extends SuperPage {
      * If the previous call has not finished, it waits and
      * starts immediately after the previous call is over
      */
-	@Scheduled(initialDelay = 10 * 1000, fixedRate = 30 * 1000)
+	@Scheduled(initialDelay = 10 * 1000, fixedRate = 40 * 1000)
 	public void execute() {
 
         Map<String, Session> sessionMap = sessionService.getActiveSessions();

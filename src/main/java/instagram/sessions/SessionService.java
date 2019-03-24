@@ -9,6 +9,7 @@ import instagram.report.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class SessionService {
         session.setData(data);
         activeSessions.put(data.sessionId, session);
         reportService.getNewReport(data);
-        logger.append("New Session").append(data).log();
+        logger.append("New Session").appendData(data).log();
         return session;
     }
 
@@ -67,10 +68,14 @@ public class SessionService {
 
     public void killAllSessions() {
         logger.append("Killing all active sessions").log();
-        activeSessions.keySet().forEach(sessionId -> {
-            Session session = killSession(sessionId);
-            emailService.sendJobAbortedForMaintenanceEmail(session.getData());
-        });
+
+        // Need to use iterator to avoid concurrent
+        Iterator<Map.Entry<String, Session>> iterator = activeSessions.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Session> entrySet = iterator.next();
+            killSession(entrySet.getKey());
+            emailService.sendJobAbortedForMaintenanceEmail(entrySet.getValue().getData());
+        }
     }
 
 }
