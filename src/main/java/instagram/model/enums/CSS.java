@@ -9,6 +9,7 @@ public enum CSS {
     ERROR,
     COMMENT_INPUT,
     COMMENT_INPUT_DISABLED,
-    COMMENTS
+    COMMENTS,
+    ARTICLE
 
 }

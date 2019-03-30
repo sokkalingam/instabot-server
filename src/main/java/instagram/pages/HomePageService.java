@@ -54,12 +54,11 @@ public class HomePageService extends SuperPage {
 
     /**
      * Scheduled Task
-     * Starts 10s after the application starts
-     * Runs every 30 seconds
-     * If the previous call has not finished, it waits and
+	 * Starts after initialDelay and run every fixedRate in milliseconds
+     * If the previous call has not finished within fixedRate, it waits and
      * starts immediately after the previous call is over
      */
-	@Scheduled(initialDelay = 10 * 1000, fixedRate = 40 * 1000)
+	@Scheduled(initialDelay = 10 * 1000, fixedRate = 45 * 1000)
 	public void execute() {
 
         Map<String, Session> sessionMap = sessionService.getActiveSessions();
@@ -236,10 +235,13 @@ public class HomePageService extends SuperPage {
 
 			/*
 			 * This is where actual liking and commenting happens
+			 *
+			 * Note: Comment needs to be done before liking.
+			 * We check the whole text to check if username is already present.
+			 * If already liked first, username will be present in the text and comment will not happen
 			 */
-			boolean liked = _performLike(action, userData, data, report);
-
 			boolean commented = _performComment(action, userData, data, report, profileName);
+			boolean liked = _performLike(action, userData, data, report);
 
 			if (liked || commented) {
 				userData.incrementPostCounter();

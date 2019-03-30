@@ -183,7 +183,7 @@ public class SuperPage {
 	}
 
 	protected String getCommentsAsText() {
-		return getText(getElement(CssData.get(CSS.COMMENTS)));
+		return getText(getElement(CssData.get(CSS.ARTICLE)));
 	}
 
 	protected String getText(WebElement element) {
