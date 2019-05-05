@@ -1,16 +1,12 @@
 package instagram.factory;
 
-import com.google.common.collect.ImmutableMap;
 import instagram.model.Data;
-import instagram.model.ConfigData;
 import instagram.utils.ConfigPropertyUtils;
 import instagram.utils.NavigationUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.io.File;
 import java.util.Arrays;
 
 public class DriverFactory {

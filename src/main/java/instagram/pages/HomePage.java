@@ -116,8 +116,6 @@ public class HomePage extends SuperPage {
 
 		_gotoHashTagPage(hashtag);
 
-		sleep(3);
-
 		System.out.println("\n#" + hashtag + ", " + data.noOfPhotos + " photos, Wait time between " + data.timeMin + " and "
 				+ data.timeMax + " seconds");
 		scrollDown(1000);
