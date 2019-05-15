@@ -4,6 +4,8 @@ import instagram.model.enums.JobStatus;
 import instagram.utils.DateUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Report {
 
@@ -15,6 +17,7 @@ public class Report {
     private String currentHashtag;
     private JobStatus jobStatus;
     private Data data;
+    private List<String> skippedHashtags;
 
     public Report(String username) {
         this.username = username;
@@ -106,6 +109,12 @@ public class Report {
 
     public void setData(Data data) {
         this.data = data;
+    }
+
+    public synchronized List<String> getSkippedHashtags() {
+        if (skippedHashtags == null)
+            skippedHashtags = new ArrayList<>();
+        return skippedHashtags;
     }
 
     @Override

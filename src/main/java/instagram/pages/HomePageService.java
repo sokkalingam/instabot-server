@@ -28,7 +28,7 @@ public class HomePageService extends SuperPage {
 	private Map<String, UserData> userDataMap;
 
 	private final Integer RIGHT_ARROW_NOT_FOUND_LIMIT = 3;
-	private final Integer NEW_POST_NOT_FOUND_LIMIT = 10;
+	private final Integer NEW_POST_NOT_FOUND_LIMIT = 15;
 	private final Integer GENERAL_LIMIT = 10;
 	private final Integer BLOCKED_LIMIT = 3;
 	private final Integer RENEW_BROWSER_LIMIT = 100;
@@ -271,6 +271,14 @@ public class HomePageService extends SuperPage {
 			// We click next to go the next post and addJobToQueue the action again
 			goToNextPost(userData, data);
 			performOnNewPost(userData, data, report);
+		} else {
+			// Skip the hashtag
+			if (userData.getHashtags().size() > 0) {
+				String skippedHashtag = userData.getHashtags().remove(0);
+				logger.append(data).append("hashtag skipped").append(skippedHashtag).log();
+				report.getSkippedHashtags().add(skippedHashtag);
+				userData.setNewPostNotFoundCounter(0);
+			}
 		}
 	}
 

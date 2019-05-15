@@ -45,7 +45,7 @@ public class DriverFactory {
         if (sessionCookie == null || !sessionId.equals(sessionCookie.getValue())) {
             driver.manage().deleteCookieNamed(SESSION_ID_KEY);
             driver.manage().addCookie(new Cookie(SESSION_ID_KEY, sessionId));
-            logger.append("New Session Cookie").append(sessionId).log();
+            logger.append("Session Cookie").append(sessionId).log();
             driver.navigate().refresh();
         }
     }
