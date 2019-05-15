@@ -4,6 +4,8 @@ import instagram.messages.EmailSubject;
 import instagram.model.Report;
 import instagram.utils.DateUtils;
 
+import java.util.Arrays;
+
 public class EmailHelper {
 
     private final static String BASE_URL = "http://instabot360.com/api/email/rerun/";
@@ -52,6 +54,12 @@ public class EmailHelper {
                 "<td style=\"width: 178px;\"><strong><span style=\"color: #800080;\">Photos Commented</span></strong></td>\n" +
                 "<td style=\"width: 342px;\">\n" +
                 "<pre><strong>" + report.getPhotosCommented() + "</strong></pre>\n" +
+                "</td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td style=\"width: 178px;\"><strong><span style=\"color: #800080;\">Skipped Hashtags</span></strong></td>\n" +
+                "<td style=\"width: 342px;\">\n" +
+                "<pre><strong>" + report.getSkippedHashtags() + "</strong></pre>\n" +
                 "</td>\n" +
                 "</tr>\n" +
                 "</tbody>\n" +
