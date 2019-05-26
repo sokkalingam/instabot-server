@@ -10,6 +10,7 @@ import instagram.model.enums.JobStatus;
 import instagram.report.ReportService;
 import instagram.sessions.SessionService;
 import instagram.utils.DataUtils;
+import instagram.utils.ScreenShotUtils;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -144,6 +145,7 @@ public class HomePageService extends SuperPage {
 	 */
 	private void validateUserData(UserData userData, Data data, Report report) {
 		if (!isSessionValid(data.username)) {
+			ScreenShotUtils.captureScreenshot(getDriver(), "invalid_session_" + data.username + "_" + new Date());
 			report.setJobStatus(JobStatus.INVALID_SESSION);
 			report.setEndTimeAsNow();
 			emailService.sendInvalidSessionEmail(data);

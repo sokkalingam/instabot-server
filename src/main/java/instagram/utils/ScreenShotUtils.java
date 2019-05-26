@@ -1,5 +1,6 @@
 package instagram.utils;
 
+import instagram.logger.LogService;
 import instagram.model.ConfigData;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -11,7 +12,9 @@ import java.io.IOException;
 
 public class ScreenShotUtils {
 
-    public static String captureScreenshot(WebDriver driver, String screenshotName){
+    private static LogService logger = new LogService();
+
+    public static String captureScreenshot(WebDriver driver, String screenshotName) {
 
         try {
             TakesScreenshot ts = (TakesScreenshot)driver;
@@ -19,10 +22,10 @@ public class ScreenShotUtils {
             String dest = ConfigData.SCREENSHOTS_DEST + "/" + screenshotName + ".png";
             File destination = new File(dest);
             FileHandler.copy(source, destination);
-            System.out.println("Screenshot taken: " + dest);
+            logger.append("Screenshot taken: " + dest).log();
             return dest;
         } catch (IOException e) {
-            System.out.println("Could not take screenshot: " + e);
+            logger.append("Could not take screenshot: " + e).log();
             return e.getMessage();
         }
     }
