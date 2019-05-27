@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import instagram.data.CssData;
+import instagram.logger.LogService;
 import instagram.model.Data;
 import instagram.model.enums.CSS;
 import org.openqa.selenium.*;
@@ -17,12 +18,14 @@ public class SuperPage {
 
 	private WebDriverWait wait;
 	private WebDriver driver;
+	private LogService logger;
 
 	private static final int WAIT_TIME = 10;
 
 	protected void superPage(WebDriver driver) {
 		this.driver = driver;
 		this.wait = new WebDriverWait(driver, WAIT_TIME);
+		logger = new LogService();
 		PageFactory.initElements(driver, this);
 	}
 
@@ -266,7 +269,9 @@ public class SuperPage {
 
 	protected boolean isSessionValid(String username) {
 		username = username.toLowerCase();
-		return getElement("a[href*='/" + username + "/']") != null;
+		WebElement element = getElement("a[href*='/" + username + "/']");
+		logger.append(username).append("isSessionValid").append(element != null).log();
+		return true;
 	}
 
 }

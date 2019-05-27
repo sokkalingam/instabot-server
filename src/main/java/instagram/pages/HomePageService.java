@@ -144,12 +144,15 @@ public class HomePageService extends SuperPage {
 	 * @param report
 	 */
 	private void validateUserData(UserData userData, Data data, Report report) {
-		if (!isSessionValid(data.username)) {
-			ScreenShotUtils.captureScreenshot(getDriver(), "invalid_session_" + data.username + "_" + new Date());
-			report.setJobStatus(JobStatus.INVALID_SESSION);
-			report.setEndTimeAsNow();
-			emailService.sendInvalidSessionEmail(data);
-		} else if (_isUserBlocked(userData, data)) {
+//		if (!isSessionValid(data.username)) {
+//			ScreenShotUtils.captureScreenshot(getDriver(), "invalid_session_" + data.username + "_" + new Date());
+//			report.setJobStatus(JobStatus.INVALID_SESSION);
+//			report.setEndTimeAsNow();
+//			emailService.sendInvalidSessionEmail(data);
+//		} else
+		isSessionValid(data.username);
+
+		if (_isUserBlocked(userData, data)) {
 			report.setJobStatus(JobStatus.BLOCKED);
 			report.setEndTimeAsNow();
 			emailService.sendUserIsBlockedEmail(data);
