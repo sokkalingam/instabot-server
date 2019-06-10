@@ -352,8 +352,9 @@ public class HomePageService extends SuperPage {
 
 			userData.setLikedBlockedCounter(userData.getLikedBlockedCounter() + 1);
             logger.append("LIKING MAY BE BLOCKED, Attempt " + userData.getLikedBlockedCounter());
+		} else {
+			userData.setLikedBlockedCounter(0);
 		}
-		userData.setLikedBlockedCounter(0);
 
 		report.incrementPhotoLiked();
 		logger.append("liked");
@@ -391,8 +392,9 @@ public class HomePageService extends SuperPage {
                 }
 			    userData.setCommentBlockedCounter(userData.getCommentBlockedCounter() + 1);
 			    logger.append("COMMENTING MAY BE BLOCKED, Attempt " + userData.getCommentBlockedCounter());
+			} else {
+				userData.setCommentBlockedCounter(0);
 			}
-			userData.setCommentBlockedCounter(0);
 
 			report.incrementPhotosCommented();
 			logger.append("commented").append(comment);
