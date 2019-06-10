@@ -64,13 +64,13 @@ public class HomePageService extends SuperPage {
 
         Map<String, Session> sessionMap = sessionService.getActiveSessions();
 
+		logger.append("HomePageService::execute").append("activeSessionCount").append(sessionMap.size()).log();
+		
 		if (sessionMap.size() == 0) {
 		    DriverFactory.closeDriverIfOpen();
 		    noOfExecsBrowserIsOpen = 0;
             return;
         }
-
-		logger.append("HomePageService::execute").append("activeSessionCount").append(sessionMap.size()).log();
 
 		closeBrowserIfRenewalLimitIsReached();
 
