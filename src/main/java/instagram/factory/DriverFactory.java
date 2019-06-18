@@ -23,7 +23,7 @@ public class DriverFactory {
 
             ChromeOptions options = new ChromeOptions();
             options.addArguments(Arrays.asList(
-                    "--headless",
+//                    "--headless",
                     "--no-sandbox"
             ));
 
