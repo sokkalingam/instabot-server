@@ -51,8 +51,8 @@ public class InstabotService {
     public void startup() {
         logger.append("Startup").log();
         cssService.buildCssMap();
-        runPendingJobs();
-        clearRemainingJobs();
+//        runPendingJobs();
+//        clearRemainingJobs();
     }
 
     public void runPendingJobs() {
