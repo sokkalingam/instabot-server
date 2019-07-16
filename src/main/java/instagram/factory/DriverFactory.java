@@ -24,7 +24,10 @@ public class DriverFactory {
             ChromeOptions options = new ChromeOptions();
             options.addArguments(Arrays.asList(
                     "--headless",
-                    "--no-sandbox"
+                    "--no-sandbox",
+                    "--disable-infobars",
+                    "--disable-browser-side-navigation",
+                    "--disable-gpu"
             ));
 
             driver = new ChromeDriver(options);
