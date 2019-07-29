@@ -10,7 +10,6 @@ import instagram.model.enums.JobStatus;
 import instagram.report.ReportService;
 import instagram.sessions.SessionService;
 import instagram.utils.DataUtils;
-import instagram.utils.ScreenShotUtils;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -163,7 +162,11 @@ public class HomePageService extends SuperPage {
 		} else if (userData.getNewPostNotFoundCounter() > NEW_POST_NOT_FOUND_LIMIT) {
 			report.setJobStatus(JobStatus.TERMINATED);
 			report.setEndTimeAsNow();
-			emailService.sendJobTerminatedEmail(data);
+			emailService.sendJobTerminatedNoNewPostsEmail(data);
+		} else if (userData.getRightArrowNotFoundCounter() > RIGHT_ARROW_NOT_FOUND_LIMIT) {
+			report.setJobStatus(JobStatus.TERMINATED);
+			report.setEndTimeAsNow();
+			emailService.sendJobTerminatedNextPostArrowNotFoundEmail(data);
 		}
 	}
 
@@ -289,7 +292,7 @@ public class HomePageService extends SuperPage {
 
 	private boolean isUserEligibleForNextPost(UserData userData) {
 		userData.setNewPostNotFoundCounter(userData.getNewPostNotFoundCounter() + 1);
-		return userData.getNewPostNotFoundCounter() <= NEW_POST_NOT_FOUND_LIMIT;
+		return userData.getNewPostNotFoundCounter() <= NEW_POST_NOT_FOUND_LIMIT && userData.getRightArrowNotFoundCounter() <= RIGHT_ARROW_NOT_FOUND_LIMIT;
 	}
 
 	private void goToNextPost(UserData userData, Data data) {
