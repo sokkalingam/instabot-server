@@ -132,8 +132,12 @@ public class EmailService {
         sendEmail(data, EmailSubject.USER_IS_BLOCKED);
     }
 
-    public void sendJobTerminatedEmail(Data data) {
-        sendEmail(data, EmailSubject.JOB_TERMINATED);
+    public void sendJobTerminatedNoNewPostsEmail(Data data) {
+        sendEmail(data, EmailSubject.JOB_TERMINATED_NO_NEW_POSTS);
+    }
+
+    public void sendJobTerminatedNextPostArrowNotFoundEmail(Data data) {
+        sendEmail(data, EmailSubject.JOB_TERMINATED_RIGHT_ARROW_NOT_FOUND);
     }
 
     public void sendInvalidSessionEmail(Data data) {
