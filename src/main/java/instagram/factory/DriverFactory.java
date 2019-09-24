@@ -27,7 +27,8 @@ public class DriverFactory {
                     "--no-sandbox",
                     "--disable-infobars",
                     "--disable-browser-side-navigation",
-                    "--disable-gpu"
+                    "--disable-gpu",
+                    "--start-maximized"
             ));
 
             driver = new ChromeDriver(options);
