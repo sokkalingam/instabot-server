@@ -130,17 +130,22 @@ public class SuperPage {
 		}
 	}
 
+	protected void click(WebElement element) {
+		if (element == null)
+			return;
+		moveToElement(element);
+		executeJs("arguments[0].scrollIntoView();", element);
+		executeJs("arguments[0].click();", element);
+
+	}
+
 	protected void scrollDown(int yOffset) {
 //		System.out.println("Scrolling Down by " + yOffset);
 		executeJs("window.scrollBy(0, "+ yOffset +")");
 	}
 
 	protected void like(WebElement element) {
-		if (element == null)
-			return;
-        moveToElement(element);
-		element.click();
-//		System.out.println("Liked");
+		click(element);
 	}
 
 	protected boolean isAlreadyLiked() {
