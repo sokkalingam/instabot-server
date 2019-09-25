@@ -1,6 +1,7 @@
 package instagram.pages;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -8,6 +9,7 @@ import instagram.data.CssData;
 import instagram.logger.LogService;
 import instagram.model.Data;
 import instagram.model.enums.CSS;
+import instagram.utils.ScreenShotUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
@@ -246,10 +248,10 @@ public class SuperPage {
 	}
 
     protected boolean clickNext() {
+		ScreenShotUtils.captureScreenshot(getDriver(), String.valueOf(new Date().getTime()));
         WebElement rightArrow = getRightNavArrow();
         if (rightArrow != null) {
-        	// We sometimes get webdriver exception, hence clicking through JS
-        	executeJs("arguments[0].click();", rightArrow);
+        	click(rightArrow);
             return true;
         } else {
             return false;
