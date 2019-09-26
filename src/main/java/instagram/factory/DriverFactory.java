@@ -24,10 +24,10 @@ public class DriverFactory {
             ChromeOptions options = new ChromeOptions();
             options.addArguments(Arrays.asList(
                     "--headless",
-                    "--no-sandbox",
+//                    "--no-sandbox",
 //                    "--disable-infobars",
 //                    "--disable-browser-side-navigation",
-                    "--disable-gpu",
+//                    "--disable-gpu",
                     "--start-maximized"
 //                    "--ignore-certificate-errors"
             ));
