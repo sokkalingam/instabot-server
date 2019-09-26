@@ -186,7 +186,7 @@ public class SuperPage {
 	}
 
 	protected String getProfileName() {
-		return getText(getElement(CssData.get(CSS.PROFILE_NAME)));
+		return getText(getElement(getElement(CssData.get(CSS.ARTICLE)), CssData.get(CSS.PROFILE_NAME)));
 	}
 
 	protected WebElement getCommentInput() {
