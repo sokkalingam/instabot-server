@@ -191,7 +191,7 @@ public class HomePageService extends SuperPage {
 			report.setCurrentHashtag(hashtag);
 
 			scrollDown(1000);
-			List<WebElement> photos = getElements("img");
+			List<WebElement> photos = getPhotos();
 
 			/* 	Skip top posts and open the most recent
 			 *	0 is the main photo on top for the hashtag, it is not a post.

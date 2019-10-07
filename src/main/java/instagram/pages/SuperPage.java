@@ -64,6 +64,21 @@ public class SuperPage {
 		}
 	}
 
+	/**
+	 * Get photos
+	 * Photos are not hidden inside a div and hence can't be found by visibilityOfAllElementsLocatedBy
+	 * @return
+	 */
+	protected List<WebElement> getPhotos() {
+		try {
+			return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("img")));
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
+
+
+
 	protected List<WebElement> getElements(WebElement element, String css) {
 		try {
 			return wait.until(ExpectedConditions.visibilityOfNestedElementsLocatedBy(element, By.cssSelector(css)));
