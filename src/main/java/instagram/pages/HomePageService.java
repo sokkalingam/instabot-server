@@ -345,6 +345,9 @@ public class HomePageService extends SuperPage {
 			return false;
 		}
 
+		if (userData.getLikedBlockedCounter() > 0)
+			reportAProblem();
+
 		if (checkIfLikeIsBlocked(report) || userData.getLikedBlockedCounter() > 0) {
 			if (userData.getLikedBlockedCounter() > BLOCKED_LIMIT) {
 			    logger.append("LIKING IS BLOCKED");
