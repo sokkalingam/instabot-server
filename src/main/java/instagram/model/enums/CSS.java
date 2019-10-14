@@ -10,6 +10,6 @@ public enum CSS {
     COMMENT_INPUT,
     COMMENT_INPUT_DISABLED,
     COMMENTS,
-    ARTICLE
-
+    ARTICLE,
+    REPORT_A_PROBLEM;
 }
