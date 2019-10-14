@@ -58,7 +58,7 @@ public class HomePageService extends SuperPage {
      * If the previous call has not finished within fixedRate, it waits and
      * starts immediately after the previous call is over
      */
-	@Scheduled(initialDelay = 10 * 1000, fixedRate = 50 * 1000)
+	@Scheduled(initialDelay = 1 * 1000, fixedRate = 30 * 1000)
 	public void execute() {
 
         Map<String, Session> sessionMap = sessionService.getActiveSessions();
@@ -412,7 +412,7 @@ public class HomePageService extends SuperPage {
 	 */
 	private boolean checkIfLikeIsBlocked(Report report) {
     	int photosLiked = report.getPhotosLiked();
-    	return (photosLiked != 0) && (photosLiked % GENERAL_LIMIT == 0) && isLikeBlocked();
+    	return (photosLiked % GENERAL_LIMIT == 0) && isLikeBlocked();
 	}
 
 	/**
@@ -421,7 +421,7 @@ public class HomePageService extends SuperPage {
 	 */
 	private boolean checkIfCommentIsBlocked(Report report, String username) {
 		int photosLiked = report.getPhotosLiked();
-		return (photosLiked != 0) && (photosLiked % GENERAL_LIMIT == 0) && isCommentBlocked(username);
+		return (photosLiked % GENERAL_LIMIT == 0) && isCommentBlocked(username);
 	}
 
 	private void _gotoHashTagPage(String hashtag) {
