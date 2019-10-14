@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SuperPage {
 
@@ -294,6 +295,22 @@ public class SuperPage {
 		WebElement element = getElement("a[href*='/" + username + "/']");
 		logger.append(username).append("isSessionValid").append(element != null).log();
 		return true;
+	}
+
+	protected void reportAProblem() {
+		setWait(2);
+		List<WebElement> buttons = getElements(CssData.get(CSS.REPORT_A_PROBLEM));
+		setWait(WAIT_TIME);
+		WebElement reportButton = null;
+		for (WebElement button : buttons) {
+			if (getText(button).equalsIgnoreCase("report a problem"))
+				reportButton = button;
+		}
+
+		if (reportButton == null)
+			return;
+
+		click(reportButton);
 	}
 
 }
