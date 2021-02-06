@@ -27,23 +27,23 @@ public class HttpCall {
 		return getResponse(ConfigData.BASE_URL + "/" + profileName);
 	}
 
-	public static Profile getProfile(String profileName) {
-		Profile profile = new Profile();
-		profile.setName(profileName);
-		String profileText = getProfileAsText(profileName);
-		try {
-			String followers = profileText.split("meta content=\"")[1].split(" ")[0];
-			profile.setNoOfFollowers(ProfileUtils.getNumberCount(followers));
-			String following = profileText.split("Followers, ")[1].split(" ")[0];
-			profile.setNoOfFollowing(ProfileUtils.getNumberCount(following));
-			String posts = profileText.split("Following, ")[1].split(" ")[0];
-			profile.setPosts(ProfileUtils.getNumberCount(posts));
-		} catch (Exception e) {
-			logger.append("Exception in getting profile details").log();
-			return profile;
-		}
-//		System.out.println(profile);
-		return profile;
-	}
+//	public static Profile getProfile(String profileName) {
+//		Profile profile = new Profile();
+//		profile.setName(profileName);
+//		String profileText = getProfileAsText(profileName);
+//		try {
+//			String followers = profileText.split("meta content=\"")[1].split(" ")[0];
+//			profile.setNoOfFollowers(ProfileUtils.getNumberCount(followers));
+//			String following = profileText.split("Followers, ")[1].split(" ")[0];
+//			profile.setNoOfFollowing(ProfileUtils.getNumberCount(following));
+//			String posts = profileText.split("Following, ")[1].split(" ")[0];
+//			profile.setPosts(ProfileUtils.getNumberCount(posts));
+//		} catch (Exception e) {
+//			logger.append("Exception in getting profile details").log();
+//			return profile;
+//		}
+////		System.out.println(profile);
+//		return profile;
+//	}
 
 }

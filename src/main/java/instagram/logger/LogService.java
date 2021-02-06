@@ -2,9 +2,6 @@ package instagram.logger;
 
 import instagram.model.Data;
 import org.apache.log4j.Logger;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.RequestScope;
 
 public class LogService {
 
@@ -38,14 +35,16 @@ public class LogService {
     }
 
     public LogService log() {
-        logger.info(logBuilder.toString());
+//        logger.info(logBuilder.toString());
+        System.out.println(logBuilder.toString());
         // Clear String Builder
         logBuilder.setLength(0);
         return this;
     }
 
     public LogService err() {
-        logger.error(errBuilder.toString());
+//        logger.error(errBuilder.toString());
+        System.err.println(logBuilder.toString());
         // Clear String Builder
         errBuilder.setLength(0);
         return this;

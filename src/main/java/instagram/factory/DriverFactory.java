@@ -19,33 +19,43 @@ public class DriverFactory {
     private static synchronized void setupDriver() {
 
         if (driver == null) {
-            System.setProperty("webdriver.chrome.driver", ConfigPropertyUtils.getDriverPath());
-
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments(Arrays.asList(
-                    "--headless",
-                    "--no-sandbox",
-                    "--disable-infobars",
-                    "--disable-browser-side-navigation",
-                    "--disable-gpu",
-                    "--start-maximized",
-                    "--ignore-certificate-errors"
-            ));
-
-            driver = new ChromeDriver(options);
-            driver.get(ConfigData.BASE_URL);
-
+            driver = getNewDriver();
             logger.append("New Driver Created").log();
         }
     }
 
-    public static WebDriver getDriver(String sessionId) {
-        setupDriver();
-        setupCookie(sessionId);
+    public static WebDriver getNewDriver() {
+        System.setProperty("webdriver.chrome.driver", ConfigPropertyUtils.getDriverPath());
+
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments(Arrays.asList(
+//                    "--headless",
+                "--no-sandbox",
+                "--disable-infobars",
+                "--disable-browser-side-navigation",
+                "--disable-gpu",
+                "--start-maximized",
+                "--ignore-certificate-errors"
+        ));
+
+        WebDriver driver = new ChromeDriver(options);
+        driver.get(ConfigData.BASE_URL);
         return driver;
     }
 
-    public static void setupCookie(String sessionId) {
+    public static WebDriver getDriver(String sessionId) {
+        setupDriver();
+        setupCookie(sessionId, driver);
+        return driver;
+    }
+
+    public static WebDriver getNewDriver(String sessionId) {
+        WebDriver driver = getNewDriver();
+        setupCookie(sessionId, driver);
+        return driver;
+    }
+
+    public static void setupCookie(String sessionId, WebDriver driver) {
         Cookie sessionCookie = driver.manage().getCookieNamed(SESSION_ID_KEY);
         if (sessionCookie == null || !sessionId.equals(sessionCookie.getValue())) {
             driver.manage().deleteCookieNamed(SESSION_ID_KEY);

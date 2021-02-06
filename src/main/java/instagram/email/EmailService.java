@@ -101,7 +101,7 @@ public class EmailService {
     }
 
     public void sendEmail(Data data, EmailSubject emailSubject) {
-        sendEmail(getBasicEmail(data, emailSubject), data);
+//        sendEmail(getBasicEmail(data, emailSubject), data);
     }
 
     public void sendJobFinishedEmail(Data data) {

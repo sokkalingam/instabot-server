@@ -10,6 +10,7 @@ import instagram.model.enums.JobStatus;
 import instagram.report.ReportService;
 import instagram.sessions.SessionService;
 import instagram.utils.DataUtils;
+import instagram.utils.ProfileUtils;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -58,7 +59,7 @@ public class HomePageService extends SuperPage {
      * If the previous call has not finished within fixedRate, it waits and
      * starts immediately after the previous call is over
      */
-	@Scheduled(initialDelay = 1 * 1000, fixedRate = 30 * 1000)
+	@Scheduled(initialDelay = 1 * 1000, fixedRate = 1 * 1000)
 	public void execute() {
 
         Map<String, Session> sessionMap = sessionService.getActiveSessions();
@@ -222,6 +223,29 @@ public class HomePageService extends SuperPage {
 
 	}
 
+	private Profile getProfileInfo(String profileName, String sessionId) {
+		WebDriver driver = DriverFactory.getNewDriver(sessionId);
+		driver.get(ConfigData.BASE_URL + "/" + profileName);
+		String profileText = driver.getPageSource();
+		Profile profile = new Profile();
+		profile.setName(profileName);
+		try {
+			String followers = profileText.split("meta content=\"")[1].split(" ")[0];
+			profile.setNoOfFollowers(ProfileUtils.getNumberCount(followers));
+			String following = profileText.split("Followers, ")[1].split(" ")[0];
+			profile.setNoOfFollowing(ProfileUtils.getNumberCount(following));
+			String posts = profileText.split("Following, ")[1].split(" ")[0];
+			profile.setPosts(ProfileUtils.getNumberCount(posts));
+		} catch (Exception e) {
+			logger.append("Exception in getting profile details").log();
+			driver.quit();
+			return profile;
+		}
+//		System.out.println(profile);
+		driver.quit();
+		return profile;
+	}
+
 	/**
 	 * When driver is in the post page, it tries to like or comment
 	 * @param userData
@@ -231,7 +255,7 @@ public class HomePageService extends SuperPage {
 	private void performOnNewPost(UserData userData, Data data, Report report) {
 
 		String profileName = getProfileName();
-		Profile currentProfile = HttpCall.getProfile(profileName);
+		Profile currentProfile = getProfileInfo(profileName, data.sessionId);
 
 		logger.append("HomePageService::performOnPost").append(data)
 				.append("MaxNoOfFollowers").append(data.maxNoOfFollowers)
@@ -345,10 +369,9 @@ public class HomePageService extends SuperPage {
 			return false;
 		}
 
-		if (userData.getLikedBlockedCounter() > 0)
-			reportAProblem();
+		reportAProblem();
 
-		if (checkIfLikeIsBlocked(report) || userData.getLikedBlockedCounter() > 0) {
+		if (checkIfLikeIsBlocked(report, userData)) {
 			if (userData.getLikedBlockedCounter() > BLOCKED_LIMIT) {
 			    logger.append("LIKING IS BLOCKED");
                 userData.setLikingBlocked(true);
@@ -413,9 +436,9 @@ public class HomePageService extends SuperPage {
 	 * Is it time to check if photo LIKING is BLOCKED for every <GENERAL_LIMIT> photos
 	 * @return
 	 */
-	private boolean checkIfLikeIsBlocked(Report report) {
+	private boolean checkIfLikeIsBlocked(Report report, UserData userData) {
     	int photosLiked = report.getPhotosLiked();
-    	return (photosLiked % GENERAL_LIMIT == 0) && isLikeBlocked();
+    	return (photosLiked % GENERAL_LIMIT == 0 || userData.getLikedBlockedCounter() > 0) && isLikeBlocked();
 	}
 
 	/**

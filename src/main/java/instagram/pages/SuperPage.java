@@ -65,6 +65,14 @@ public class SuperPage {
 		}
 	}
 
+	protected List<WebElement> getElementsPresent(String css) {
+		try {
+			return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector(css)));
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
+
 	/**
 	 * Get photos
 	 * Photos are not hidden inside a div and hence can't be found by visibilityOfAllElementsLocatedBy
@@ -123,11 +131,13 @@ public class SuperPage {
 	}
 
 	protected WebElement getLikeButton() {
-		return _getButton(CssData.get(CSS.LIKE_BUTTON));
+		WebElement likeButton = _getButton(CssData.get(CSS.LIKE_BUTTON));
+		return getElement(likeButton, "[aria-label=Like]") != null ? likeButton : null;
 	}
 
 	protected WebElement getUnlikeButton() {
-		return _getButton(CssData.get(CSS.UNLIKE_BUTTON));
+		WebElement unlikeButton = _getButton(CssData.get(CSS.UNLIKE_BUTTON));
+		return getElement(unlikeButton, "[aria-label=Unlike]") != null ? unlikeButton : null;
 	}
 
 	private WebElement _getButton(String css) {
@@ -298,8 +308,8 @@ public class SuperPage {
 	}
 
 	protected void reportAProblem() {
-		setWait(2);
-		List<WebElement> buttons = getElements(CssData.get(CSS.REPORT_A_PROBLEM));
+		sleep(2);
+		List<WebElement> buttons = getElementsPresent(CssData.get(CSS.REPORT_A_PROBLEM));
 		setWait(WAIT_TIME);
 		WebElement reportButton = null;
 		for (WebElement button : buttons) {
